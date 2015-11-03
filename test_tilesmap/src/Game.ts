@@ -4,6 +4,7 @@
 /// <reference path="com/isb/map/maploader.ts" />
 /// <reference path="com/isb/sounds/soundsmanager.ts" />
 /// <reference path="com/isb/grid/grid.ts" />
+/// <reference path="com/isb/connection/connectionmodule.ts" />
 
 var myGame;
 window.onload = () => {
@@ -18,6 +19,7 @@ class Game {
     mapLoader;
     soundManager;
     grid;
+    connection;
 
     background;
     character;
@@ -50,6 +52,9 @@ class Game {
     {
         this.background = this.game.add.image(0, 0, 'background');
         this.background.scale.setTo(4.5,4.5);
+
+        /*this.connection = new ConnectionModule.Connection(this.game);
+        this.connection.init("ws://razvanpat.info.tm:8001/");*/
 
         this.mapLoader.createMap('Tiles');
         this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
@@ -88,6 +93,10 @@ class Game {
         if (this.cursors.up.isDown)
         {
             this.character.body.velocity.y = -200;
+        }
+        if (this.cursors.down.isDown)
+        {
+            this.connection.terminate();
         }
         if (this.cursors.left.isDown)
         {

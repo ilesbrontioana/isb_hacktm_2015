@@ -4,6 +4,7 @@
 /// <reference path="com/isb/map/maploader.ts" />
 /// <reference path="com/isb/sounds/soundsmanager.ts" />
 /// <reference path="com/isb/grid/grid.ts" />
+/// <reference path="com/isb/connection/connectionmodule.ts" />
 var myGame;
 window.onload = function () {
     myGame = new Game();
@@ -29,6 +30,8 @@ var Game = (function () {
     Game.prototype.create = function () {
         this.background = this.game.add.image(0, 0, 'background');
         this.background.scale.setTo(4.5, 4.5);
+        /*this.connection = new ConnectionModule.Connection(this.game);
+        this.connection.init("ws://razvanpat.info.tm:8001/");*/
         this.mapLoader.createMap('Tiles');
         this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
         this.grid = new GridModule.Grid(this.game, MapLoader.Map.grids['Tiles']);
@@ -49,19 +52,18 @@ var Game = (function () {
         this.game.camera.follow(this.character);
     };
     Game.prototype.update = function () {
-        this.soundManager.playSound('sound2', 2000, true);
         this.game.physics.arcade.collide(this.character, MapLoader.Map.layers['Tiles']['TilesLayer']);
         this.character.body.velocity.x = 0;
         if (this.cursors.up.isDown) {
-            this.soundManager.playSound('sound1', 0, false, true);
             this.character.body.velocity.y = -200;
         }
+        if (this.cursors.down.isDown) {
+            this.connection.terminate();
+        }
         if (this.cursors.left.isDown) {
-            this.soundManager.pauseSound('sound2');
             this.character.body.velocity.x = -150;
         }
         else if (this.cursors.right.isDown) {
-            this.soundManager.resumeSound('sound2');
             this.character.body.velocity.x = 150;
         }
     };
