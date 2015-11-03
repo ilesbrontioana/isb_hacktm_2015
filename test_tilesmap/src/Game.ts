@@ -5,6 +5,7 @@
 /// <reference path="com/isb/sounds/soundsmanager.ts" />
 /// <reference path="com/isb/grid/grid.ts" />
 /// <reference path="com/isb/connection/connectionmodule.ts" />
+/// <reference path="com/isb/character/character.ts" />
 
 var myGame;
 window.onload = () => {
@@ -43,13 +44,17 @@ class Game {
         this.soundManager.loadSounds();
 
         this.game.load.image('background', 'assets/background/bg1.jpg');
-        this.game.load.image('character', 'assets/character/phaser-dude.png');
+
+        CharacterModule.CharacterLoader.load(this.game, 'character', 'assets/character/phaser-dude.png');
 
         this.game.time.advancedTiming = true;
     }
 
     create()
     {
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.game.physics.arcade.gravity.y = 400;
+
         this.background = this.game.add.image(0, 0, 'background');
         this.background.scale.setTo(4.5,4.5);
 
@@ -59,25 +64,27 @@ class Game {
         this.mapLoader.createMap('Tiles');
         this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
 
+        this.character = new CharacterModule.Character(this.game);
+        this.character.createCharacter('character', 800, 1800, true);
+
         this.grid = new GridModule.Grid(this.game, MapLoader.Map.grids['Tiles']);
-        this.grid.signal.add(function(tile)
+        this.grid.signal.add(
+                function(x, y)
                 {
-                    this.character.x = tile.x;
-                    this.character.y = tile.y;
-                }, this);
+                    this.character.moveCharacter(x, y);
+                    this.game.time.events.removeAll();
+                    this.game.time.events.add(Phaser.Timer.SECOND, function(){
+                        this.character.freezeCharacter();
+                        this.game.time.events.removeAll();
+                        this.game.time.events.add(Phaser.Timer.SECOND, function(){
+                            this.character.unfreezeCharacter();
+                            this.game.time.events.removeAll();
+                        }, this);
+                    }, this);
+                },
+                this);
 
         this.soundManager.createSounds();
-
-        this.game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        this.character = this.game.add.sprite(100, 1800, 'character');
-        this.character.scale.setTo(4,4);
-        this.game.physics.enable(this.character);
-        this.game.physics.arcade.gravity.y = 400;
-
-        this.character.body.bounce.y = 0.2;
-        this.character.body.linearDamping = 1;
-        this.character.body.collideWorldBounds = true;
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
@@ -86,26 +93,8 @@ class Game {
 
     update()
     {
-        this.game.physics.arcade.collide(this.character, MapLoader.Map.layers['Tiles']['TilesLayer']);
-
-        this.character.body.velocity.x = 0;
-
-        if (this.cursors.up.isDown)
-        {
-            this.character.body.velocity.y = -200;
-        }
-        if (this.cursors.down.isDown)
-        {
-            this.connection.terminate();
-        }
-        if (this.cursors.left.isDown)
-        {
-            this.character.body.velocity.x = -150;
-        }
-        else if (this.cursors.right.isDown)
-        {
-            this.character.body.velocity.x = 150;
-        }
+        this.game.physics.arcade.collide(this.character.character, MapLoader.Map.layers['Tiles']['TilesLayer']);
+        this.character.updateCharacter();
     }
 
     render()

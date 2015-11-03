@@ -25,6 +25,7 @@ module GridModule
                     bmd.ctx.closePath();
 
                     game.cache.addBitmapData("tile "+i+" "+j, bmd);
+
                     var newTile = game.add.sprite(tiles[i][j].worldX, tiles[i][j].worldY, game.cache.getBitmapData("tile "+i+" "+j));
                     this.grid[i].push(newTile);
                     newTile.inputEnabled = true;
@@ -35,8 +36,19 @@ module GridModule
 
         gridTouched(tile, pointer)
         {
-            this.signal.dispatch(tile);
+            this.signal.dispatch(tile.x, tile.y);
         }
 
+        getTileForPosition(x, y):Phaser.Sprite
+        {
+            for(var i = 0; i < this.grid.length; i++) {
+                for (var j = 0; j < this.grid[i].length; j++) {
+                    if(this.grid[i][j].x == x && this.grid[i][j].y == y)
+                    {
+                        return this.grid[i][j];
+                    }
+                }
+            }
+        }
     }
 }

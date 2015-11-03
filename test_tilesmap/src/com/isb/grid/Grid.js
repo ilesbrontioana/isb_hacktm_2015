@@ -25,10 +25,19 @@ var GridModule;
             }
         }
         Grid.prototype.gridTouched = function (tile, pointer) {
-            this.signal.dispatch(tile);
+            this.signal.dispatch(tile.x, tile.y);
+        };
+        Grid.prototype.getTileForPosition = function (x, y) {
+            for (var i = 0; i < this.grid.length; i++) {
+                for (var j = 0; j < this.grid[i].length; j++) {
+                    if (this.grid[i][j].x == x && this.grid[i][j].y == y) {
+                        return this.grid[i][j];
+                    }
+                }
+            }
         };
         return Grid;
     })();
     GridModule.Grid = Grid;
 })(GridModule || (GridModule = {}));
-//# sourceMappingURL=grid.js.map
+//# sourceMappingURL=Grid.js.map
