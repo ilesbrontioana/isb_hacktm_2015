@@ -4,13 +4,15 @@
 module MapLoader
 {
     export class Map{
-
         game;
         assetPath;
         static maps: {[name:string]:Phaser.Tilemap; } = {};
         static layers: {[name:string]: {[layerName:string]: Phaser.Phaser.TilemapLayer;}; } = {};
 
+        static grids: {[name:string]: Array; } = {};
+
         constructor (game, assetPath) {
+
             this.game = game;
             this.assetPath = assetPath;
         }
@@ -28,7 +30,7 @@ module MapLoader
             Map.maps[name] = map;
         }
 
-        createLayer(mapName, layerName)
+        createLayer(mapName, layerName, saveGrid)
         {
             var layer = Map.maps[mapName].createLayer(layerName);
             layer.resizeWorld();
@@ -38,6 +40,13 @@ module MapLoader
                 Map.layers[mapName] = {};
             }
             Map.layers[mapName][layerName] = layer;
+
+            if(saveGrid == true)
+            {
+                var grid = layer.layer.data;
+                Map.grids[mapName] = grid;
+            }
+
         }
 
     }

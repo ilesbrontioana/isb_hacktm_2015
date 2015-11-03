@@ -18,16 +18,21 @@ var MapLoader;
             map.setCollisionBetween(0, map.tiles.length);
             Map.maps[name] = map;
         };
-        Map.prototype.createLayer = function (mapName, layerName) {
+        Map.prototype.createLayer = function (mapName, layerName, saveGrid) {
             var layer = Map.maps[mapName].createLayer(layerName);
             layer.resizeWorld();
             if (Map.layers[mapName] == null) {
                 Map.layers[mapName] = {};
             }
             Map.layers[mapName][layerName] = layer;
+            if (saveGrid == true) {
+                var grid = layer.layer.data;
+                Map.grids[mapName] = grid;
+            }
         };
         Map.maps = {};
         Map.layers = {};
+        Map.grids = {};
         return Map;
     })();
     MapLoader.Map = Map;

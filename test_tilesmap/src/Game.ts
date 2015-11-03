@@ -3,6 +3,7 @@
  */
 /// <reference path="com/isb/map/maploader.ts" />
 /// <reference path="com/isb/sounds/soundsmanager.ts" />
+/// <reference path="com/isb/grid/grid.ts" />
 
 var myGame;
 window.onload = () => {
@@ -16,27 +17,23 @@ class Game {
     game;
     mapLoader;
     soundManager;
+    grid;
 
     background;
     character;
     cursors;
 
     constructor() {
-        this.game = new Phaser.Game(3200, 2000, Phaser.AUTO, 'content', {
+        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {
             preload: this.preload,
             create: this.create,
-            update: this.update
+            update: this.update,
+            render: this.render
         });
-
     }
 
     preload()
     {
-        this.game.stage.scale.pageAlignHorizontally = true;
-        this.game.stage.scale.pageAlignVeritcally = true;
-        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.game.scale.refresh();
-
         this.mapLoader = new MapLoader.Map(this.game, 'assets/map/');
         this.mapLoader.loadMap('Tiles');
 
@@ -45,15 +42,24 @@ class Game {
 
         this.game.load.image('background', 'assets/background/bg1.jpg');
         this.game.load.image('character', 'assets/character/phaser-dude.png');
+
+        this.game.time.advancedTiming = true;
     }
 
     create()
     {
-        this.background = this.game.add.sprite(0, 0, 'background');
+        this.background = this.game.add.image(0, 0, 'background');
         this.background.scale.setTo(4.5,4.5);
 
         this.mapLoader.createMap('Tiles');
-        this.mapLoader.createLayer('Tiles', 'TilesLayer');
+        this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
+
+        this.grid = new GridModule.Grid(this.game, MapLoader.Map.grids['Tiles']);
+        this.grid.signal.add(function(tile)
+                {
+                    this.character.x = tile.x;
+                    this.character.y = tile.y;
+                }, this);
 
         this.soundManager.createSounds();
 
@@ -75,27 +81,26 @@ class Game {
 
     update()
     {
-
-        this.soundManager.playSound('sound2', 2000, true);
-
         this.game.physics.arcade.collide(this.character, MapLoader.Map.layers['Tiles']['TilesLayer']);
 
         this.character.body.velocity.x = 0;
 
         if (this.cursors.up.isDown)
         {
-            this.soundManager.playSound('sound1', 0, false, true);
             this.character.body.velocity.y = -200;
         }
         if (this.cursors.left.isDown)
         {
-            this.soundManager.pauseSound('sound2');
             this.character.body.velocity.x = -150;
         }
         else if (this.cursors.right.isDown)
         {
-            this.soundManager.resumeSound('sound2');
             this.character.body.velocity.x = 150;
         }
+    }
+
+    render()
+    {
+        this.game.debug.text(this.game.time.fps, 2, 14, "#ff0000");
     }
 }

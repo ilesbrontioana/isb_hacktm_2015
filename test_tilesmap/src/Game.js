@@ -3,35 +3,39 @@
  */
 /// <reference path="com/isb/map/maploader.ts" />
 /// <reference path="com/isb/sounds/soundsmanager.ts" />
+/// <reference path="com/isb/grid/grid.ts" />
 var myGame;
 window.onload = function () {
     myGame = new Game();
 };
 var Game = (function () {
     function Game() {
-        this.game = new Phaser.Game(3200, 2000, Phaser.AUTO, 'content', {
+        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {
             preload: this.preload,
             create: this.create,
-            update: this.update
+            update: this.update,
+            render: this.render
         });
     }
     Game.prototype.preload = function () {
-        this.game.stage.scale.pageAlignHorizontally = true;
-        this.game.stage.scale.pageAlignVeritcally = true;
-        this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.game.scale.refresh();
         this.mapLoader = new MapLoader.Map(this.game, 'assets/map/');
         this.mapLoader.loadMap('Tiles');
         this.soundManager = new SoundsModule.SoundsManager(this.game, 'assets/sounds/');
         this.soundManager.loadSounds();
         this.game.load.image('background', 'assets/background/bg1.jpg');
         this.game.load.image('character', 'assets/character/phaser-dude.png');
+        this.game.time.advancedTiming = true;
     };
     Game.prototype.create = function () {
-        this.background = this.game.add.sprite(0, 0, 'background');
+        this.background = this.game.add.image(0, 0, 'background');
         this.background.scale.setTo(4.5, 4.5);
         this.mapLoader.createMap('Tiles');
-        this.mapLoader.createLayer('Tiles', 'TilesLayer');
+        this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
+        this.grid = new GridModule.Grid(this.game, MapLoader.Map.grids['Tiles']);
+        this.grid.signal.add(function (tile) {
+            this.character.x = tile.x;
+            this.character.y = tile.y;
+        }, this);
         this.soundManager.createSounds();
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.character = this.game.add.sprite(100, 1800, 'character');
@@ -60,6 +64,9 @@ var Game = (function () {
             this.soundManager.resumeSound('sound2');
             this.character.body.velocity.x = 150;
         }
+    };
+    Game.prototype.render = function () {
+        this.game.debug.text(this.game.time.fps, 2, 14, "#ff0000");
     };
     return Game;
 })();
