@@ -25,7 +25,8 @@ var Game = (function () {
         this.soundManager = new SoundsModule.SoundsManager(this.game, 'assets/sounds/');
         this.soundManager.loadSounds();
         this.game.load.image('background', 'assets/background/bg1.jpg');
-        CharacterModule.CharacterLoader.load(this.game, 'character', 'assets/character/phaser-dude.png');
+        this.character = new CharacterModule.Character(this.game);
+        this.character.load('character', 'assets/character/phaser-dude.png');
         this.game.time.advancedTiming = true;
     };
     Game.prototype.create = function () {
@@ -37,7 +38,6 @@ var Game = (function () {
         this.connection.init("ws://razvanpat.info.tm:8001/");*/
         this.mapLoader.createMap('Tiles');
         this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
-        this.character = new CharacterModule.Character(this.game);
         this.character.createCharacter('character', 800, 1800, true);
         this.grid = new GridModule.Grid(this.game, MapLoader.Map.grids['Tiles']);
         this.grid.signal.add(function (x, y) {
@@ -54,7 +54,6 @@ var Game = (function () {
         }, this);
         this.soundManager.createSounds();
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.game.camera.follow(this.character);
     };
     Game.prototype.update = function () {
         this.game.physics.arcade.collide(this.character.character, MapLoader.Map.layers['Tiles']['TilesLayer']);

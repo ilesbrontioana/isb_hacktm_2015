@@ -3,20 +3,14 @@
  */
 var CharacterModule;
 (function (CharacterModule) {
-    var CharacterLoader = (function () {
-        function CharacterLoader() {
-        }
-        CharacterLoader.load = function (game, characterName, characterPath) {
-            game.load.image(characterName, characterPath);
-        };
-        return CharacterLoader;
-    })();
-    CharacterModule.CharacterLoader = CharacterLoader;
     var Character = (function () {
-        function Character(game, characterName, characterPath) {
+        function Character(game) {
             this.freezed = false;
             this.game = game;
         }
+        Character.prototype.load = function (characterName, characterPath) {
+            this.game.load.image(characterName, characterPath);
+        };
         Character.prototype.createCharacter = function (characterName, x, y, followCharacter) {
             this.character = this.game.add.sprite(x, y, characterName);
             this.character.scale.setTo(4, 4);
@@ -62,4 +56,4 @@ var CharacterModule;
     })();
     CharacterModule.Character = Character;
 })(CharacterModule || (CharacterModule = {}));
-//# sourceMappingURL=Character.js.map
+//# sourceMappingURL=character.js.map

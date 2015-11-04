@@ -45,7 +45,8 @@ class Game {
 
         this.game.load.image('background', 'assets/background/bg1.jpg');
 
-        CharacterModule.CharacterLoader.load(this.game, 'character', 'assets/character/phaser-dude.png');
+        this.character = new CharacterModule.Character(this.game);
+        this.character.load('character', 'assets/character/phaser-dude.png');
 
         this.game.time.advancedTiming = true;
     }
@@ -64,7 +65,6 @@ class Game {
         this.mapLoader.createMap('Tiles');
         this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
 
-        this.character = new CharacterModule.Character(this.game);
         this.character.createCharacter('character', 800, 1800, true);
 
         this.grid = new GridModule.Grid(this.game, MapLoader.Map.grids['Tiles']);
@@ -87,8 +87,6 @@ class Game {
         this.soundManager.createSounds();
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
-
-        this.game.camera.follow(this.character);
     }
 
     update()

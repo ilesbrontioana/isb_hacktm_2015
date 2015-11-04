@@ -3,13 +3,6 @@
  */
 module CharacterModule
 {
-    export class CharacterLoader
-    {
-        static load(game, characterName, characterPath)
-        {
-            game.load.image(characterName, characterPath);
-        }
-    }
     export class Character
     {
         game;
@@ -20,9 +13,14 @@ module CharacterModule
 
         freezed = false;
 
-        constructor(game, characterName, characterPath)
+        constructor(game)
         {
             this.game = game;
+        }
+
+        load( characterName, characterPath)
+        {
+            this.game.load.image(characterName, characterPath);
         }
 
         createCharacter(characterName, x, y, followCharacter)
