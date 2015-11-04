@@ -6,6 +6,7 @@
 /// <reference path="com/isb/grid/grid.ts" />
 /// <reference path="com/isb/connection/connectionmodule.ts" />
 /// <reference path="com/isb/character/character.ts" />
+/// <reference path="com/isb/events/SignalsManager.ts" />
 
 var myGame;
 window.onload = () => {
@@ -59,13 +60,12 @@ class Game {
         this.background = this.game.add.image(0, 0, 'background');
         this.background.scale.setTo(4.5,4.5);
 
-        /*this.connection = new ConnectionModule.Connection(this.game);
-        this.connection.init("ws://razvanpat.info.tm:8001/");*/
-
         this.mapLoader.createMap('Tiles');
         this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
 
         this.character.createCharacter('character', 800, 1800, true);
+
+        this.connection = new ConnectionModule.Connection(new WebSocket('ws://razvanpat.info.tm:8001/'));
 
         this.grid = new GridModule.Grid(this.game, MapLoader.Map.grids['Tiles']);
         this.grid.signal.add(

@@ -4,71 +4,57 @@
 
 module ConnectionModule{
     export class Connection{
-
-        grid;
         websocket;
-        signal:Phaser.Signal;
 
-        constructor(grid, websocket){
-            this.grid = grid;
+        constructor(websocket){
             this.websocket = websocket;
-            this.signal = new Phaser.Signal;
             this.init();
         }
 
         init(){
             //add listeners
 
-            //LISTENER FOR TESTING PURPOSES ONLY!
-            /*this.grid.signal.add(
-                function()
-                {
-                    console.log("Connection module got signal");
-                    this.sendSkip();
-                }
-            )*/
-
-            this.websocket.onclose = function(evt) { this.onClose(evt) };
-            this.websocket.onmessage = function(evt) { this.onMessage(evt) };
-            this.websocket.onerror = function(evt) { this.onError(evt) };
+            this.websocket.cmodule = this;
+            this.websocket.onmessage = function(evt) { this.cmodule.onMessage(evt) };
+            this.websocket.onerror = function(evt) { this.cmodule.onError(evt) };
         }
 
         onMessage(evt){
-            console.log("Received from server: "+evt.data);
+            EventsModule.SignalsManager.getInstance().dispatch("test", tile);
         }
 
         sendCharacterSelection(msg){
-            doSendObj({
+            this.doSendObj({
                 name: 'select character',
                 param: msg
             });
         }
 
         sendMove(move, state){
-            doSendObj({
+            this.doSendObj({
                 name: 'move',
                 param: move //TODO: send the correct param (move and state)
             });
         }
 
         sendSkip(){
-            doSendObj({
+            this.doSendObj({
                 name: 'move_skip',
                 param: null //TODO: send state (maybe)
             });
         }
 
         doSend(obj){
-            console.log("SENT: " + message);
-            websocket.send(message);
+            console.log("SENT: " + obj);
+            this.websocket.send(obj);
         }
 
         doSendObj(obj){
-            doSend(JSON.stringify(obj));
+            this.doSend(JSON.stringify(obj));
         }
 
         terminate(){
-            websocket.close();
+            this.websocket.close();
         }
     }
 }
