@@ -15,12 +15,13 @@ class SimpleGame {
 
     constructor() {
         this.game = new Phaser.Game(1024, 768, Phaser.AUTO, 'content', {
-            create: this.create, preload: this.preload, render: this.render, update: this.update
+            create: this.create,
+            preload: this.preload,
+            render: this.render,
+            update: this.update,
+            onTest1:this.onTest1,
+            onTest2:this.onTest2
         });
-
-        //REGISTER SIGNALS
-        EventsModule.SignalsManager.getInstance().createBinding("test", this.onTest1, this);
-        EventsModule.SignalsManager.getInstance().createBinding("test", this.onTest2, this);
     }
 
     preload() {
@@ -35,6 +36,10 @@ class SimpleGame {
     }
 
     create() {
+        //REGISTER SIGNALS
+        EventsModule.SignalsManager.getInstance().createBinding("test", this.onTest1, this);
+        EventsModule.SignalsManager.getInstance().createBinding("test", this.onTest2, this);
+
         GameControllerModule.GameController.getInstance().game = this.game;
         EventsModule.SignalsManager.getInstance().scope = this;
 
@@ -51,7 +56,7 @@ class SimpleGame {
         this.game.camera.follow(this.player);
     }
 
-    public onTest1(test) {
+    onTest1(test) {
         console.log("ON TEST 1    "+this+" !?!?!?!?! "+test);
     }
 
