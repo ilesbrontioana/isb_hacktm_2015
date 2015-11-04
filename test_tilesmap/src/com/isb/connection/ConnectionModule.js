@@ -4,33 +4,56 @@
 var ConnectionModule;
 (function (ConnectionModule) {
     var Connection = (function () {
-        function Connection(game) {
-            this.game = game;
+        function Connection(grid, websocket) {
+            this.grid = grid;
+            this.websocket = websocket;
+            this.signal = new Phaser.Signal;
+            this.init();
         }
-        Connection.prototype.init = function (wsURL) {
-            websocket = new WebSocket(wsURL);
-            websocket.onopen = function (evt) {
-                this.onOpen;
-            };
-            websocket.onclose = function (evt) {
+        Connection.prototype.init = function () {
+            //add listeners
+            //LISTENER FOR TESTING PURPOSES ONLY!
+            /*this.grid.signal.add(
+                function()
+                {
+                    console.log("Connection module got signal");
+                    this.sendSkip();
+                }
+            )*/
+            this.websocket.onclose = function (evt) {
                 this.onClose(evt);
             };
-            websocket.onmessage = function (evt) {
-                this.onMessage;
+            this.websocket.onmessage = function (evt) {
+                this.onMessage(evt);
             };
-            websocket.onerror = function (evt) {
+            this.websocket.onerror = function (evt) {
                 this.onError(evt);
             };
         };
-        Connection.prototype.onOpen = function (evt) {
-            console.log("Connected to server");
-            doSendObj({
-                name: 'register_name',
-                param: 'htmlClientName'
-            });
-        };
         Connection.prototype.onMessage = function (evt) {
             console.log("Received from server: " + evt.data);
+        };
+        Connection.prototype.sendCharacterSelection = function (msg) {
+            doSendObj({
+                name: 'select character',
+                param: msg
+            });
+        };
+        Connection.prototype.sendMove = function (move, state) {
+            doSendObj({
+                name: 'move',
+                param: move //TODO: send the correct param (move and state)
+            });
+        };
+        Connection.prototype.sendSkip = function () {
+            doSendObj({
+                name: 'move_skip',
+                param: null //TODO: send state (maybe)
+            });
+        };
+        Connection.prototype.doSend = function (obj) {
+            console.log("SENT: " + message);
+            websocket.send(message);
         };
         Connection.prototype.doSendObj = function (obj) {
             doSend(JSON.stringify(obj));
