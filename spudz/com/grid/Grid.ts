@@ -24,6 +24,7 @@ module GridModule
         constructor (game:Phaser.Game, bitmapKey:string,x:number, y:number){
             var tile = game.add.sprite(x,y,game.cache.getBitmapData(bitmapKey));
             tile.inputEnabled = true;
+            tile.alpha = 0;
             tile.events.onInputDown.add(this.gridTouched, this);
             this.game = game;
         }
