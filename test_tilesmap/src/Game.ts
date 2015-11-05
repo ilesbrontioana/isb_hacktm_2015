@@ -28,7 +28,7 @@ class Game {
     cursors;
 
     constructor() {
-        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {
+        this.game = new Phaser.Game(1800, 1200, Phaser.AUTO, 'content', {
             preload: this.preload,
             create: this.create,
             update: this.update,
@@ -57,11 +57,13 @@ class Game {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y = 400;
 
-        this.background = this.game.add.image(0, 0, 'background');
-        this.background.scale.setTo(4.5,4.5);
+        /*this.background = this.game.add.image(0, 0, 'background');
+        this.background.scale.setTo(4.5,4.5);*/
 
         this.mapLoader.createMap('Tiles');
         this.mapLoader.createLayer('Tiles', 'TilesLayer', true);
+        this.mapLoader.createLayer('Tiles', 'SkyLayer', true);
+        this.mapLoader.createLayer('Tiles', 'HillsLayer', true);
 
         this.character.createCharacter('character', 800, 1800, true);
 
