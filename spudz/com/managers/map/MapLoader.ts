@@ -37,22 +37,23 @@ module MapModule
             }
             Map.layers[mapName][layerName] = layer;
 
-            if(collideUp == true)
-            {
-                    var grid = layer.layer.data;
-                    for(var i = 0; i < grid.length; i++)
-                    {
-                        for(var j = 0; j < grid[i].length; j++)
-                        {
-                            var tile:Phaser.Tile = grid[i][j];
-                            tile.collideUp = true;
-                            tile.collideLeft = false;
-                            tile.collideRight = false;
-                            tile.collideDown = false;
-                        }
-                    }
-            }
+        }
 
+        setLayerCollision(mapName, layerName, collideUp, collideLeft, collideRight, collideDown)
+        {
+            var layer = Map.layers[mapName][layerName];
+            var grid = layer.layer.data;
+            for(var i = 0; i < grid.length; i++)
+            {
+                for(var j = 0; j < grid[i].length; j++)
+                {
+                    var tile:Phaser.Tile = grid[i][j];
+                    tile.collideUp = collideUp;
+                    tile.collideLeft = collideLeft;
+                    tile.collideRight = collideRight;
+                    tile.collideDown = collideDown;
+                }
+            }
         }
 
     }

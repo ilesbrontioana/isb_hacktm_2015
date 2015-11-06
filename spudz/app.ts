@@ -50,8 +50,7 @@ class SimpleGame {
     }
 
     update() {
-        this.game.physics.arcade.collide(this.character.graphics, MapModule.Map.layers['Spudz']['TilesLayer']);
-        this.character.updateCharacter();
+        this.character.updateCharacter([MapModule.Map.layers['Spudz']['TilesLayer']]);
     }
 
     create() {
@@ -68,7 +67,7 @@ class SimpleGame {
         this.background.scale.setTo(4.5, 4.5);
 
         this.map.createMap('Spudz');
-        this.map.createLayer('Spudz', 'TilesLayer', true);
+        this.map.createLayer('Spudz', 'TilesLayer');
 
         var grid:GridModule.Grid = new GridModule.Grid(0, 0, 32, 20, 80, 80);
 
