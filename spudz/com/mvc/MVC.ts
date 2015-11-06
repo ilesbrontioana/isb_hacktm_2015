@@ -58,7 +58,7 @@ module MvcModule{
             this.notifications[notificationName].push(mediator);
         }
 
-        public sendNotification(notificationName:string, body:any, type?:string){
+        public sendNotification(notificationName:string, body?:any, type?:string){
             if(this.commands[notificationName]) {
                 for (var i = 0; i < this.commands[notificationName].length; i++) {
                     var notification:Notification = new Notification();

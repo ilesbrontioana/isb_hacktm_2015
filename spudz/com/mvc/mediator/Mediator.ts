@@ -3,8 +3,10 @@
  */
 module MvcModule {
     export class Mediator {
-        constructor(viewComponent:View) {
+        public viewComponent:View;
 
+        constructor(viewComponent:View) {
+            this.viewComponent = viewComponent;
         }
 
         public onRegister() {

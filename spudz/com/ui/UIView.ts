@@ -10,6 +10,11 @@ module UserInterfaceModule{
            lifeGroup:Phaser.Group;
            actionsGroup:Phaser.Group;
 
+           lifeBar:Phaser.Sprite;
+           lifeBarEnemy:Phaser.Sprite;
+
+           actionsMenuButton:Phaser.Sprite;
+
         constructor(){
             this.game = GameControllerModule.GameController.getInstance().game;
             this.uiBackground();
@@ -46,16 +51,45 @@ module UserInterfaceModule{
 
        createLife(){
            this.lifeGroup = new Phaser.Group(this.game);
-           var lifeBar:Phaser.Sprite = new Phaser.Sprite(this.game, 0,0, "ui", "life_bar.png");
-           var lifeBarEnemy:Phaser.Sprite = new Phaser.Sprite(this.game, 1328,0, "ui", "life_bar.png");
-           lifeBarEnemy.width = -lifeBarEnemy.width;
-           this.lifeGroup.add(lifeBar);
-           this.lifeGroup.add(lifeBarEnemy);
+           this.lifeBar = new Phaser.Sprite(this.game, 0,0, "ui", "life_bar.png");
+           this.lifeBarEnemy = new Phaser.Sprite(this.game, 1328,0, "ui", "life_bar.png");
+           this.lifeBarEnemy.width = -this.lifeBarEnemy.width;
+           this.lifeGroup.add(this.lifeBar);
+           this.lifeGroup.add(this.lifeBarEnemy);
            this.lifeGroup.fixedToCamera = true;
        }
 
        createActionsMenu(){
            this.actionsGroup = new Phaser.Group(this.game);
+           this.actionsMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
+
+           this.actionsGroup.fixedToCamera = true;
+           this.actionsGroup.add(this.actionsMenuButton);
+
+           this.actionsMenuButton.inputEnabled = true;
+           this.actionsMenuButton.events.onInputDown.add(this.menuButtonTouched, this);
+       }
+
+       menuButtonTouched(){
+           this.updateLife(50);
+           this.updateEnemyLife(50);
+           this.actionsGroup.visible = false;
+       }
+
+       updateLife(amount:number){
+            this.lifeBar.x -= amount;
+       }
+
+       updateEnemyLife(amount:number){
+            this.lifeBarEnemy.x += amount;
+       }
+
+       showActionsMenu(){
+           this.actionsGroup.visible = true;
+       }
+
+       hideActionsMenu(){
+           this.actionsGroup.visible = false;
        }
     }
 }

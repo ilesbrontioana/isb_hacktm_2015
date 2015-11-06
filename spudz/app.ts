@@ -86,6 +86,7 @@ class SimpleGame {x
         //this.hud = new UserInterfaceModule.hud();
         //USER INTERFACE
         MvcModule.Mvc.getInstance().registerMediator(UserInterfaceModule.UIMediator.NAME, new UserInterfaceModule.UIMediator(new UserInterfaceModule.UIView()));
+        MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU);
     }
 
     onTestMVC() {
@@ -99,7 +100,7 @@ class SimpleGame {x
     }
 
     onTest2(tile) {
-        console.log("ON TEST 2    ");
+        console.log("ON TEST 2     ");
     }
 }
 
@@ -107,7 +108,7 @@ window.onload = () => {
     var game = new SimpleGame();
 };
 
-//////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
 class testView extends MvcModule.View{
     constructor(){
         console.log("za test view")
