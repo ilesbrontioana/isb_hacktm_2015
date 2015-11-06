@@ -8,9 +8,12 @@
 /// <reference path="com/managers/game/GameController.ts" />
 /// <reference path="com/managers/map/MapLoader.ts" />
 /// <reference path="com/managers/sounds/SoundsManager.ts" />
+/// <reference path="com/managers/graphics/GraphicsManager.ts" />
 /// <reference path="com/actors/Character.ts" />
+/// <reference path="com/ui/UIMediator.ts" />
+/// <reference path="com/ui/UIView.ts" />
 
-class SimpleGame {
+class SimpleGame {x
     game: Phaser.Game;
     cursors;
     map:MapModule.Map;
@@ -33,7 +36,7 @@ class SimpleGame {
         this.onTestMVC();
 
         GameControllerModule.GameController.getInstance().game = this.game;
-        //GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
+        GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
 
         this.game.load.image('bg', '../../spudz/bin/assets/background/bg1.jpg');
 
@@ -50,7 +53,8 @@ class SimpleGame {
     }
 
     update() {
-        this.character.updateCharacter([MapModule.Map.layers['Spudz']['TilesLayer']]);
+        this.game.physics.arcade.collide(this.character.graphics, MapModule.Map.layers['Spudz']['TilesLayer']);
+        this.character.updateCharacter();
     }
 
     create() {
@@ -67,7 +71,7 @@ class SimpleGame {
         this.background.scale.setTo(4.5, 4.5);
 
         this.map.createMap('Spudz');
-        this.map.createLayer('Spudz', 'TilesLayer');
+        this.map.createLayer('Spudz', 'TilesLayer', true);
 
         var grid:GridModule.Grid = new GridModule.Grid(0, 0, 32, 20, 80, 80);
 
@@ -80,6 +84,8 @@ class SimpleGame {
         SoundsModule.SoundsManager.getInstance().playSound('sound3');
 
         //this.hud = new UserInterfaceModule.hud();
+        //USER INTERFACE
+        MvcModule.Mvc.getInstance().registerMediator(UserInterfaceModule.UIMediator.NAME, new UserInterfaceModule.UIMediator(new UserInterfaceModule.UIView()));
     }
 
     onTestMVC() {
