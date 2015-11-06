@@ -3,9 +3,10 @@
  */
 module CharacterModule
 {
+    import SignalsManager = EventsModule.SignalsManager;
     export class Character
     {
-        characterImage;
+        graphics;
 
         newX;
         newY;
@@ -21,36 +22,39 @@ module CharacterModule
 
         createCharacter(characterName, x, y, followCharacter = false)
         {
-            this.characterImage = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, characterName);
+            this.graphics = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, characterName);
 
-            GameControllerModule.GameController.getInstance().game.physics.enable(this.characterImage, Phaser.Physics.ARCADE);
+            GameControllerModule.GameController.getInstance().game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
-            this.characterImage.body.collideWorldBounds = true;
-            this.characterImage.body.gravity.y = 100;
+            this.graphics.body.collideWorldBounds = true;
+            this.graphics.body.gravity.y = 200;
 
             if(followCharacter == true)
             {
-                GameControllerModule.GameController.getInstance().game.camera.follow(this.characterImage);
+                GameControllerModule.GameController.getInstance().game.camera.follow(this.graphics);
             }
+
+            SignalsManager.getInstance().createBinding("TiledClicked", this.moveCharacter, this)
         }
 
-        moveCharacter(x, y) {
-
-
-            this.newX = x;
-            this.newY = y;
-            GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.characterImage, this.newX, this.newY, 300);
+        moveCharacter(tile)
+        {
+            this.newX = tile.x;
+            this.newY = tile.y;
+            this.graphics.x = this.newX;
+            this.graphics.y = this.newY;
+            //GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, this.newX, this.newY, 300);
         }
 
         updateCharacter()
         {
-            if(GameControllerModule.GameController.getInstance().game.physics.arcade.distanceToXY(this.characterImage, this.newX, this.newY) < 10)
-            {
-                this.characterImage.body.velocity.x = 0;
-                this.characterImage.body.velocity.y = 0;
-                this.characterImage.body.x = this.newX;
-                this.characterImage.body.y = this.newY;
-            }
+            //if(GameControllerModule.GameController.getInstance().game.physics.arcade.distanceToXY(this.graphics, this.newX, this.newY) < 50)
+            //{
+            //    this.graphics.body.velocity.x = 0;
+            //    this.graphics.body.velocity.y = 0;
+            //    this.graphics.body.x = this.newX;
+            //    this.graphics.body.y = this.newY;
+            //}
         }
     }
 }

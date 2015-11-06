@@ -10,8 +10,6 @@ module MapModule
         static maps: {[name:string]:Phaser.Tilemap; } = {};
         static layers: {[name:string]: {[layerName:string]: Phaser.Phaser.TilemapLayer;}; } = {};
 
-        static grids: {[name:string]: Array; } = {};
-
         constructor () {
         }
 
@@ -28,7 +26,7 @@ module MapModule
             Map.maps[name] = map;
         }
 
-        createLayer(mapName, layerName, saveGrid)
+        createLayer(mapName, layerName, collideUp)
         {
             var layer = Map.maps[mapName].createLayer(layerName);
             layer.resizeWorld();
@@ -39,10 +37,20 @@ module MapModule
             }
             Map.layers[mapName][layerName] = layer;
 
-            if(saveGrid == true)
+            if(collideUp == true)
             {
-                var grid = layer.layer.data;
-                Map.grids[mapName] = grid;
+                    var grid = layer.layer.data;
+                    for(var i = 0; i < grid.length; i++)
+                    {
+                        for(var j = 0; j < grid[i].length; j++)
+                        {
+                            var tile:Phaser.Tile = grid[i][j];
+                            tile.collideUp = true;
+                            tile.collideLeft = false;
+                            tile.collideRight = false;
+                            tile.collideDown = false;
+                        }
+                    }
             }
 
         }

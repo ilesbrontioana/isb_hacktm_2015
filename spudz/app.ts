@@ -9,8 +9,6 @@
 /// <reference path="com/managers/map/MapLoader.ts" />
 /// <reference path="com/managers/sounds/SoundsManager.ts" />
 /// <reference path="com/actors/Character.ts" />
-/// <reference path="com/ui/UI.ts" />
-/// <reference path="com/managers/graphics/GraphicsManager.ts" />
 
 class SimpleGame {
     game: Phaser.Game;
@@ -35,12 +33,12 @@ class SimpleGame {
         this.onTestMVC();
 
         GameControllerModule.GameController.getInstance().game = this.game;
-        GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
+        //GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
 
-        this.game.load.image('bg', '../../spudz/bin/assets/background/Background3.jpg');
+        this.game.load.image('bg', '../../spudz/bin/assets/background/bg1.jpg');
 
         this.character = new CharacterModule.Character();
-        this.character.load('phaser-dude');
+        this.character.load('pirate_test');
 
         this.map = new MapModule.Map();
         this.map.loadMap('Tiles');
@@ -59,7 +57,7 @@ class SimpleGame {
     create() {
         //REGISTER SIGNALS
         //EventsModule.SignalsManager.getInstance().createBinding("test", this.onTest1, this);
-        EventsModule.SignalsManager.getInstance().createBinding("test", this.onTest2, this);
+        EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", this.onTest2, this);
 
         EventsModule.SignalsManager.getInstance().scope = this;
 
@@ -72,14 +70,17 @@ class SimpleGame {
         this.map.createMap('Tiles');
         this.map.createLayer('Tiles', 'TilesLayer', true);
 
-        var grid:GridModule.Grid = new GridModule.Grid(this.game, 0, 0, 100, 100, 32, 20);
+        var grid:GridModule.Grid = new GridModule.Grid(0, 0, 32, 20, 100, 100);
+
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
-        this.character.createCharacter('phaser-dude', 150, 50, true);
+        this.character.createCharacter('pirate_test', 150, 50, true);
+
+        grid.addActionRayAt(800, 800, 2);
 
         SoundsModule.SoundsManager.getInstance().playSound('sound3');
 
-        this.hud = new UserInterfaceModule.hud();
+        //this.hud = new UserInterfaceModule.hud();
     }
 
     onTestMVC() {
@@ -93,7 +94,6 @@ class SimpleGame {
     }
 
     onTest2(tile) {
-        this.character.moveCharacter(tile.x, tile.y)
         console.log("ON TEST 2    ");
     }
 }
