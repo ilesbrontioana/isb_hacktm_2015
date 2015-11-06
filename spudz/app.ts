@@ -50,7 +50,7 @@ class SimpleGame {
     }
 
     update() {
-        this.game.physics.arcade.collide(this.character.characterImage, MapModule.Map.layers['Tiles']['TilesLayer']);
+        this.game.physics.arcade.collide(this.character.graphics, MapModule.Map.layers['Tiles']['TilesLayer']);
         this.character.updateCharacter();
     }
 
