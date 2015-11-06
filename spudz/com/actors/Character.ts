@@ -7,26 +7,16 @@ module CharacterModule
     export class Character
     {
         graphics;
-        //playerGraphics;
+
         assetPath = '../../spudz/bin/assets/character/';
 
         canMove = true;
-        moving = false;
 
         speed = 700;
 
         tween;
 
         constructor() {
-
-            //var bmd = GameControllerModule.GameController.getInstance().game.add.bitmapData(4, 4);
-            //bmd.ctx.fillStyle = '#CCCCCC';
-            //bmd.ctx.beginPath();
-            //bmd.ctx.fillRect(0,0,4,4);
-            //bmd.ctx.closePath();
-            //bmd.ctx.fill();
-            //GameControllerModule.GameController.getInstance().game.cache.addBitmapData("SmallRectangleBMP", bmd);
-
         }
 
         load( characterName)
@@ -81,12 +71,10 @@ module CharacterModule
             this.tween.start();
 
             this.canMove = false;
-            this.moving = true;
         }
 
         onCompleteTween()
         {
-            this.moving = false;
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
             this.canMove = true;
