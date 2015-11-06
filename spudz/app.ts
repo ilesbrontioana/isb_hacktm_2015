@@ -41,7 +41,7 @@ class SimpleGame {
         this.character.load('pirate_test');
 
         this.map = new MapModule.Map();
-        this.map.loadMap('Tiles');
+        this.map.loadMap('Spudz');
 
         SoundsModule.SoundsManager.getInstance().loadSounds();
     }
@@ -50,7 +50,7 @@ class SimpleGame {
     }
 
     update() {
-        this.game.physics.arcade.collide(this.character.graphics, MapModule.Map.layers['Tiles']['TilesLayer']);
+        this.game.physics.arcade.collide(this.character.graphics, MapModule.Map.layers['Spudz']['TilesLayer']);
         this.character.updateCharacter();
     }
 
@@ -67,16 +67,16 @@ class SimpleGame {
         this.background = this.game.add.image(0,0,'bg');
         this.background.scale.setTo(4.5, 4.5);
 
-        this.map.createMap('Tiles');
-        this.map.createLayer('Tiles', 'TilesLayer', true);
+        this.map.createMap('Spudz');
+        this.map.createLayer('Spudz', 'TilesLayer', true);
 
-        var grid:GridModule.Grid = new GridModule.Grid(0, 0, 32, 20, 100, 100);
+        var grid:GridModule.Grid = new GridModule.Grid(0, 0, 32, 20, 80, 80);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
-        this.character.createCharacter('pirate_test', 150, 50, true);
+        this.character.createCharacter('pirate_test', 560, 1100, true);
 
-        grid.addActionRayAt(800, 800, 2);
+        grid.addActionRayAt(560, 1040, 2);
 
         SoundsModule.SoundsManager.getInstance().playSound('sound3');
 
