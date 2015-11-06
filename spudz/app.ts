@@ -74,9 +74,9 @@ class SimpleGame {
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
-        this.character.createCharacter('pirate_test', 560, 1100, true);
+        this.character.createCharacter('pirate_test', 560, 1120, true);
 
-        grid.addActionRayAt(560, 1040, 2);
+        grid.addActionRayAt(this.character.graphics.x + this.character.graphics.width/2, this.character.graphics.y + this.character.graphics.height/2, 8);
 
         SoundsModule.SoundsManager.getInstance().playSound('sound3');
 

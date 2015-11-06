@@ -8,9 +8,10 @@ module CharacterModule
     {
         graphics;
 
-        newX;
-        newY;
+        tile;
         assetPath = '../../spudz/bin/assets/character/';
+
+        moving = false;
 
         constructor() {
         }
@@ -27,7 +28,11 @@ module CharacterModule
             GameControllerModule.GameController.getInstance().game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
             this.graphics.body.collideWorldBounds = true;
-            this.graphics.body.gravity.y = 200;
+            this.graphics.body.gravity.y = 400;
+
+            this.graphics.body.friction = 400;
+            this.graphics.body.mass = 400;
+            this.graphics.body.inertia = 0;
 
             if(followCharacter == true)
             {
@@ -39,21 +44,24 @@ module CharacterModule
 
         moveCharacter(tile)
         {
-            this.newX = tile.x;
-            this.newY = tile.y;
-            this.graphics.x = this.newX;
-            this.graphics.y = this.newY;
-            //GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, this.newX, this.newY, 300);
+            this.tile = tile;
+
+            GameControllerModule.GameController.getInstance().game.physics.enable(this.tile, Phaser.Physics.ARCADE);
+
+            GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 600);
+            this.moving = true;
         }
 
         updateCharacter()
         {
-            //if(GameControllerModule.GameController.getInstance().game.physics.arcade.distanceToXY(this.graphics, this.newX, this.newY) < 50)
-            //{
-            //    this.graphics.body.velocity.x = 0;
-            //    this.graphics.body.velocity.y = 0;
-            //    this.graphics.body.x = this.newX;
-            //    this.graphics.body.y = this.newY;
+            //if(this.moving) {
+            //    GameControllerModule.GameController.getInstance().game.physics.arcade.overlap(this.graphics, this.tile,
+            //        function() {
+            //
+            //            this.moving = false;
+            //            this.graphics.body.velocity.x = 0;
+            //            this.graphics.body.velocity.y = 0;
+            //        }, null, this);
             //}
         }
     }

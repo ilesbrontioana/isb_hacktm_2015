@@ -26,30 +26,34 @@ module GridModule
         addActionRayAt(x, y, radius)
         {
             var tileAtPoint:GridModule.Tile = this.getTileAt(x, y);
-            for(var i = 1; i <= radius; i++)
-            {
-                var rayTiles = i * 4;
-                for(var r = 0; r < rayTiles; r++)
-                {
-                    var angle = (r/rayTiles) * 360;
-                    var rad = angle * (Math.PI / 180);
-                    var tileX = tileAtPoint.graphics.x + i * tileAtPoint.graphics.width * Math.cos(rad);
-                    var tileY = tileAtPoint.graphics.y + i * tileAtPoint.graphics.height * Math.sin(rad);
+            var circleCenterX = radius * tileAtPoint.graphics.width + tileAtPoint.graphics.width/2;
+            var circleCenterY = radius * tileAtPoint.graphics.height + tileAtPoint.graphics.height/2;
 
-                    var tile:GridModule.Tile = this.getTileAt(tileX, tileY);
-                    tile.graphics.alpha = 0.5;
+            var bmd = GameControllerModule.GameController.getInstance().game.add.bitmapData(circleCenterX * 2, circleCenterY * 2);
+            bmd.ctx.fillStyle = '#CCCCCC';
+            bmd.ctx.beginPath();
+            bmd.ctx.arc(circleCenterX, circleCenterY, radius * tileAtPoint.graphics.width, 0, Math.PI*2, true);
+            bmd.ctx.closePath();
+            bmd.ctx.fill();
+            GameControllerModule.GameController.getInstance().game.cache.addBitmapData("CircleBMP", bmd);
 
-                    console.log("i = " + i + " angle = " + angle + " ray = " + i * tileAtPoint.graphics.width);
+            var cicle  = GameControllerModule.GameController.getInstance().game.add.sprite(x - circleCenterX, y - circleCenterY, GameControllerModule.GameController.getInstance().game.cache.getBitmapData("CircleBMP"));
+            cicle.inputEnabled = true;
+            cicle.alpha = 0.5;
+            cicle.events.onInputDown.add(this.circleTouched, this);
+        }
 
-                }
-            }
+        circleTouched(circle:Phaser.Sprite, pointer){
+            var tile = this.getTileAt(pointer.worldX, pointer.worldY);
+            EventsModule.SignalsManager.getInstance().dispatch("TiledClicked", tile.graphics);
         }
 
         getTileAt(x, y):GridModule.Tile
         {
             for(var i = 0; i < this.tiles.length; i++) {
                 for (var j = 0; j < this.tiles[i].length; j++) {
-                    if(this.tiles[i][j].graphics.x == x && this.tiles[i][j].graphics.y == y)
+                    if(x >= this.tiles[i][j].graphics.x && x < this.tiles[i][j].graphics.x + this.tiles[i][j].graphics.width
+                        && y >= this.tiles[i][j].graphics.y && y < this.tiles[i][j].graphics.y + this.tiles[i][j].graphics.height)
                     {
                         return this.tiles[i][j];
                     }
@@ -63,16 +67,9 @@ module GridModule
         graphics;
         constructor (bitmapKey:string,x:number, y:number){
             this.graphics = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, GameControllerModule.GameController.getInstance().game.cache.getBitmapData(bitmapKey));
-            this.graphics.inputEnabled = true;
             this.graphics.alpha = 0;
-            this.graphics.events.onInputDown.add(this.gridTouched, this);
         }
 
-        gridTouched(tile:Phaser.Sprite){
-            if(tile.alpha == 0.5)
-            {
-                EventsModule.SignalsManager.getInstance().dispatch("TiledClicked", tile);
-            }
-        }
+
     }
 }
