@@ -7,19 +7,18 @@ module CharacterModule
     export class Character
     {
         graphics;
-
+        //playerGraphics;
         assetPath = '../../spudz/bin/assets/character/';
 
         canMove = true;
         moving = false;
 
-        speed = 700;
+        speed = 5000;
 
         tween;
 
-        positionTile;
-
         constructor() {
+
         }
 
         load( characterName)
@@ -37,12 +36,9 @@ module CharacterModule
             this.graphics.body.collideWorldBounds = true;
             this.graphics.body.gravity.y = 400;
 
-            this.graphics.body.friction = 400;
-            this.graphics.body.mass = 400;
-
             this.graphics.body.speed = this.speed;
 
-            this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 50, 0);
+            this.graphics.body.setSize(10, 10, this.graphics.width/2 - 5, this.graphics.height - 10);
 
             if(followCharacter == true)
             {
@@ -55,58 +51,23 @@ module CharacterModule
 
         moveCharacter(tile)
         {
-            //if(!this.canMove)
-            //{
-            //    return;
-            //}
-
-            this.positionTile = tile;
-            GameControllerModule.GameController.getInstance().game.physics.enable(tile, Phaser.Physics.ARCADE);
-
-
-            var distance = GameControllerModule.GameController.getInstance().game.physics.arcade.distanceBetween(this.graphics,tile);
-            var tweenDuration = distance/this.speed;
-
-            this.tween = GameControllerModule.GameController.getInstance().game.add.tween(this.graphics.body.position).to(
-                {   x: tile.x,
-                    y: tile.y
-                }, tweenDuration * 1000, "Linear", true);
-
-            this.tween.onComplete.removeAll();
-            this.tween.onComplete.add( this.onCompleteTween ,this);
-
-            this.tween.start();
-
-            //GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 700);
-
-            this.canMove = false;
-            this.moving = true;
+            this.tile = tile;
         }
 
-        onCompleteTween()
-        {
-            this.graphics.body.velocity.x = 0;
-            this.graphics.body.velocity.y = 0;
-            this.canMove = true;
-        }
+        tile;
 
-        updateCharacter(collideObjects:Array) {
-            for (var i = 0; i < collideObjects.length; i++) {
-                GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, collideObjects[i]);
+        updateCharacter() {
+            if(!GameControllerModule.GameController.getInstance().inputOngoing){
+                if(this.canMove) {
+                    this.graphics.body.velocity.x = 0;
+                    this.graphics.body.velocity.y = 0;
+                }
+                this.canMove = false;
+            } else {
+                this.canMove = true;
+                //GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, this.tile.x, this.tile.y, 1000);
+                GameControllerModule.GameController.getInstance().game.physics.arcade.moveToObject(this.graphics, this.tile, 1000);
             }
-
-            //if (this.moving) {
-            //    GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.positionTile, this.characterHitPosition, null, this);
-            //}
         }
-
-        characterHitPosition()
-        {
-            this.graphics.body.velocity.x = 0;
-            this.graphics.body.velocity.y = 0;
-            this.canMove = true;
-            this.moving = false;
-        }
-
     }
 }
