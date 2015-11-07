@@ -4,9 +4,11 @@
 module MvcModule {
     export class Mediator {
         public viewComponent:View;
+        public signalsManager:EventsModule.SignalsManager;
 
         constructor(viewComponent:View) {
             this.viewComponent = viewComponent;
+            this.signalsManager =  EventsModule.SignalsManager.getInstance();
         }
 
         public onRegister() {
@@ -19,6 +21,14 @@ module MvcModule {
 
         public handleNotification(notification:INotification) {
 
+        }
+
+        public dispatchSignal(signalName:string, args?:any){
+            this.signalsManager.dispatch(signalName, args)
+        }
+
+        public addListenerToSignal(signalName:string, listener:Function, listenerContext?:any, priority?:number, args?:any){
+            this.signalsManager.createBinding(signalName, listener, listenerContext, priority, args)
         }
     }
 }

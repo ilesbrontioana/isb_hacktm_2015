@@ -9,5 +9,13 @@ module RoundsModule{
         constructor(){
            this.VO = new RoundsModule.RoundsVO();
         }
+
+        public setRound(round:any){
+            this.VO.currentRound = round;
+        }
+
+        public getRound():any{
+            return this.VO.currentRound;
+        }
     }
 }

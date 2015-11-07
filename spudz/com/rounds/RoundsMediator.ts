@@ -9,5 +9,17 @@ module RoundsModule{
         constructor(viewComponent:MvcModule.View){
             super(viewComponent);
         }
+
+        listNotificationInterests():Array{
+            return [RoundsModule.RoundsNotifications.UPDATE_ROUND];
+        }
+
+        handleNotification(notification:MvcModule.INotification) {
+            switch (notification.name) {
+                case RoundsModule.RoundsNotifications.UPDATE_ROUND:
+                    MvcModule.Mvc.getInstance().retrieveProxy(RoundsModule.RoundsProxy).setRound(notification.body);
+                    break;
+            }
+        }
     }
 }

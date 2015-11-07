@@ -3,8 +3,10 @@
  */
 module RoundsModule{
     export class RoundsVO{
-        constructor(){
 
+        public currentRound:any;
+
+        constructor(){
         }
     }
 }
