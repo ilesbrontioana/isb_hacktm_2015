@@ -24,7 +24,7 @@ class SimpleGame {
     hud;
 
     constructor() {
-        this.game = new Phaser.Game(2000, 1400, Phaser.AUTO, 'content', {
+        this.game = new Phaser.Game(1336, 740, Phaser.AUTO, 'content', {
             create: this.create,
             preload: this.preload,
             render: this.render,
