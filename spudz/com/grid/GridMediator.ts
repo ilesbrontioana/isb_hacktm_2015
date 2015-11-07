@@ -8,12 +8,7 @@ module GridModule
 
         constructor(viewComponent:MvcModule.View){
             super(viewComponent);
-            EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(tile){
-                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.GRID_TOUCHED, tile);
-            }, this);
-            EventsModule.SignalsManager.getInstance().createBinding("GridCreated", function(tiles){
-                MvcModule.Mvc.getInstance().sendNotification(GridModule.GridNotifications.GRID_CREATED, tiles);
-            }, this);
+            MvcModule.Mvc.getInstance().sendNotification(GridModule.GridNotifications.GRID_CREATED, viewComponent.getTiles());
         }
 
         listNotificationInterests():Array{
