@@ -11,7 +11,13 @@ module CharacterModule
         }
 
         listNotificationInterests():Array{
-            return [CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION, CharacterModule.CharacterNotifications.GRID_TOUCHED];
+            return [CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
+                CharacterModule.CharacterNotifications.GRID_TOUCHED,
+                CharacterModule.CharacterNotifications.BLOCK,
+                CharacterModule.CharacterNotifications.MOVE,
+                CharacterModule.CharacterNotifications.MELEE,
+                CharacterModule.CharacterNotifications.RANGE,
+                CharacterModule.CharacterNotifications.ULTIMATE];
         }
 
         handleNotification(notification:MvcModule.INotification) {
@@ -23,6 +29,21 @@ module CharacterModule
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
                     this.viewComponent.moveCharacter(notification.body)
                     break;
+                case CharacterModule.CharacterNotifications.BLOCK:
+                    this.viewComponent.animateBlock(notification.body)
+                    break
+                case CharacterModule.CharacterNotifications.MOVE:
+                    this.viewComponent.animateMove(notification.body)
+                    break
+                case CharacterModule.CharacterNotifications.MELEE:
+                    this.viewComponent.animateMelee(notification.body)
+                    break
+                case CharacterModule.CharacterNotifications.RANGE:
+                    this.viewComponent.animateRange(notification.body)
+                    break
+                case CharacterModule.CharacterNotifications.ULTIMATE:
+                    this.viewComponent.animateUltimate(notification.body)
+                    break
             }
         }
     }
