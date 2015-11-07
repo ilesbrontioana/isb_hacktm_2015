@@ -27,6 +27,7 @@ module ConnectionModule{
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, this.selectCharacter, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE_SKIP, this.skipMove, this);
+            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.REGISTER_NAME, this.registerName, this);
 
             this.websocket.cmodule = this;
             this.websocket.onmessage = function(evt) { this.cmodule.onMessage(evt) };
@@ -35,11 +36,20 @@ module ConnectionModule{
 
         onMessage(evt){
             var data = JSON.parse(evt.data);
-            console.log("FROM SERVER: "+data.name+" WITH PARAMS: "+data.param);
+            console.log(">>>> "+data.name+" WITH PARAMS: "+JSON.stringify(data.param));
 
-            //TODO: handle the issue with 'move' coming from both internal and server
             if(this.isInArray(data.name, this.signalsToDispatch))
-                this.sendNotification(data.name, data.param);
+                if(data.name =='move'){
+                    moveVO:ConnectionModule.MoveVO = this.createMoveVO(data.param);
+                    console.log(JSON.stringify(moveVO));
+                }
+
+            //ask for match making,
+            if(data.name == 'welcome')
+            {
+                EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.FIND_MATCH);
+                EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.REGISTER_NAME, "gameclient");
+            }
         }
 
         onError(evt){
@@ -60,7 +70,7 @@ module ConnectionModule{
             });
         }
 
-        sendMove(move, state){
+        sendMove(move){
             this.doSendObj({
                 name: 'move',
                 param: move
@@ -74,8 +84,29 @@ module ConnectionModule{
             });
         }
 
+        registerName(msg){
+            this.doSendObj({
+                name: 'register_name',
+                param: msg
+            });
+        }
+
+        createMoveVO(data):ConnectionModule.MoveVO{
+            moveVO:ConnectionModule.MoveVO = new moveVO();
+            moveVO.destinationon = JSON.parse(data.destination);
+            moveVO.ability = JSON.parse(data.ability);
+            moveVO.player_pos = JSON.parse(data.player_pos);
+            moveVO.opponent_pos = JSON.parse(data.opponent_pos);
+            moveVO.player_health = JSON.parse(data.player_health);
+            moveVO.opponent_health = JSON.parse(data.opponent_health);
+            moveVO.player_energy = JSON.parse(data.player_energy);
+            moveVO.opponent_energy = JSON.parse(data.opponent_energy);
+
+            return moveVO;
+        }
+
         doSend(obj){
-            console.log("SENT TO SERVER: " + obj);
+            console.log("<<<< " + obj);
             this.websocket.send(obj);
         }
 

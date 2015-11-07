@@ -8,6 +8,9 @@
 /// <reference path="com/managers/map/MapLoader.ts" />
 /// <reference path="com/managers/sounds/SoundsManager.ts" />
 /// <reference path="com/managers/graphics/GraphicsManager.ts" />
+/// <reference path="com/managers/connection/ConnectionModule.ts" />
+/// <reference path="com/managers/connection/ConnectionSignals.ts" />
+/// <reference path="com/managers/connection/ConnectionNotifications.ts" />
 /// <reference path="com/ui/UIMediator.ts" />
 /// <reference path="com/ui/UIView.ts" />
 /// <reference path="com/actors/CharacterMediator.ts" />
@@ -94,6 +97,20 @@ class SimpleGame {
 
         //USER INTERFACE
 
+
+        //CONNECTION AND CONNECTION SIGNALS
+        this.connection = new ConnectionModule.ConnectionProxy(new WebSocket("ws://192.168.8.2:8001/"));
+
+
+        //register signals for testing purposes
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER, this.onSignal, this);
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.START_MATCH, this.onSignal, this);
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.RECONCILIATION, this.onSignal, this);
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.WIN, this.onSignal, this);
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.OPPONENT_DISCONNECTED, this.onSignal, this);
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE_TIME_EXPIRED, this.onSignal, this);
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.OPPONENT_SKIP, this.onSignal, this);
+        EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.ERROR, this.onSignal, this);
     }
 
     onStartup() {

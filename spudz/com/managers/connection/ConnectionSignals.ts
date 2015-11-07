@@ -9,6 +9,7 @@ module ConnectionModule{
         static SELECT_CHARACTER: string = "select_character";
         static MOVE: string = "move";
         static MOVE_SKIP: string = "move_skip";
+        static REGISTER_NAME: string = "register_name";
 
         //server to client
         static OPPONENT_CHARACTER: string = "opponent_character";
