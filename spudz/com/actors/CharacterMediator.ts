@@ -44,6 +44,9 @@ module CharacterModule
                 case CharacterModule.CharacterNotifications.ULTIMATE:
                     this.viewComponent.animateUltimate(notification.body)
                     break
+                case GridModule.GridNotifications.GRID_CREATED:
+                    this.viewComponent.gridCreated(notification.body)
+                    break
             }
         }
     }

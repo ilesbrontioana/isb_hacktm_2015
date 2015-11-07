@@ -6,13 +6,19 @@ module CharacterModule
     export class CharacterView extends MvcModule.View{
         graphics;
 
-        canMove = true;
-        moving = false;
-
         speed = 1000;
 
         verticalRectangle;
         horizontalRectangle;
+
+        playerTile;
+
+        tiles;
+
+        gridCreated(tiles)
+        {
+            this.tiles = tiles;
+        }
 
         constructor() {
             this.createCharacter('pirate', 640, 300, true);
@@ -56,7 +62,7 @@ module CharacterModule
             this.graphics.animations.add(CharacterModule.CharacterAnimations.RANGE_ANIMATION, Phaser.Animation.generateFrameNames('range_pirate', 0, 42, '', 4), 30, true);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.DAMAGE_ANIMATION, Phaser.Animation.generateFrameNames('Layer ', 0, 12, '', 4), 30, true);
 
-            this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
+            this.animateIdle();
 
             GameControllerModule.GameController.getInstance().game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
@@ -74,44 +80,87 @@ module CharacterModule
         }
 
         checkCollision(map){
-            GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, map);
-
-            if(this.moving)
+            this.collide = false;
+            for(var i = 0; i < map.length; i++)
             {
-                GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.collideWithRectangle, null, this);
-                GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.collideWithRectangle, null, this);
+                GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, map[i], this.collideWithMap, null, this);
             }
+            if(!this.collide)
+            {
+                if(this.currentAnimation == CharacterModule.CharacterAnimations.RUN_ANIMATION)
+                {
+                    this.animateJump();
+                }
+            }
+            GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.collideWithRectangle, null, this);
+            GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.collideWithRectangle, null, this);
+
+        }
+
+        collide;
+
+        collideWithMap()
+        {
+           this.collide = true;
         }
 
         collideWithRectangle()
         {
             this.moving =  false;
+            this.verticalRectangle.x = 0;
+            this.horizontalRectangle.y = 0;
         }
 
         moveCharacter(tile)
         {
-            this.tile = tile;
 
-            this.verticalRectangle.x = this.tile.x - this.tile.width/2;
-            this.horizontalRectangle.y = this.tile.y - this.tile.height/2;
+            if(tile.y >= (this.graphics.y - this.graphics.height) && tile.y < this.graphics.y + this.graphics.height)
+            {
+                this.animateWalk();
+            }
+            else
+            {
+                this.animateJump();
+            }
 
-            this.moving = true;
+            if(tile.x < this.graphics.x)
+            {
+                this.graphics.scale.x = -1;
+            }
+            else
+            {
+                this.graphics.scale.x = 1;
+            }
+
+            this.verticalRectangle.x = tile.x - tile.width/2;
+            this.horizontalRectangle.y = tile.y - tile.height/2;
+
             GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 700);
-         }
-
-
-        tile;
+        }
 
         updateCharacter() {
+            if(this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
+            {
+                if(this.graphics.body.velocity.x == 0 && this.graphics.body.velocity.y == 0)
+                {
+                    this.animateIdle();
+                }
+            }
 
         }
 ////////////////////////////////////
+
+        currentAnimation = CharacterModule.CharacterAnimations.IDLE_ANIMATION;
+
         animateWalk(){
+            this.graphics.play(CharacterModule.CharacterAnimations.RUN_ANIMATION);
+            this.currentAnimation = CharacterModule.CharacterAnimations.RUN_ANIMATION;
 
         }
 
         animateJump(){
-
+            this.graphics.play(CharacterModule.CharacterAnimations.JUMP_ANIMATION);
+            this.currentAnimation = CharacterModule.CharacterAnimations.JUMP_ANIMATION;
         }
 
         animateBlock(){
@@ -128,6 +177,12 @@ module CharacterModule
 
         animateUltimate(){
 
+        }
+
+        animateIdle()
+        {
+            this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
+            this.currentAnimation = CharacterModule.CharacterAnimations.IDLE_ANIMATION;
         }
     }
 }
