@@ -17,8 +17,6 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.MOVE,
                 CharacterModule.CharacterNotifications.MELEE,
                 CharacterModule.CharacterNotifications.RANGE,
-                CharacterModule.CharacterNotifications.TAKE_DAMAGE,
-                CharacterModule.CharacterNotifications.DRAIN_ENERGY,
                 CharacterModule.CharacterNotifications.ULTIMATE];
         }
 
@@ -45,15 +43,6 @@ module CharacterModule
                     break
                 case CharacterModule.CharacterNotifications.ULTIMATE:
                     this.viewComponent.animateUltimate(notification.body)
-                    break
-                case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
-                    this.viewComponent.animateTakeDamage(notification.body);
-                    MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,
-                        MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.life);
-                    break
-                case CharacterModule.CharacterNotifications.DRAIN_ENERGY:
-                        MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_ENERGY,
-                        MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.energy);
                     break
             }
         }

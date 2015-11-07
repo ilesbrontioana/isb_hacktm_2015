@@ -8,10 +8,11 @@ module GridModule
         tiles = [];
 
         constructor (){
+            EventsModule.SignalsManager.getInstance().createBinding("GridCreated", function(){
+            }, this);
             this.buildGrid(0, 0, 50, 35, 40, 40);
             EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(){
             }, this);
-            this.addActionRayAt(640, 300, 5);
         }
 
         buildGrid(x:number, y:number, gridH:number, gridV:number, tileW:number, tileH:number){
@@ -31,6 +32,9 @@ module GridModule
             }
 
             this.addActionRayAt(0, 0, 50);
+
+            EventsModule.SignalsManager.getInstance().dispatch("GridCreated", this.tiles);
+
         }
 
         addActionRayAt(x, y, radius)
