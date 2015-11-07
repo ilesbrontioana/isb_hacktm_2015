@@ -15,7 +15,7 @@ module CharacterModule
         horizontalRectangle;
 
         constructor() {
-            this.createCharacter('pirate_test', 640, 300, true);
+            this.createCharacter('pirate', 640, 300, true);
 
             this.createBitmapDataRectangles();
         }
@@ -49,6 +49,14 @@ module CharacterModule
         {
 
             this.graphics = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, characterName);
+            this.graphics.animations.add(CharacterModule.CharacterAnimations.IDLE_ANIMATION, Phaser.Animation.generateFrameNames('idle_pirate', 0, 18, '', 4), 30, true);
+            this.graphics.animations.add(CharacterModule.CharacterAnimations.JUMP_ANIMATION, Phaser.Animation.generateFrameNames('jump_pirate', 0, 24, '', 4), 30, true);
+            this.graphics.animations.add(CharacterModule.CharacterAnimations.MELEE_ANIMATION, Phaser.Animation.generateFrameNames('melee_pirate 2_frame_', 1, 23, '', 4), 30, true);
+            this.graphics.animations.add(CharacterModule.CharacterAnimations.RUN_ANIMATION, Phaser.Animation.generateFrameNames('pirate_run', 0, 15, '', 4), 30, true);
+            this.graphics.animations.add(CharacterModule.CharacterAnimations.RANGE_ANIMATION, Phaser.Animation.generateFrameNames('range_pirate', 0, 42, '', 4), 30, true);
+            this.graphics.animations.add(CharacterModule.CharacterAnimations.DAMAGE_ANIMATION, Phaser.Animation.generateFrameNames('Layer ', 0, 12, '', 4), 30, true);
+
+            this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
 
             GameControllerModule.GameController.getInstance().game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
@@ -95,6 +103,30 @@ module CharacterModule
         tile;
 
         updateCharacter() {
+
+        }
+////////////////////////////////////
+        animateWalk(){
+
+        }
+
+        animateJump(){
+
+        }
+
+        animateBlock(){
+
+        }
+
+        animateMelee(){
+
+        }
+
+        animateRange(){
+
+        }
+
+        animateUltimate(){
 
         }
     }
