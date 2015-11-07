@@ -117,19 +117,19 @@ module CharacterModule
             if(tile.y >= (this.graphics.y - this.graphics.height) && tile.y < this.graphics.y + this.graphics.height)
             {
                 this.animateWalk();
+
+                if(tile.x < this.graphics.x)
+                {
+                    this.graphics.scale.x = -1;
+                }
+                else
+                {
+                    this.graphics.scale.x = 1;
+                }
             }
             else
             {
                 this.animateJump();
-            }
-
-            if(tile.x < this.graphics.x)
-            {
-                this.graphics.scale.x = -1;
-            }
-            else
-            {
-                this.graphics.scale.x = 1;
             }
 
             this.verticalRectangle.x = tile.x - tile.width/2;
