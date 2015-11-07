@@ -7,6 +7,11 @@ module CharacterModule
         static NAME:string = this + "CharacterMediator";
 
         constructor(viewComponent:MvcModule.View){
+
+            EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
+                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
+            }, this);
+
             super(viewComponent);
         }
 

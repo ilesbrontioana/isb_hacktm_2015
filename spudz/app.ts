@@ -36,6 +36,10 @@
 /// <reference path="com/welcomeScreen/WelcomeNotifications.ts" />
 /// <reference path="com/welcomeScreen/WelcomeView.ts" />
 
+/// <reference path="com/actors/CharacterActionType.ts" />
+/// <reference path="com/actors/ActionRayView.ts" />
+/// <reference path="com/actors/ActionRayMediator.ts" />
+
 class SimpleGame {
     game: Phaser.Game;
     map:MapModule.Map;
@@ -56,6 +60,7 @@ class SimpleGame {
         GameControllerModule.GameController.getInstance().game = this.game;
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("pirate", "../../spudz/bin/assets/character/pirate/", 'Spritesheet_Pirate.png', 'Spritesheet_Pirate.json');
+        GraphicsModule.GraphicsManager.getInstance().loadAtlas("space", "../../spudz/bin/assets/character/space/", 'Spritesheet_Space.png', 'Spritesheet_Space.json');
 
         this.game.load.image('bg', '../../spudz/bin/assets/background/bg1.jpg');
         //this.game.load.image('pirate_test', '../../spudz/bin/assets/character/pirate_test.png');
