@@ -3,6 +3,7 @@
  */
 module MvcModule {
     export class Proxy {
+
         public VO:any
 
         public sendNotification(notificationName:string, body?:any, type?:string) {

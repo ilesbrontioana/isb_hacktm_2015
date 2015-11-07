@@ -14,9 +14,11 @@
 /// <reference path="com/actors/CharacterView.ts" />
 /// <reference path="com/actors/CharacterNotifications.ts" />
 /// <reference path="com/actors/CharacterAnimations.ts" />
+/// <reference path="com/actors/CharacterProxy.ts" />
+/// <reference path="com/actors/CharacterVO.ts" />
 /// <reference path="com/grid/GridMediator.ts" />
 /// <reference path="com/grid/GridView.ts" />
-/// <reference path="com/grid/GridNotifications.ts" />
+/// <reference path="com/grid/GridNotifications.ts" /> 
 
 class SimpleGame {
     game: Phaser.Game;
@@ -80,17 +82,6 @@ class SimpleGame {
 
         this.onStartup();
 
-        //MvcModule.Mvc.getInstance().registerMediator(CharacterModule.CharacterMediator.NAME, new CharacterModule.CharacterMediator(new CharacterModule.CharacterView()));
-
-
-        //var grid:GridModule.Grid = new GridModule.Grid(0, 0, 32, 20, 80, 80);
-
-        //this.cursors = this.game.input.keyboard.createCursorKeys();
-
-        //this.character.createCharacter('pirate_test', 560, 1120, true);
-
-        //grid.addActionRayAt(this.character.graphics.x + this.character.graphics.width/2, this.character.graphics.y + this.character.graphics.height/2, 8);
-
         SoundsModule.SoundsManager.getInstance().playSound('sound3');
 
         //CHARACTER
@@ -136,6 +127,7 @@ class StartupMediator extends MvcModule.Mediator{
 
         MvcModule.Mvc.getInstance().registerMediator(GridModule.GridMediator.NAME, new GridModule.GridMediator(new GridModule.GridView()));
         MvcModule.Mvc.getInstance().registerMediator(CharacterModule.CharacterMediator.NAME, new CharacterModule.CharacterMediator(new CharacterModule.CharacterView()));
+        MvcModule.Mvc.getInstance().registerProxy(CharacterModule.CharacterProxy.NAME, new CharacterModule.CharacterProxy());
 
         MvcModule.Mvc.getInstance().registerMediator(UserInterfaceModule.UIMediator.NAME, new UserInterfaceModule.UIMediator(new UserInterfaceModule.UIView()));
         MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU);

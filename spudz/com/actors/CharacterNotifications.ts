@@ -12,5 +12,7 @@ module CharacterModule
         static  MELEE:string = "_character_melee";
         static  RANGE:string = "_character_range";
         static  ULTIMATE:string = "_character_ultimate";
+        static  TAKE_DAMAGE:string = "_character_take_damage";
+        static  DRAIN_ENERGY:string = "_character_drain_energy";
     }
 }

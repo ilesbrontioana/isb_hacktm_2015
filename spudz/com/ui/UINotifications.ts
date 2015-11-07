@@ -9,6 +9,7 @@ module UserInterfaceModule{
         static  SHOW_ACTIONS_MENU:string = "_SHOW_ACTIONS_MENU";
         static  HIDE_ACTIONS_MENU:string = "_HIDE_ACTIONS_MENU";
         static  UPDATE_LIFE:string = "_UPDATE_LIFE";
+        static  UPDATE_ENERGY:string = "_UPDATE_ENERGY";
         static  UPDATE_LIFE_ENEMY:string = "_UPDATE_LIFE_ENEMY";
     }
 }
