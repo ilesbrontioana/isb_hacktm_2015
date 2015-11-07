@@ -18,7 +18,12 @@
 /// <reference path="com/actors/CharacterVO.ts" />
 /// <reference path="com/grid/GridMediator.ts" />
 /// <reference path="com/grid/GridView.ts" />
-/// <reference path="com/grid/GridNotifications.ts" /> 
+/// <reference path="com/grid/GridNotifications.ts" />
+/// <reference path="com/rounds/RoundsController.ts" />
+/// <reference path="com/rounds/RoundsMediator.ts" />
+/// <reference path="com/rounds/RoundsProxy.ts" />
+/// <reference path="com/rounds/RoundsView.ts" />
+/// <reference path="com/rounds/RoundsVO.ts" />
 
 class SimpleGame {
     game: Phaser.Game;
@@ -131,6 +136,10 @@ class StartupMediator extends MvcModule.Mediator{
 
         MvcModule.Mvc.getInstance().registerMediator(UserInterfaceModule.UIMediator.NAME, new UserInterfaceModule.UIMediator(new UserInterfaceModule.UIView()));
         MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU);
+
+        MvcModule.Mvc.getInstance().registerCommand(RoundsModule.RoundsCommand.NAME, new RoundsModule.RoundsCommand());
+        MvcModule.Mvc.getInstance().registerMediator(RoundsModule.RoundsMediator.NAME, new RoundsModule.RoundsMediator(new RoundsModule.RoundsView()));
+        MvcModule.Mvc.getInstance().registerProxy(RoundsModule.RoundsProxy.NAME, new RoundsModule.RoundsProxy());
     }
 }
 
