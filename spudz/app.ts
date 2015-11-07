@@ -50,7 +50,11 @@ class SimpleGame {
     }
 
     update() {
-        MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION, MapModule.Map.layers['Spudz']['TilesLayer']);
+        MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
+                [
+                    MapModule.Map.layers['Spudz']['Tiles2Layer'],
+                    MapModule.Map.layers['Spudz']['TilesLayer']
+                ]);
         // Mouse Poll
         if (this.game.input.activePointer.isDown) {
             GameControllerModule.GameController.getInstance().inputOngoing = true;
@@ -68,8 +72,9 @@ class SimpleGame {
         SoundsModule.SoundsManager.getInstance().createSounds();
 
         this.map.createMap('Spudz');
-        this.map.createLayer('Spudz', 'TilesLayer', true);
+        this.map.createLayer('Spudz', 'TilesLayer');
         this.map.setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
+        this.map.createLayer('Spudz', 'Tiles2Layer')
 
         this.onStartup();
 

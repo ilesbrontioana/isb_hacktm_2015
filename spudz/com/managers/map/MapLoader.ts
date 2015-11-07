@@ -26,7 +26,7 @@ module MapModule
             Map.maps[name] = map;
         }
 
-        createLayer(mapName, layerName, collideUp)
+        createLayer(mapName, layerName)
         {
             var layer = Map.maps[mapName].createLayer(layerName);
             layer.resizeWorld();
@@ -37,6 +37,9 @@ module MapModule
             }
             Map.layers[mapName][layerName] = layer;
 
+            GameControllerModule.GameController.getInstance().game.physics.enable(layer, Phaser.Physics.ARCADE);
+
+            Map.maps[mapName].setCollisionByExclusion([], true, layer);
         }
 
         setLayerCollision(mapName, layerName, collideUp, collideLeft, collideRight, collideDown)
