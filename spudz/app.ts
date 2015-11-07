@@ -13,6 +13,7 @@
 /// <reference path="com/actors/CharacterMediator.ts" />
 /// <reference path="com/actors/CharacterView.ts" />
 /// <reference path="com/actors/CharacterNotifications.ts" />
+/// <reference path="com/actors/CharacterAnimations.ts" />
 /// <reference path="com/grid/GridMediator.ts" />
 /// <reference path="com/grid/GridView.ts" />
 /// <reference path="com/grid/GridNotifications.ts" />
@@ -24,7 +25,7 @@ class SimpleGame {
     hud;
 
     constructor() {
-        this.game = new Phaser.Game(1336, 740, Phaser.AUTO, 'content', {
+        this.game = new Phaser.Game(1334, 740, Phaser.AUTO, 'content', {
             create: this.create,
             preload: this.preload,
             render: this.render,
@@ -36,9 +37,10 @@ class SimpleGame {
     preload() {
         GameControllerModule.GameController.getInstance().game = this.game;
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
+        GraphicsModule.GraphicsManager.getInstance().loadAtlas("pirate", "../../spudz/bin/assets/character/pirate/", 'Spritesheet_Pirate.png', 'Spritesheet_Pirate.json');
 
         this.game.load.image('bg', '../../spudz/bin/assets/background/bg1.jpg');
-        this.game.load.image('pirate_test', '../../spudz/bin/assets/character/pirate_test.png');
+        //this.game.load.image('pirate_test', '../../spudz/bin/assets/character/pirate_test.png');
 
         this.map = new MapModule.Map();
         this.map.loadMap('Spudz');
