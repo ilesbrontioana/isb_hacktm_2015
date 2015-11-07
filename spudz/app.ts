@@ -40,6 +40,11 @@
 /// <reference path="com/actors/ActionRayView.ts" />
 /// <reference path="com/actors/ActionRayMediator.ts" />
 
+/// <reference path="com/managers/connection/ConnectionModule.ts" />
+/// <reference path="com/managers/connection/ConnectionNotifications.ts" />
+/// <reference path="com/managers/connection/ConnectionSignals.ts" />
+/// <reference path="com/managers/connection/MoveVO.ts" />
+
 class SimpleGame {
     game: Phaser.Game;
     map:MapModule.Map;
@@ -124,7 +129,7 @@ window.onload = () => {
     var game = new SimpleGame();
 };
 
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 class testView extends MvcModule.View{
     constructor(){
 

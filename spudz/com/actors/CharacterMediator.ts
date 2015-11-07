@@ -10,6 +10,7 @@ module CharacterModule
 
             EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
+                //GameControllerModule.GameController.pauseAll();
             }, this);
 
             super(viewComponent);

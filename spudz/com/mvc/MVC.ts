@@ -32,6 +32,7 @@ module MvcModule{
             if(!this.commands[notificationName]){
                 this.commands[notificationName] = new Array<Controller>();
             }
+            command.onRegister();
             this.commands[notificationName].push(command);
         }
 

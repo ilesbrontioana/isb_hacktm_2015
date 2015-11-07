@@ -9,5 +9,9 @@ module MvcModule {
         public sendNotification(notificationName:string, body?:any, type?:string) {
             Mvc.getInstance().sendNotification(notificationName, body, type);
         }
+
+        public onRegister(){
+
+        }
     }
 }

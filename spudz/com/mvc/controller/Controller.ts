@@ -6,5 +6,9 @@ module MvcModule{
         public execute(notification:INotification){
 
         }
+
+        public onRegister(){
+
+        }
     }
 }
