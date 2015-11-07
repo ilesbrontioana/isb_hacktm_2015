@@ -16,6 +16,8 @@ module UserInterfaceModule{
             return [UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU,
                 UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU,
                 UserInterfaceModule.UINotifications.UPDATE_LIFE,
+                UserInterfaceModule.UINotifications.SHOW_MOVE_MENU,
+                UserInterfaceModule.UINotifications.HIDE_MOVE_MENU,
                 UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY];
         }
 
@@ -30,6 +32,10 @@ module UserInterfaceModule{
                 case  UserInterfaceModule.UINotifications.UPDATE_LIFE:
                     break;
                 case UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY:
+                    break;
+                case UserInterfaceModule.UINotifications.SHOW_MOVE_MENU:
+                    break;
+                case UserInterfaceModule.UINotifications.HIDE_MOVE_MENU:
                     break;
             }
         }

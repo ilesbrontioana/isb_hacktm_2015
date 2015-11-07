@@ -14,6 +14,7 @@ module UserInterfaceModule{
            lifeBarEnemy:Phaser.Sprite;
 
            actionsMenuButton:Phaser.Sprite;
+           moveMenuButton:Phaser.Sprite;
 
         constructor(){
             this.game = GameControllerModule.GameController.getInstance().game;
@@ -62,9 +63,11 @@ module UserInterfaceModule{
        createActionsMenu(){
            this.actionsGroup = new Phaser.Group(this.game);
            this.actionsMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
+           this.moveMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
 
            this.actionsGroup.fixedToCamera = true;
            this.actionsGroup.add(this.actionsMenuButton);
+           this.actionsGroup.add(this.moveMenuButton);
 
            this.actionsMenuButton.inputEnabled = true;
            this.actionsMenuButton.events.onInputDown.add(this.menuButtonTouched, this);
@@ -90,6 +93,14 @@ module UserInterfaceModule{
 
        hideActionsMenu(){
            this.actionsGroup.visible = false;
+       }
+
+       showMoveMenu(){
+
+       }
+
+       hideMoveMenu(){
+
        }
     }
 }

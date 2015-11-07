@@ -1,13 +1,20 @@
 /**
- * Created by adm on 04.11.15.
+ * Created by adm on 07.11.15.
  */
 module GridModule
 {
-    export class Grid{
+    export class GridView{
 
         tiles = [];
 
-        constructor (x:number, y:number, gridH:number, gridV:number, tileW:number, tileH:number){
+        constructor (){
+            this.buildGrid(0, 0, 32, 20, 80, 80);
+            EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(){
+
+            }, this);
+        }
+
+        buildGrid(x:number, y:number, gridH:number, gridV:number, tileW:number, tileH:number){
             var bmd = GameControllerModule.GameController.getInstance().game.add.bitmapData(tileW, tileH);
             bmd.ctx.fillStyle = '#CCCCCC';
             bmd.ctx.beginPath();
@@ -22,6 +29,8 @@ module GridModule
                     GameControllerModule.GameController.getInstance().game.physics.enable(t.graphics, Phaser.Physics.ARCADE);
                 }
             }
+
+            this.addActionRayAt(0, 0, 50);
         }
 
         addActionRayAt(x, y, radius)

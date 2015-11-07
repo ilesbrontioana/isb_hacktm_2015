@@ -6,6 +6,7 @@ module GameControllerModule{
         private static _instance:GameController = new GameController();
 
         public game:Phaser.Game;
+        public inputOngoing:boolean = false;
         public isPaused:boolean = false;
         public tweens:Array<Phaser.Tween> = new Array();
 
