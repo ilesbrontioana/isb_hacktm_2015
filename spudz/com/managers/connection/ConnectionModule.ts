@@ -102,12 +102,10 @@ module ConnectionModule {
                 });
             }
 
-            createMoveVO(data)
-        :
-            ConnectionModule.MoveVO
+            createMoveVO(data):ConnectionModule.MoveVO
             {
-                moveVO:ConnectionModule.MoveVO = new moveVO();
-                moveVO.destinationon = JSON.parse(data.destination);
+                var moveVO:ConnectionModule.MoveVO = new MoveVO();
+                moveVO.destination = JSON.parse(data.destination);
                 moveVO.ability = JSON.parse(data.ability);
                 moveVO.player_pos = JSON.parse(data.player_pos);
                 moveVO.opponent_pos = JSON.parse(data.opponent_pos);
