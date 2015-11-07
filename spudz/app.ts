@@ -2,28 +2,39 @@
  * Created by adm on 12.10.15.
  */
 /// <reference path="phaser.d.ts" />
+
 /// <reference path="com/MVC/MVC.ts" />
+
 /// <reference path="com/managers/events/SignalsManager.ts" />
 /// <reference path="com/managers/game/GameController.ts" />
 /// <reference path="com/managers/map/MapLoader.ts" />
 /// <reference path="com/managers/sounds/SoundsManager.ts" />
 /// <reference path="com/managers/graphics/GraphicsManager.ts" />
+
 /// <reference path="com/ui/UIMediator.ts" />
 /// <reference path="com/ui/UIView.ts" />
+
 /// <reference path="com/actors/CharacterMediator.ts" />
 /// <reference path="com/actors/CharacterView.ts" />
 /// <reference path="com/actors/CharacterNotifications.ts" />
 /// <reference path="com/actors/CharacterAnimations.ts" />
 /// <reference path="com/actors/CharacterProxy.ts" />
 /// <reference path="com/actors/CharacterVO.ts" />
+
 /// <reference path="com/grid/GridMediator.ts" />
 /// <reference path="com/grid/GridView.ts" />
 /// <reference path="com/grid/GridNotifications.ts" />
+
 /// <reference path="com/rounds/RoundsController.ts" />
 /// <reference path="com/rounds/RoundsMediator.ts" />
 /// <reference path="com/rounds/RoundsProxy.ts" />
 /// <reference path="com/rounds/RoundsView.ts" />
 /// <reference path="com/rounds/RoundsVO.ts" />
+/// <reference path="com/rounds/RoundsNotifications.ts" />
+
+/// <reference path="com/welcomeScreen/WelcomeMediator.ts" />
+/// <reference path="com/welcomeScreen/WelcomeNotifications.ts" />
+/// <reference path="com/welcomeScreen/WelcomeView.ts" />
 
 class SimpleGame {
     game: Phaser.Game;
@@ -88,12 +99,6 @@ class SimpleGame {
         this.onStartup();
 
         SoundsModule.SoundsManager.getInstance().playSound('sound3');
-
-        //CHARACTER
-
-
-        //USER INTERFACE
-
     }
 
     onStartup() {
@@ -129,17 +134,7 @@ class StartupMediator extends MvcModule.Mediator{
     }
 
     handleNotification(notification:MvcModule.INotification){
-
-        MvcModule.Mvc.getInstance().registerMediator(GridModule.GridMediator.NAME, new GridModule.GridMediator(new GridModule.GridView()));
-        MvcModule.Mvc.getInstance().registerMediator(CharacterModule.CharacterMediator.NAME, new CharacterModule.CharacterMediator(new CharacterModule.CharacterView()));
-        MvcModule.Mvc.getInstance().registerProxy(CharacterModule.CharacterProxy.NAME, new CharacterModule.CharacterProxy());
-
-        MvcModule.Mvc.getInstance().registerMediator(UserInterfaceModule.UIMediator.NAME, new UserInterfaceModule.UIMediator(new UserInterfaceModule.UIView()));
-        MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU);
-
-        MvcModule.Mvc.getInstance().registerCommand(RoundsModule.RoundsCommand.NAME, new RoundsModule.RoundsCommand());
-        MvcModule.Mvc.getInstance().registerMediator(RoundsModule.RoundsMediator.NAME, new RoundsModule.RoundsMediator(new RoundsModule.RoundsView()));
-        MvcModule.Mvc.getInstance().registerProxy(RoundsModule.RoundsProxy.NAME, new RoundsModule.RoundsProxy());
+        MvcModule.Mvc.getInstance().registerMediator(WelcomeModule.WelcomeMediator.NAME, new WelcomeModule.WelcomeMediator(new WelcomeModule.WelcomeView()));
     }
 }
 
