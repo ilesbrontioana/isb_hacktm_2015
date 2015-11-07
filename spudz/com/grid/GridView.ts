@@ -8,10 +8,10 @@ module GridModule
         tiles = [];
 
         constructor (){
-            this.buildGrid(0, 0, 32, 20, 80, 80);
+            this.buildGrid(0, 0, 50, 35, 40, 40);
             EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(){
-
             }, this);
+            this.addActionRayAt(640, 300, 5);
         }
 
         buildGrid(x:number, y:number, gridH:number, gridV:number, tileW:number, tileH:number){

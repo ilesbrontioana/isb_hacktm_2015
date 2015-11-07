@@ -4,12 +4,10 @@
 /// <reference path="phaser.d.ts" />
 /// <reference path="com/MVC/MVC.ts" />
 /// <reference path="com/managers/events/SignalsManager.ts" />
-/// <reference path="com/grid/Grid.ts" />
 /// <reference path="com/managers/game/GameController.ts" />
 /// <reference path="com/managers/map/MapLoader.ts" />
 /// <reference path="com/managers/sounds/SoundsManager.ts" />
 /// <reference path="com/managers/graphics/GraphicsManager.ts" />
-/// <reference path="com/actors/Character.ts" />
 /// <reference path="com/ui/UIMediator.ts" />
 /// <reference path="com/ui/UIView.ts" />
 /// <reference path="com/actors/CharacterMediator.ts" />
@@ -21,20 +19,17 @@
 
 class SimpleGame {
     game: Phaser.Game;
-    cursors;
     map:MapModule.Map;
-    character:CharacterModule.Character;
     background;
     hud;
 
     constructor() {
-        this.game = new Phaser.Game(1336, 740, Phaser.AUTO, 'content', {
+        this.game = new Phaser.Game(2000, 1400, Phaser.AUTO, 'content', {
             create: this.create,
             preload: this.preload,
             render: this.render,
             update: this.update,
-            onStartup:this.onStartup,
-            onTest2:this.onTest2
+            onStartup:this.onStartup
         });
     }
 
@@ -74,6 +69,7 @@ class SimpleGame {
 
         this.map.createMap('Spudz');
         this.map.createLayer('Spudz', 'TilesLayer', true);
+        this.map.setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
 
         this.onStartup();
 
@@ -106,10 +102,6 @@ class SimpleGame {
 
         MvcModule.Mvc.getInstance().sendNotification("Startup",1, "test");
     }
-
-    onTest2(tile) {
-        console.log("ON TEST 2     ");
-    }
 }
 
 window.onload = () => {
@@ -119,7 +111,8 @@ window.onload = () => {
 /////////////////////////////////////////////////////////////////////
 class testView extends MvcModule.View{
     constructor(){
-        //console.log("za test view")
+
+
     }
 }
 

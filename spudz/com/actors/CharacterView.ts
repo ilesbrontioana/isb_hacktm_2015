@@ -5,23 +5,44 @@ module CharacterModule
 {
     export class CharacterView extends MvcModule.View{
         graphics;
-        //playerGraphics;
-        assetPath = '../../spudz/bin/assets/character/';
 
         canMove = true;
         moving = false;
 
-        speed = 5000;
+        speed = 1000;
 
-        tween;
+        verticalRectangle;
+        horizontalRectangle;
 
         constructor() {
-            this.createCharacter('pirate_test', 560, 1120, true);
+            this.createCharacter('pirate_test', 640, 300, true);
+
+            this.createBitmapDataRectangles();
         }
 
-        load( characterName)
+        createBitmapDataRectangles()
         {
-            GameControllerModule.GameController.getInstance().game.load.image(characterName, this.assetPath + characterName +'.png');
+            var bmd = GameControllerModule.GameController.getInstance().game.add.bitmapData(4, 4);
+            bmd.ctx.fillStyle = '#000000';
+            bmd.ctx.beginPath();
+            bmd.ctx.fillRect(0,0,4,4);
+            bmd.ctx.closePath();
+            bmd.ctx.fill();
+            GameControllerModule.GameController.getInstance().game.cache.addBitmapData("SmallRectangleBMP", bmd);
+
+            this.verticalRectangle  = GameControllerModule.GameController.getInstance().game.add.sprite(0, 0, GameControllerModule.GameController.getInstance().game.cache.getBitmapData("SmallRectangleBMP"));
+            this.horizontalRectangle  = GameControllerModule.GameController.getInstance().game.add.sprite(0, 0, GameControllerModule.GameController.getInstance().game.cache.getBitmapData("SmallRectangleBMP"));
+            this.verticalRectangle.alpha = 0;
+            this.horizontalRectangle.alpha = 0;
+            this.horizontalRectangle.width = 2000;
+            this.verticalRectangle.height = 1400;
+
+            GameControllerModule.GameController.getInstance().game.physics.enable(this.horizontalRectangle, Phaser.Physics.ARCADE);
+            GameControllerModule.GameController.getInstance().game.physics.enable(this.verticalRectangle, Phaser.Physics.ARCADE);
+
+
+            this.horizontalRectangle.body.immovable = true;
+            this.verticalRectangle.body.immovable = true;
         }
 
         createCharacter(characterName, x, y, followCharacter = false)
@@ -36,7 +57,7 @@ module CharacterModule
 
             this.graphics.body.speed = this.speed;
 
-            this.graphics.body.setSize(10, 10, this.graphics.width/2 - 5, this.graphics.height - 10);
+            this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
 
             if(followCharacter == true)
             {
@@ -46,27 +67,35 @@ module CharacterModule
 
         checkCollision(map){
             GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, map);
+
+            if(this.moving)
+            {
+                GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.collideWithRectangle, null, this);
+                GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.collideWithRectangle, null, this);
+            }
+        }
+
+        collideWithRectangle()
+        {
+            this.moving =  false;
         }
 
         moveCharacter(tile)
         {
             this.tile = tile;
-        }
+
+            this.verticalRectangle.x = this.tile.x - this.tile.width/2;
+            this.horizontalRectangle.y = this.tile.y - this.tile.height/2;
+
+            this.moving = true;
+            GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 700);
+         }
+
 
         tile;
 
         updateCharacter() {
-            if(!GameControllerModule.GameController.getInstance().inputOngoing){
-                if(this.canMove) {
-                    this.graphics.body.velocity.x = 0;
-                    this.graphics.body.velocity.y = 0;
-                }
-                this.canMove = false;
-            } else {
-                this.canMove = true;
-                //GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, this.tile.x, this.tile.y, 1000);
-                GameControllerModule.GameController.getInstance().game.physics.arcade.moveToObject(this.graphics, this.tile, 1000);
-            }
+
         }
     }
 }
