@@ -53,7 +53,7 @@ module GridModule
 
             var cicle  = GameControllerModule.GameController.getInstance().game.add.sprite(x - circleCenterX, y - circleCenterY, GameControllerModule.GameController.getInstance().game.cache.getBitmapData("CircleBMP"));
             cicle.inputEnabled = true;
-            cicle.alpha = 0.5;
+            cicle.alpha = 0;
             cicle.events.onInputDown.add(this.circleTouched, this);
         }
 

@@ -9,6 +9,7 @@ module UserInterfaceModule{
            cellsGroup:Phaser.Group;
            lifeGroup:Phaser.Group;
            actionsGroup:Phaser.Group;
+           textsGroup:Phaser.Group;
 
            lifeBar:Phaser.Sprite;
            lifeBarEnemy:Phaser.Sprite;
@@ -22,11 +23,12 @@ module UserInterfaceModule{
             this.createEnergyCells();
             this.createLife();
             this.createActionsMenu();
+            this.updatePlayerNames();
         }
 
        uiBackground(){
            var lifeBackground:Phaser.Sprite = new Phaser.Sprite(this.game, 0,0, "ui", "life_frame.png")
-           var enemyLifeBackground:Phaser.Sprite = new Phaser.Sprite(this.game, 1328,0, "ui", "life_frame.png")
+           var enemyLifeBackground:Phaser.Sprite = new Phaser.Sprite(this.game, 1337,0, "ui", "life_frame.png")
            var vs:Phaser.Sprite = new Phaser.Sprite(this.game, lifeBackground.x + lifeBackground.width+10,10, "ui", "versus.png")
 
            enemyLifeBackground.width = -enemyLifeBackground.width;
@@ -53,7 +55,7 @@ module UserInterfaceModule{
        createLife(){
            this.lifeGroup = new Phaser.Group(this.game);
            this.lifeBar = new Phaser.Sprite(this.game, 0,0, "ui", "life_bar.png");
-           this.lifeBarEnemy = new Phaser.Sprite(this.game, 1328,0, "ui", "life_bar.png");
+           this.lifeBarEnemy = new Phaser.Sprite(this.game, 1337,0, "ui", "life_bar.png");
            this.lifeBarEnemy.width = -this.lifeBarEnemy.width;
            this.lifeGroup.add(this.lifeBar);
            this.lifeGroup.add(this.lifeBarEnemy);
@@ -101,6 +103,19 @@ module UserInterfaceModule{
 
        hideMoveMenu(){
 
+       }
+
+       updatePlayerNames(){
+           this.textsGroup = new Phaser.Group(this.game);
+           var currentPlayerNameText = this.game.add.bitmapText(10, 5, 'font','Gheorghe',30);
+           var opponentPlayerNameText = this.game.add.bitmapText(1000, 5, 'font','Vasile',30);
+
+           opponentPlayerNameText.x = 1334 - opponentPlayerNameText.width - 10;
+
+           this.textsGroup.add(currentPlayerNameText);
+           this.textsGroup.add(opponentPlayerNameText);
+
+           this.textsGroup.fixedToCamera = true;
        }
     }
 }

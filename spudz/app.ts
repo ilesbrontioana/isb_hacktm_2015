@@ -43,6 +43,7 @@ class SimpleGame {
     hud;
 
     constructor() {
+
         this.game = new Phaser.Game(1334, 740, Phaser.AUTO, 'content', {
             create: this.create,
             preload: this.preload,
@@ -57,6 +58,7 @@ class SimpleGame {
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("pirate", "../../spudz/bin/assets/character/pirate/", 'Spritesheet_Pirate.png', 'Spritesheet_Pirate.json');
 
+        this.game.load.bitmapFont('font', '../../spudz/bin/assets/font/font.png', '../../spudz/bin/assets/font/font.fnt');
         this.game.load.image('bg', '../../spudz/bin/assets/background/bg1.jpg');
         //this.game.load.image('pirate_test', '../../spudz/bin/assets/character/pirate_test.png');
 
@@ -94,7 +96,8 @@ class SimpleGame {
         this.map.createMap('Spudz');
         this.map.createLayer('Spudz', 'TilesLayer');
         this.map.setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
-        this.map.createLayer('Spudz', 'Tiles2Layer')
+        this.map.createLayer('Spudz', 'Tiles2Layer');
+        this.map.createLayer('Spudz', 'Stuff');
 
         this.onStartup();
 
