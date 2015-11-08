@@ -15,9 +15,17 @@ module UserInterfaceModule{
            lifeBarEnemy:Phaser.Sprite;
 
            actionsMenuButton:Phaser.Sprite;
+           btnDefence:Phaser.Sprite;
+           btnMelee:Phaser.Sprite;
+           btnRange:Phaser.Sprite;
+           btnSkip:Phaser.Sprite;
            moveMenuButton:Phaser.Sprite;
 
+           currentTarget:Phaser.Sprite;
+           currentAction:string;
+
         constructor(){
+            super();
             this.game = GameControllerModule.GameController.getInstance().game;
             this.uiBackground();
             this.createEnergyCells();
@@ -67,18 +75,75 @@ module UserInterfaceModule{
            this.actionsMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
            this.moveMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
 
-           this.actionsGroup.fixedToCamera = true;
+           this.btnDefence = this.game.add.image(10,20,'btnDefence');
+           this.btnMelee = this.game.add.image(60,20,'btnMelee');
+           this.btnRange = this.game.add.image(110,20,'btnRange');
+           this.btnSkip = this.game.add.image(160,20,'btnSkip');
+
+           this.btnDefence.scale.set(.5,.5);
+           this.btnMelee.scale.set(.5,.5);
+           this.btnRange.scale.set(.5,.5);
+           this.btnSkip.scale.set(.5,.5);
+
+           //this.actionsGroup.fixedToCamera = true;
            this.actionsGroup.add(this.actionsMenuButton);
            this.actionsGroup.add(this.moveMenuButton);
+           this.actionsGroup.add(this.btnDefence);
+           this.actionsGroup.add(this.btnMelee);
+           this.actionsGroup.add(this.btnRange);
+           this.actionsGroup.add(this.btnSkip);
 
            this.actionsMenuButton.inputEnabled = true;
+           this.btnDefence.inputEnabled = true;
+           this.btnMelee.inputEnabled = true;
+           this.btnRange.inputEnabled = true;
+           this.btnSkip.inputEnabled = true;
+
            this.actionsMenuButton.events.onInputDown.add(this.menuButtonTouched, this);
+           this.btnDefence.events.onInputDown.add(this.defenceButtonTouched, this);
+           this.btnMelee.events.onInputDown.add(this.meleeButtonTouched, this);
+           this.btnRange.events.onInputDown.add(this.rangeButtonTouched, this);
+           this.btnSkip.events.onInputDown.add(this.skipButtonTouched, this);
        }
 
        menuButtonTouched(){
-           this.updateLife(50);
-           this.updateEnemyLife(50);
-           this.actionsGroup.visible = false;
+           //this.updateLife(50);
+           //this.updateEnemyLife(50);
+           //this.actionsGroup.visible = false;
+           if(this.btnDefence.visible)
+           {
+               this.btnDefence.visible = false;
+               this.btnMelee.visible = false;
+               this.btnRange.visible = false;
+               this.btnSkip.visible = false;
+           }
+           else
+           {
+               this.btnDefence.visible = true;
+               this.btnMelee.visible = true;
+               this.btnRange.visible = true;
+               this.btnSkip.visible = true;
+           }
+       }
+
+       defenceButtonTouched(){
+          this.currentAction = CharacterModule.CharacterActionType.DEFENCE;
+           this.dispatchSignal("sendAction", this.currentAction);
+       }
+
+       meleeButtonTouched(){
+           this.currentAction = CharacterModule.CharacterActionType.MELEE;
+           this.dispatchSignal("sendAction", this.currentAction);
+       }
+
+       rangeButtonTouched(){
+           this.currentAction = CharacterModule.CharacterActionType.RANGE;
+           this.dispatchSignal("sendAction", this.currentAction);
+       }
+
+       skipButtonTouched(){
+           this.currentAction = CharacterModule.CharacterActionType.SKIP;
+           this.dispatchSignal("sendAction", this.currentAction);
        }
 
        updateLife(amount:number){
@@ -89,8 +154,27 @@ module UserInterfaceModule{
             this.lifeBarEnemy.x += amount;
        }
 
-       showActionsMenu(){
+       showActionsMenu(target:Phaser.Sprite){
+           this.currentTarget = target;
+
            this.actionsGroup.visible = true;
+
+           this.actionsMenuButton.x = target.x;
+           this.actionsMenuButton.y = target.y - 140;
+
+           this.btnDefence.x = this.actionsMenuButton.x - 50  - 110;
+           this.btnDefence.y = this.actionsMenuButton.y - 35;
+
+           this.btnMelee.x = this.actionsMenuButton.x - 30 + 110;
+           this.btnMelee.y = this.actionsMenuButton.y - 30;
+
+           this.btnRange.x = this.actionsMenuButton.x - 40;
+           this.btnRange.y = this.actionsMenuButton.y - 30 - 110;
+
+           this.btnSkip.x = this.actionsMenuButton.x -30  - 260;
+           this.btnSkip.y = this.actionsMenuButton.y - 30;
+
+           this.actionsMenuButton.inputEnabled = true;
        }
 
        hideActionsMenu(){

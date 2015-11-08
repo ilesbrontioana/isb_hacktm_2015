@@ -7,6 +7,7 @@ module CharacterModule
 
         public life:number = 100;
         public energy:number = 100;
+        public character:Phaser.Sprite;
 
         constructor(){
 

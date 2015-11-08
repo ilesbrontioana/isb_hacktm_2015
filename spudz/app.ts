@@ -71,6 +71,11 @@ class SimpleGame {
         this.game.load.bitmapFont('font', '../../spudz/bin/assets/font/font.png', '../../spudz/bin/assets/font/font.fnt');
         this.game.load.image('bg', '../../spudz/bin/assets/background/backgroud1.png');
 
+        this.game.load.image('btnDefence', '../../spudz/bin/assets/ui/button_defence.png');
+        this.game.load.image('btnMelee', '../../spudz/bin/assets/ui/button_melee.png');
+        this.game.load.image('btnRange', '../../spudz/bin/assets/ui/button_range.png');
+        this.game.load.image('btnSkip', '../../spudz/bin/assets/ui/button_skip.png');
+
         this.map = new MapModule.Map();
         this.map.loadMap('Spudz');
 

@@ -16,7 +16,7 @@ module CharacterModule
         constructor() {
             super();
 
-            this.createCharacter('bacon', 640, 300, true);
+            this.createCharacter('pirate', 640, 300, true);
 
             this.createBitmapDataRectangles();
 

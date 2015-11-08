@@ -3,16 +3,20 @@
  */
 module WelcomeModule{
     export class WelcomeView extends MvcModule.View{
+
+        bmd:Phaser.Sprite;
+
         constructor(){
             super();
-            var bmd = this.game.add.image(50,50,"ui", "button.png")
+            this.bmd = this.game.add.image(50,50,"ui", "button.png")
 
-            bmd.inputEnabled = true;
-            bmd.events.onInputDown.add(this.onStartGamePressed, this);
+            this.bmd.inputEnabled = true;
+            this.bmd.events.onInputDown.add(this.onStartGamePressed, this);
         }
 
         onStartGamePressed(){
             this.dispatchSignal("StartGame");
+            this.bmd.visible = false;
         }
     }
 }

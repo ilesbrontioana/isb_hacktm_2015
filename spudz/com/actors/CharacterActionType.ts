@@ -7,5 +7,9 @@ module CharacterModule
     {
         static MOVE:string = "character_action_move";
         static ATTACK:string = "character_action_attack";
+        static DEFENCE:string = "character_action_defence";
+        static MELEE:string = "character_action_melee";
+        static RANGE:string = "character_action_range";
+        static SKIP:string = "character_action_skip";
     }
 }

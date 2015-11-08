@@ -12,6 +12,10 @@ module UserInterfaceModule{
             super(viewComponent);
         }
 
+        onRegister(){
+            this.addListenerToSignal("sendAction", this.doPlayerAction, this);
+        }
+
         listNotificationInterests():Array{
             return [UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU,
                 UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU,
@@ -28,6 +32,7 @@ module UserInterfaceModule{
                     this.viewComponent.hideActionsMenu();
                     break;
                 case UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU:
+                    this.viewComponent.showActionsMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
                     break;
                 case  UserInterfaceModule.UINotifications.UPDATE_LIFE:
                     break;
@@ -38,6 +43,10 @@ module UserInterfaceModule{
                 case UserInterfaceModule.UINotifications.HIDE_MOVE_MENU:
                     break;
             }
+        }
+
+        doPlayerAction(actionType:string){
+            MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterActionType.ATTACK, actionType);
         }
     }
 }

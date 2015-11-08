@@ -11,11 +11,18 @@ module CharacterModule
 
             EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
-                this.moveVO.ability = ""
-                this.moveVO.destination = {x:body.x, y:body.y}
-                this.moveVO.player_health =  MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).getLife();
-                this.moveVO.player_pos = {x:body.x, y:body.y}
-                this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.moveVO);
+                if(body.actionType == CharacterActionType.MOVE)
+                {
+                    this.moveVO.ability = ""
+                    this.moveVO.destination = {x:body.x, y:body.y}
+                    this.moveVO.player_health =  MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).getLife();
+                    this.moveVO.player_pos = {x:body.x, y:body.y}
+                    //this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.moveVO);
+                } else{
+                    MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
+                }
+
+
             }, this);
 
             super(viewComponent);
@@ -38,6 +45,8 @@ module CharacterModule
         }
 
         handleNotification(notification:MvcModule.INotification) {
+            MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.character = this.viewComponent.graphics;
+
             switch (notification.name){
                 case CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION:
                     this.viewComponent.checkCollision(notification.body)
