@@ -5,15 +5,24 @@ module CharacterModule
 {
     export class CharacterMediator extends MvcModule.Mediator{
         static NAME:string = this + "CharacterMediator";
+        moveVO:ConnectionModule.MoveVO;
 
         constructor(viewComponent:MvcModule.View){
 
             EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
-                //GameControllerModule.GameController.pauseAll();
+                this.moveVO.ability = ""
+                this.moveVO.destination = {x:body.x, y:body.y}
+                this.moveVO.player_health =  MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).getLife();
+                this.moveVO.player_pos = {x:body.x, y:body.y}
+                this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.moveVO);
             }, this);
 
             super(viewComponent);
+        }
+
+        onRegister(){
+            this.moveVO = new ConnectionModule.MoveVO();
         }
 
         listNotificationInterests():Array{

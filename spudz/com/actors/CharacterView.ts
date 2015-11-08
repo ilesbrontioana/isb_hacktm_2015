@@ -113,10 +113,15 @@ module CharacterModule
         {
             this.verticalRectangle.x = 0;
             this.horizontalRectangle.y = 0;
+            //this.graphics.body.gravity.y = 0;
+            this.graphics.body.velocity.x = 0;
+            this.graphics.body.velocity.y = 0;
+            this.game.physics.arcade.isPaused = true;
         }
 
         moveCharacter(tile)
         {
+            this.graphics.body.gravity.y = 400;
             this.verticalRectangle.x = tile.x - tile.width/2;
             this.horizontalRectangle.y = tile.y - tile.height/2;
 

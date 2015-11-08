@@ -84,6 +84,7 @@ module ConnectionModule {
                     name: 'move',
                     param: move
                 });
+                console.log("SEND TO SERVER MOVE "+move);
             }
 
             skipMove()

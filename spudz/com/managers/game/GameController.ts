@@ -21,19 +21,19 @@ module GameControllerModule{
             return GameController._instance;
         }
 
-        pausePhysics(value:boolean){
+        public pausePhysics(value:boolean){
             this.isPaused = value;
             this.game.physics.arcade.isPaused = value;
         }
 
-        pauseTweens(value:boolean) {
+        public pauseTweens(value:boolean) {
             for(var i=0; i<this.tweens.length; i++)
             {
                 this.tweens[i].isPaused = value;
             }
         }
 
-        pauseAll(value:boolean){
+        public pauseAll(value:boolean){
             this.pausePhysics(value);
             this.pauseTweens(value);
         }

@@ -69,14 +69,14 @@ class SimpleGame {
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("space", "../../spudz/bin/assets/character/space/", 'Spritesheet_Space.png', 'Spritesheet_Space.json');
 
         this.game.load.bitmapFont('font', '../../spudz/bin/assets/font/font.png', '../../spudz/bin/assets/font/font.fnt');
-        this.game.load.image('bg', '../../spudz/bin/assets/background/bg1.jpg');
-        //this.game.load.image('pirate_test', '../../spudz/bin/assets/character/pirate_test.png');
+        this.game.load.image('bg', '../../spudz/bin/assets/background/backgroud1.png');
 
         this.map = new MapModule.Map();
         this.map.loadMap('Spudz');
 
         SoundsModule.SoundsManager.getInstance().loadSounds();
     }
+
     render() {
 
     }
@@ -87,18 +87,11 @@ class SimpleGame {
                     MapModule.Map.layers['Spudz']['Tiles2Layer'],
                     MapModule.Map.layers['Spudz']['TilesLayer']
                 ]);
-        // Mouse Poll
-        if (this.game.input.activePointer.isDown) {
-            GameControllerModule.GameController.getInstance().inputOngoing = true;
-        }
-        else{
-            GameControllerModule.GameController.getInstance().inputOngoing = false;
-        }
     }
 
     create() {
         this.background = this.game.add.image(0,0,'bg');
-        this.background.scale.setTo(4.5, 4.5);
+        this.background.scale.setTo(1, 1);
 
         EventsModule.SignalsManager.getInstance().scope = this;
         SoundsModule.SoundsManager.getInstance().createSounds();
@@ -107,9 +100,10 @@ class SimpleGame {
         this.map.createLayer('Spudz', 'TilesLayer');
         this.map.setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
         this.map.createLayer('Spudz', 'Tiles2Layer');
-        this.map.createLayer('Spudz', 'Stuff');
 
         this.onStartup();
+
+        this.map.createLayer('Spudz', 'Stuff');
 
         SoundsModule.SoundsManager.getInstance().playSound('sound3');
     }
@@ -129,7 +123,7 @@ window.onload = () => {
     var game = new SimpleGame();
 };
 
-////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 class testView extends MvcModule.View{
     constructor(){
 
