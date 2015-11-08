@@ -38,6 +38,12 @@
 /// <reference path="com/welcomeScreen/WelcomeNotifications.ts" />
 /// <reference path="com/welcomeScreen/WelcomeView.ts" />
 
+    /// <reference path="com/selectionScreen/SelectionScreenMediator.ts" />
+/// <reference path="com/selectionScreen/SelectionScreenNotifications.ts" />
+/// <reference path="com/selectionScreen/SelectionScreenView.ts" />
+/// <reference path="com/selectionScreen/SelectionScreenProxy.ts" />
+/// <reference path="com/selectionScreen/SelectionScreenVO.ts" />
+
 /// <reference path="com/actors/CharacterActionType.ts" />
 /// <reference path="com/actors/ActionRayView.ts" />
 /// <reference path="com/actors/ActionRayMediator.ts" />
@@ -45,7 +51,7 @@
 /// <reference path="com/managers/connection/ConnectionModule.ts" />
 /// <reference path="com/managers/connection/ConnectionNotifications.ts" />
 /// <reference path="com/managers/connection/ConnectionSignals.ts" />
-/// <reference path="com/managers/connection/MoveVO.ts" />
+/// <reference path="com/managers/connection/MoveVO.ts" /> 
 
 class SimpleGame {
     game: Phaser.Game;
@@ -78,6 +84,18 @@ class SimpleGame {
         this.game.load.image('btnRange', '../../spudz/bin/assets/ui/button_range.png');
         this.game.load.image('btnSkip', '../../spudz/bin/assets/ui/button_skip.png');
 
+        this.game.load.image('background_welcome_screen', '../../spudz/bin/assets/selectionScreen/Background.png');
+        this.game.load.image('active_bacon', '../../spudz/bin/assets/selectionScreen/active_bacon.png');
+        this.game.load.image('active_pirate', '../../spudz/bin/assets/selectionScreen/active_pirate.png');
+        this.game.load.image('active_space', '../../spudz/bin/assets/selectionScreen/active_space.png');
+        this.game.load.image('back_button', '../../spudz/bin/assets/selectionScreen/back_button.png');
+        this.game.load.image('menu_bar', '../../spudz/bin/assets/selectionScreen/menu_bar.png');
+        this.game.load.image('menu_button', '../../spudz/bin/assets/selectionScreen/menu_button.png');
+        this.game.load.image('next_button', '../../spudz/bin/assets/selectionScreen/next_button.png');
+        this.game.load.image('non-active_bacon', '../../spudz/bin/assets/selectionScreen/non-active_bacon.png');
+        this.game.load.image('non-active_pirate', '../../spudz/bin/assets/selectionScreen/non-active_pirate.png');
+        this.game.load.image('non-active_space', '../../spudz/bin/assets/selectionScreen/non-active_space.png');
+
         this.map = new MapModule.Map();
         this.map.loadMap('Spudz');
 
@@ -108,8 +126,6 @@ class SimpleGame {
         this.map.setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
         this.map.createLayer('Spudz', 'Tiles2Layer');
 
-       //CONNECTION AND CONNECTION SIGNALS
-        this.connection = new ConnectionModule.ConnectionProxy(new WebSocket("ws://192.168.8.2:8001/"));
         this.onStartup();
 
         this.map.createLayer('Spudz', 'Stuff');
@@ -132,7 +148,7 @@ window.onload = () => {
     var game = new SimpleGame();
 };
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 class testView extends MvcModule.View{
     constructor(){
 
@@ -150,7 +166,9 @@ class StartupMediator extends MvcModule.Mediator{
     }
 
     handleNotification(notification:MvcModule.INotification){
-        MvcModule.Mvc.getInstance().registerMediator(WelcomeModule.WelcomeMediator.NAME, new WelcomeModule.WelcomeMediator(new WelcomeModule.WelcomeView()));
+        //MvcModule.Mvc.getInstance().registerMediator(WelcomeModule.WelcomeMediator.NAME, new WelcomeModule.WelcomeMediator(new WelcomeModule.WelcomeView()));
+        MvcModule.Mvc.getInstance().registerMediator(SelectionScreenModule.SelectionScreenMediator.NAME, new SelectionScreenModule.SelectionScreenMediator(new SelectionScreenModule.SelectionScreenView()));
+         MvcModule.Mvc.getInstance().registerProxy(SelectionScreenModule.SelectionScreenProxy.NAME, new SelectionScreenModule.SelectionScreenProxy());
     }
 }
 

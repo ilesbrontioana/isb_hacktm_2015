@@ -38,9 +38,9 @@ module SelectionScreenModule{
             this.menu_button = this.game.add.image(0,0,'menu_button');
             this.next_button = this.game.add.image(0,0,'next_button');
 
-            this.non_active_bacon = this.game.add.image(0,0,'active_bacon');
-            this.non_active_pirate = this.game.add.image(0,0,'active_pirate');
-            this.non_active_space = this.game.add.image(0,0,'active_space');
+            this.non_active_bacon = this.game.add.image(0,0,'non-active_bacon');
+            this.non_active_pirate = this.game.add.image(0,0,'non-active_pirate');
+            this.non_active_space = this.game.add.image(0,0,'non-active_space');
 
             this.background.inputEnabled = true;
             this.background.events.onInputDown.add(this.onStartGamePressed, this);
