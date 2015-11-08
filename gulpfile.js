@@ -7,7 +7,7 @@ var Server = require('karma').Server;
 var browserSync = require('browser-sync').init(
     ['build/local/index.html'], {
         port: 63342,
-        proxy: "http://localhost:63342/GulpLearning/built/local/",
+        proxy: "http://localhost:63342/isb_hacktm_2015/built/local/",
         files: ["app/**", "scss/**.*.scss"]
     });
 
