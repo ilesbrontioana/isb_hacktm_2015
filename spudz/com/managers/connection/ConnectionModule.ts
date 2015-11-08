@@ -25,10 +25,10 @@ module ConnectionModule {
 
         init() {
             //register signals
+            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove.bind(this), this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.FIND_MATCH, this.findMatch, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.PLAYER_READY, this.playerReady, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, this.selectCharacter, this);
-            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE_SKIP, this.skipMove, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.REGISTER_NAME, this.registerName, this);
 
@@ -88,23 +88,22 @@ module ConnectionModule {
                     event: 'select character',
                     param: msg
                 });
-            }
+            };
 
             playerReady(msg){
                 this.doSendObj({
                     event: ConnectionModule.ConnectionSignals.PLAYER_READY,
                     param: msg
                 });
-            }
+            };
 
             sendMove(move)
             {
                 this.doSendObj({
-                    event: 'move',
+                    event: ConnectionModule.ConnectionSignals.MOVE,
                     param: move
                 });
-                console.log("SEND TO SERVER MOVE "+move);
-            }
+            };
 
             skipMove()
             {
@@ -116,6 +115,7 @@ module ConnectionModule {
 
             registerName(msg)
             {
+                console.log(this)
                 this.doSendObj({
                     event: 'register_name',
                     param: msg
