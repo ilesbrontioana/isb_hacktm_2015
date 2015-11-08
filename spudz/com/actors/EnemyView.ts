@@ -47,5 +47,32 @@ module CharacterModule
 
             this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
         }
+
+        sendPosition()
+        {
+            this.dispatchSignal("CharacterPosition", {  x: this.graphics.x + this.graphics.width/2,
+                y: this.graphics.y + this.graphics.height/2,
+                actionType: this.currentAction,
+                addActionRay:false});
+        }
+
+        overlap;
+        tryDamage(graphics)
+        {
+            this.overlap = false;
+            GameControllerModule.GameController.getInstance().game.physics.arcade.overlap(this.graphics, graphics, this.addDamage, null, this);
+            if(this.overlap == true)
+            {
+                this.animateHit();
+                this.dispatchSignal("CharacterDamage", 10)
+            }
+        }
+
+        addDamage()
+        {
+            this.overlap = true;
+        }
+
+
     }
 }

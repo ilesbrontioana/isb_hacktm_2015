@@ -11,37 +11,32 @@ module CharacterModule
         constructor(viewComponent:MvcModule.View){
 
             EventsModule.SignalsManager.getInstance().createBinding("move", function(){},this);
+            EventsModule.SignalsManager.getInstance().createBinding("CharacterDamage", function(damage){
+
+            },this);
             EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
 
                 if(body.addActionRay == true)
                 {
                     MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
                 }
-                if(body.actionType == CharacterActionType.MOVE)
-                {
-                    this.moveVO.ability = ""
-                    this.moveVO.destination = {x:body.x, y:body.y}
-                    this.moveVO.player_health =  MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).getLife();
-                    this.moveVO.player_pos = {x:body.x, y:body.y}
-                    this.dispatchSignal("move", this.moveVO);
-                } else{
-                    MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
-                }
             }, this);
 
             super(viewComponent);
-
-            viewComponent.createCharacter('bacon');
         }
 
         onRegister(){
             this.moveVO = new ConnectionModule.MoveVO();
+
+            this.viewComponent.createCharacter('bacon');
         }
 
         listNotificationInterests():Array{
             return [CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
-                CharacterModule.CharacterNotifications.DRAIN_ENERGY];
+                CharacterModule.CharacterNotifications.DRAIN_ENERGY,
+                CharacterModule.CharacterNotifications.TRY_DAMAGE,
+            ];
         }
 
         handleNotification(notification:MvcModule.INotification) {
@@ -61,6 +56,9 @@ module CharacterModule
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_ENERGY,
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.energy);
                     break
+                case  CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY:
+                    this.viewComponent.tryDamage(notification.body);
+                    break;
             }
         }
     }

@@ -16,6 +16,7 @@ module SelectionScreenModule{
                 MvcModule.Mvc.getInstance().registerMediator(GridModule.GridMediator.NAME, new GridModule.GridMediator(new GridModule.GridView()));
 
                 MvcModule.Mvc.getInstance().registerMediator(CharacterModule.CharacterMediator.NAME, new CharacterModule.CharacterMediator(new CharacterModule.CharacterView()));
+                MvcModule.Mvc.getInstance().registerMediator(CharacterModule.EnemyMediator.NAME, new CharacterModule.EnemyMediator(new CharacterModule.EnemyView()));
                 MvcModule.Mvc.getInstance().registerProxy(CharacterModule.CharacterProxy.NAME, new CharacterModule.CharacterProxy());
 
                 MvcModule.Mvc.getInstance().registerMediator(UserInterfaceModule.UIMediator.NAME, new UserInterfaceModule.UIMediator(new UserInterfaceModule.UIView()));

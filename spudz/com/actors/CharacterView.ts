@@ -121,7 +121,6 @@ module CharacterModule
         {
             this.verticalRectangle.x = 0;
             this.horizontalRectangle.y = 0;
-            //this.graphics.body.gravity.y = 0;
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
             this.game.physics.arcade.isPaused = true;
@@ -192,6 +191,12 @@ module CharacterModule
             }
         }
 
+        characterTurn()
+        {
+            this.game.physics.arcade.isPaused = false;
+            this.setCurrentAction();
+        }
+
         updateCharacter() {
             if(this.currentAction == CharacterModule.CharacterActionType.MOVE &&
                 this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
@@ -203,6 +208,10 @@ module CharacterModule
                         this.currentAction = CharacterModule.CharacterActionType.ATTACK;
                         this.initial = false;
                     }
+                    else
+                    {
+                        this.sendToServer();
+                    }
                     this.setCurrentAction();
                     this.animateIdle();
                 }
@@ -212,37 +221,41 @@ module CharacterModule
             {
                 if(this.attackComplete)
                 {
-                    this.setCurrentAction();
 
                     if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
                     {
                         this.animateIdle();
+                        this.dispatchSignal("AttackOpponent");
+                    }
+                    else if(this.currentAction != CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
+                    {
+                        this.sendToServer();
                     }
                     this.attackComplete = false;
+
                 }
             }
 
         }
+
 ////////////////////////////////////
 
-        animateIdle()
-        {
-            this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
-            this.graphics.loop = false;
-            this.currentAnimation = CharacterModule.CharacterAnimations.IDLE_ANIMATION;
-        }
 
         animateWalk(){
             this.graphics.play(CharacterModule.CharacterAnimations.RUN_ANIMATION);
-            this.graphics.loop = true;
             this.currentAnimation = CharacterModule.CharacterAnimations.RUN_ANIMATION;
 
         }
 
         animateJump(){
             this.graphics.play(CharacterModule.CharacterAnimations.JUMP_ANIMATION);
-            this.graphics.loop = true;
             this.currentAnimation = CharacterModule.CharacterAnimations.JUMP_ANIMATION;
+        }
+
+        animateIdle()
+        {
+            this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
+            this.currentAnimation = CharacterModule.CharacterAnimations.IDLE_ANIMATION;
         }
 
         animateBlock(){
@@ -270,17 +283,17 @@ module CharacterModule
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
+        animateHit(){
+
+            this.graphics.play(CharacterModule.CharacterAnimations.DAMAGE_ANIMATION, 30, false);
+            this.currentAnimation = CharacterModule.CharacterAnimations.DAMAGE_ANIMATION;
+            this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
+        }
+
         onAttackComplete()
         {
             this.graphics.events.onAnimationComplete.removeAll();
             this.attackComplete = true;
-        }
-
-        animateIdle()
-        {
-            this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
-            this.graphics.loop = false;
-            this.currentAnimation = CharacterModule.CharacterAnimations.IDLE_ANIMATION;
         }
 
         setCurrentAction()
@@ -293,10 +306,20 @@ module CharacterModule
             {
                 this.currentAction = CharacterActionType.ATTACK;
             }
+            this.sendPosition();
+        }
+
+        sendPosition()
+        {
             this.dispatchSignal("CharacterPosition", {  x: this.graphics.x + this.graphics.width/2,
-                                                        y: this.graphics.y + this.graphics.height/2,
-                                                        actionType: this.currentAction,
-                                                        addActionRay:true});
+                y: this.graphics.y + this.graphics.height/2,
+                actionType: this.currentAction,
+                addActionRay:true});
+        }
+
+        sendToServer()
+        {
+            this.dispatchSignal("CharacterInfoToServer");
         }
     }
 }
