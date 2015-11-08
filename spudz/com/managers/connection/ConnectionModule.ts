@@ -11,6 +11,7 @@ module ConnectionModule {
             this.signalsToDispatch = [
                 ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER,
                 ConnectionModule.ConnectionSignals.START_MATCH,
+                ConnectionModule.ConnectionSignals.MATCH_FOUND,
                 ConnectionModule.ConnectionSignals.MOVE,
                 ConnectionModule.ConnectionSignals.RECONCILIATION,
                 ConnectionModule.ConnectionSignals.WIN,
@@ -24,9 +25,10 @@ module ConnectionModule {
 
         init() {
             //register signals
+            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove.bind(this), this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.FIND_MATCH, this.findMatch, this);
+            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.PLAYER_READY, this.playerReady, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, this.selectCharacter, this);
-            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE_SKIP, this.skipMove, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.REGISTER_NAME, this.registerName, this);
 
@@ -41,19 +43,29 @@ module ConnectionModule {
 
         onMessage(evt) {
             var data = JSON.parse(evt.data);
-            console.log(">>>> " + data.name + " WITH PARAMS: " + JSON.stringify(data.param));
+            console.log(">>>> " + data.event + " WITH PARAMS: " + JSON.stringify(data.param));
 
-            if (this.isInArray(data.name, this.signalsToDispatch)) {
-                if (data.name == ConnectionModule.ConnectionSignals.MOVE) {
+            if (this.isInArray(data.event, this.signalsToDispatch))
+            {
+                if (data.event == ConnectionModule.ConnectionSignals.MOVE) {
                     var moveVO = this.createMoveVO(data.param);
-                    MvcModule.Mvc.getInstance().sendNotification(RoundsModule.RoundsCommand.NAME, moveVO);
+                    MvcModule.Mvc.getInstance().sendNotification(RoundsModule.RoundsCommand.event, moveVO);
+                }
+                else
+                {
+                    MvcModule.Mvc.getInstance().sendNotification(data.event, data.param);
                 }
             }
 
-                //ask for match making,
-                if (data.name == 'welcome') {
+                //FAKE MATCHMAKING
+                if (data.event == 'welcome') {
                     EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.FIND_MATCH);
-                    EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.REGISTER_NAME, "gameclient");
+                }
+                if (data.event == ConnectionModule.ConnectionSignals.MATCH_FOUND) {
+                    EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.PLAYER_READY);
+                }
+                if (data.event == ConnectionModule.ConnectionSignals.START_CHARACTER_SELECTION) {
+                    EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, 2);
                 }
             }
 
@@ -65,7 +77,7 @@ module ConnectionModule {
             findMatch(msg)
             {
                 this.doSendObj({
-                    name: 'find_match',
+                    event: 'find_match',
                     param: msg
                 });
             }
@@ -73,32 +85,39 @@ module ConnectionModule {
             selectCharacter(msg)
             {
                 this.doSendObj({
-                    name: 'select character',
+                    event: 'select character',
                     param: msg
                 });
-            }
+            };
+
+            playerReady(msg){
+                this.doSendObj({
+                    event: ConnectionModule.ConnectionSignals.PLAYER_READY,
+                    param: msg
+                });
+            };
 
             sendMove(move)
             {
                 this.doSendObj({
-                    name: 'move',
+                    event: ConnectionModule.ConnectionSignals.MOVE,
                     param: move
                 });
-                console.log("SEND TO SERVER MOVE "+move);
-            }
+            };
 
             skipMove()
             {
                 this.doSendObj({
-                    name: 'move_skip',
+                    event: 'move_skip',
                     param: null
                 });
             }
 
             registerName(msg)
             {
+                console.log(this)
                 this.doSendObj({
-                    name: 'register_name',
+                    event: 'register_name',
                     param: msg
                 });
             }

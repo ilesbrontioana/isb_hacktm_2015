@@ -14,7 +14,8 @@ module CharacterModule {
 
         listNotificationInterests():Array{
             return [CharacterModule.CharacterNotifications.CHARACTER_POSITION,
-                    GridModule.GridNotifications.GRID_CREATED
+                    GridModule.GridNotifications.GRID_CREATED,
+                    CharacterModule.CharacterActionType.ATTACK
                     ];
         }
 
@@ -22,6 +23,9 @@ module CharacterModule {
             switch (notification.name){
                 case CharacterModule.CharacterNotifications.CHARACTER_POSITION:
                     this.viewComponent.addActionRayAt(notification.body.x, notification.body.y, notification.body.actionType);
+                    break;
+                case CharacterModule.CharacterActionType.ATTACK
+                    this.viewComponent.removeActionRay();
                     break;
                 case GridModule.GridNotifications.GRID_CREATED:
                     this.viewComponent.setGrid(notification.body);

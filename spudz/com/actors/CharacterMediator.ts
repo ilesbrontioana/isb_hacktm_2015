@@ -30,7 +30,7 @@ module CharacterModule
 
             super(viewComponent);
 
-            viewComponent.createCharacter('pirate');
+            viewComponent.createCharacter('bacon');
         }
 
         onRegister(){
@@ -40,14 +40,9 @@ module CharacterModule
         listNotificationInterests():Array{
             return [CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
                 CharacterModule.CharacterNotifications.GRID_TOUCHED,
-                CharacterModule.CharacterNotifications.BLOCK,
-                CharacterModule.CharacterNotifications.MOVE,
-                CharacterModule.CharacterNotifications.MELEE,
-                CharacterModule.CharacterNotifications.RANGE,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
-                CharacterActionType.ATTACK,
-                CharacterModule.CharacterNotifications.ULTIMATE];
+                CharacterActionType.ATTACK];
         }
 
         handleNotification(notification:MvcModule.INotification) {
@@ -61,21 +56,6 @@ module CharacterModule
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
                     this.viewComponent.startAction(notification.body)
                     break;
-                case CharacterModule.CharacterNotifications.BLOCK:
-                    this.viewComponent.animateBlock(notification.body)
-                    break
-                case CharacterModule.CharacterNotifications.MOVE:
-                    this.viewComponent.animateMove(notification.body)
-                    break
-                case CharacterModule.CharacterNotifications.MELEE:
-                    this.viewComponent.animateMelee(notification.body)
-                    break
-                case CharacterModule.CharacterNotifications.RANGE:
-                    this.viewComponent.animateRange(notification.body)
-                    break
-                case CharacterModule.CharacterNotifications.ULTIMATE:
-                    this.viewComponent.animateUltimate(notification.body)
-                    break
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
                     this.viewComponent.animateTakeDamage(notification.body);
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,

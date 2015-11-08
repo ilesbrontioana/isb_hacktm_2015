@@ -192,6 +192,11 @@ module CharacterModule
             }
         }
 
+        characterTurn()
+        {
+            this.setCurrentAction();
+        }
+
         updateCharacter() {
             if(this.currentAction == CharacterModule.CharacterActionType.MOVE &&
                 this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
@@ -212,7 +217,6 @@ module CharacterModule
             {
                 if(this.attackComplete)
                 {
-                    this.setCurrentAction();
 
                     if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
                     {

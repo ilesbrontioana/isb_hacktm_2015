@@ -47,5 +47,21 @@ module CharacterModule
 
             this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
         }
+
+        setCurrentAction()
+        {
+            if(this.currentAction == CharacterActionType.ATTACK)
+            {
+                this.currentAction = CharacterActionType.MOVE;
+            }
+            else
+            {
+                this.currentAction = CharacterActionType.ATTACK;
+            }
+            this.dispatchSignal("CharacterPosition", {  x: this.graphics.x + this.graphics.width/2,
+                y: this.graphics.y + this.graphics.height/2,
+                actionType: this.currentAction,
+                addActionRay:false});
+        }
     }
 }
