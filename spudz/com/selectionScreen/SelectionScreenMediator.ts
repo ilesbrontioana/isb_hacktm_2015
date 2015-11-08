@@ -9,6 +9,7 @@ module SelectionScreenModule{
             super(viewComponent);
             this.addListenerToSignal("characterSelected", function(selection:string){
                 MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenProxy.NAME).VO.selectedCharacter = selection;
+                this.dispatchSignal("select_character", selection);
             })
             this.addListenerToSignal("StartGame", function(){
                 MvcModule.Mvc.getInstance().registerMediator(CharacterModule.ActionRayMediator.NAME, new CharacterModule.ActionRayMediator(new CharacterModule.ActionRayView()));

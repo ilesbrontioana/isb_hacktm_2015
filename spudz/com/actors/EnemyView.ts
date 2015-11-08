@@ -61,11 +61,13 @@ module CharacterModule
         {
             this.overlap = false;
             GameControllerModule.GameController.getInstance().game.physics.arcade.overlap(this.graphics, graphics, this.addDamage, null, this);
+            var damage = 0;
             if(this.overlap == true)
             {
                 this.animateHit();
-                this.dispatchSignal("CharacterDamage", 10)
+                damage = 10;
             }
+            this.dispatchSignal("CharacterDamage", damage);
         }
 
         addDamage()

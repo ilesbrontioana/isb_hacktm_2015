@@ -12,7 +12,7 @@ module CharacterModule
 
             EventsModule.SignalsManager.getInstance().createBinding("move", function(){},this);
             EventsModule.SignalsManager.getInstance().createBinding("CharacterDamage", function(damage){
-
+                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.DAMAGE_COMPLETE, damage);
             },this);
             EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
 
@@ -36,6 +36,7 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
                 CharacterModule.CharacterNotifications.TRY_DAMAGE,
+                CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY,
             ];
         }
 

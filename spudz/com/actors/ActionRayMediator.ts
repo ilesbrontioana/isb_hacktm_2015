@@ -15,6 +15,7 @@ module CharacterModule {
         listNotificationInterests():Array{
             return [CharacterModule.CharacterNotifications.CHARACTER_POSITION,
                     GridModule.GridNotifications.GRID_CREATED,
+                CharacterModule.CharacterActionType.ATTACK,
                     CharacterModule.CharacterNotifications.TRY_DAMAGE
                     ];
         }
@@ -29,6 +30,9 @@ module CharacterModule {
                     break;
                 case CharacterModule.CharacterNotifications.TRY_DAMAGE:
                     MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY, this.viewComponent.attackCircle);
+                    break;
+                case CharacterModule.CharacterActionType.ATTACK:
+                    this.viewComponent.removeActionRay();
                     break;
             }
         }

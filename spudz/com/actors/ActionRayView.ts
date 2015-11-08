@@ -64,6 +64,8 @@ module CharacterModule
             this.attackCircle.alpha = 0;
             this.attackCircle.anchor.setTo(0.5, 0.5);
             this.attackCircle.events.onInputDown.add(this.circleTouched, this);
+            GameControllerModule.GameController.getInstance().game.physics.enable(this.attackCircle, Phaser.Physics.ARCADE);
+
 
         }
 

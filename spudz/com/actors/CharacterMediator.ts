@@ -17,9 +17,6 @@ module CharacterModule
 
         initListeners()
         {
-            EventsModule.SignalsManager.getInstance().createBinding("move", function(){},this);
-
-
             EventsModule.SignalsManager.getInstance().createBinding("AttackOpponent", function(){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.TRY_DAMAGE, this.viewComponent.graphics);
             },this);
@@ -56,6 +53,7 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.GRID_TOUCHED,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
+                CharacterModule.CharacterNotifications.DAMAGE_COMPLETE,
                 CharacterActionType.ATTACK];
         }
 
@@ -81,6 +79,14 @@ module CharacterModule
                     break
                 case CharacterActionType.ATTACK:
                         this.viewComponent.setCharacterAttackAction(notification.body);
+                    break;
+                case CharacterModule.CharacterNotifications.DAMAGE_COMPLETE:
+                    this.moveVO.ability = ""
+                    this.moveVO.destination = {x:this.viewComponent.graphics.x, y:this.viewComponent.graphics.y}
+                    this.moveVO.player_health =  MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).getLife();
+                    this.moveVO.player_pos = {x:this.viewComponent.graphics.x, y:this.viewComponent.graphics.y}
+                    this.moveVO.opponent_health = this.moveVO.opponent_health - notification.body;
+                    this.dispatchSignal("move", this.moveVO);
                     break;
             }
         }

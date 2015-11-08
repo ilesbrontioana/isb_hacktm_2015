@@ -129,21 +129,35 @@ module UserInterfaceModule{
        defenceButtonTouched(){
           this.currentAction = CharacterModule.CharacterActionType.DEFENCE;
            this.dispatchSignal("sendAction", this.currentAction);
+            this.hideAll();
        }
+
+       hideAll()
+       {
+           this.btnDefence.visible = false;
+           this.btnMelee.visible = false;
+           this.btnRange.visible = false;
+           this.btnSkip.visible = false;
+           this.actionsMenuButton.visible = false;
+       }
+
 
        meleeButtonTouched(){
            this.currentAction = CharacterModule.CharacterActionType.MELEE;
            this.dispatchSignal("sendAction", this.currentAction);
+           this.hideAll();
        }
 
        rangeButtonTouched(){
            this.currentAction = CharacterModule.CharacterActionType.RANGE;
            this.dispatchSignal("sendAction", this.currentAction);
+           this.hideAll();
        }
 
        skipButtonTouched(){
            this.currentAction = CharacterModule.CharacterActionType.SKIP;
            this.dispatchSignal("sendAction", this.currentAction);
+           this.hideAll();
        }
 
        updateLife(amount:number){

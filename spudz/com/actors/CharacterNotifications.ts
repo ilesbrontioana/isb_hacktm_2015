@@ -12,5 +12,6 @@ module CharacterModule
         static  CHARACTER_POSITION:string = "_character_position";
         static  TRY_DAMAGE:string = "_character_try_damage";
         static  TRY_DAMAGE_WITH_RAY:string = "_character_try_damage_with_ray";
+        static  DAMAGE_COMPLETE:string = "_character_damage_complete";
     }
 }
