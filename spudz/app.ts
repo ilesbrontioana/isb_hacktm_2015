@@ -49,7 +49,6 @@ class SimpleGame {
     game: Phaser.Game;
     map:MapModule.Map;
     background;
-    hud;
 
     constructor() {
 
@@ -67,6 +66,7 @@ class SimpleGame {
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("pirate", "../../spudz/bin/assets/character/pirate/", 'Spritesheet_Pirate.png', 'Spritesheet_Pirate.json');
         GraphicsModule.GraphicsManager.getInstance().loadAtlas("space", "../../spudz/bin/assets/character/space/", 'Spritesheet_Space.png', 'Spritesheet_Space.json');
+        GraphicsModule.GraphicsManager.getInstance().loadAtlas("bacon", "../../spudz/bin/assets/character/bacon/", 'Spritesheet_Bacon.png', 'Spritesheet_Bacon.json');
 
         this.game.load.bitmapFont('font', '../../spudz/bin/assets/font/font.png', '../../spudz/bin/assets/font/font.fnt');
         this.game.load.image('bg', '../../spudz/bin/assets/background/backgroud1.png');
@@ -105,7 +105,7 @@ class SimpleGame {
 
         this.map.createLayer('Spudz', 'Stuff');
 
-        SoundsModule.SoundsManager.getInstance().playSound('sound3');
+        //SoundsModule.SoundsManager.getInstance().playSound('sound3');
     }
 
     onStartup() {
