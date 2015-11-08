@@ -108,6 +108,8 @@ class SimpleGame {
         this.map.setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
         this.map.createLayer('Spudz', 'Tiles2Layer');
 
+       //CONNECTION AND CONNECTION SIGNALS
+        this.connection = new ConnectionModule.ConnectionProxy(new WebSocket("ws://192.168.8.2:8001/"));
         this.onStartup();
 
         this.map.createLayer('Spudz', 'Stuff');
