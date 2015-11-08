@@ -20,6 +20,8 @@
 /// <reference path="com/actors/CharacterAnimations.ts" />
 /// <reference path="com/actors/CharacterProxy.ts" />
 /// <reference path="com/actors/CharacterVO.ts" />
+/// <reference path="com/actors/EnemyMediator.ts" />
+/// <reference path="com/actors/EnemyView.ts" />
 
 /// <reference path="com/grid/GridMediator.ts" />
 /// <reference path="com/grid/GridView.ts" />

@@ -11,6 +11,7 @@ module CharacterModule
         static RANGE_ANIMATION:string = "range";
         static DAMAGE_ANIMATION:string = "damage";
         static BLOCK_ANIMATION:string = "block";
+        static ULTIMATE_ANIMATION:string = "ultimate";
     }
 
     export class CharacterAnimationsAssets

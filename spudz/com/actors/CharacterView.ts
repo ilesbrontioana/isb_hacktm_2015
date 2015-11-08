@@ -11,17 +11,17 @@ module CharacterModule
         verticalRectangle;
         horizontalRectangle;
 
-        currentAction = CharacterModule.CharacterActionType.ATTACK;
+        initial = true;
+        attackComplete = false;
+        attackAction;
+
+        currentAction = CharacterModule.CharacterActionType.MOVE;
+        currentAnimation = "";
 
         constructor() {
             super();
 
-            this.createCharacter('pirate', 640, 300, true);
-
             this.createBitmapDataRectangles();
-
-            EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(){
-            }, this);
         }
 
         createBitmapDataRectangles()
@@ -48,8 +48,11 @@ module CharacterModule
             this.verticalRectangle.body.immovable = true;
         }
 
-        createCharacter(characterName, x, y, followCharacter = false)
+        createCharacter(characterName)
         {
+            var x = 680;
+            var y = 1240;
+            var followCharacter = true;
 
             this.graphics = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, characterName);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.IDLE_ANIMATION, Phaser.Animation.generateFrameNames(
@@ -124,11 +127,20 @@ module CharacterModule
             this.game.physics.arcade.isPaused = true;
         }
 
+        startAction(tile)
+        {
+            if(this.currentAction == CharacterModule.CharacterActionType.MOVE)
+            {
+                this.moveCharacter(tile);
+            }
+
+        }
+
         moveCharacter(tile)
         {
             this.graphics.body.gravity.y = 400;
-            this.verticalRectangle.x = tile.x - tile.width/2;
-            this.horizontalRectangle.y = tile.y - tile.height/2;
+            this.verticalRectangle.x = tile.x - tile.width;
+            this.horizontalRectangle.y = tile.y - tile.height;
 
             if(tile.y >= (this.graphics.y - this.graphics.height) && tile.y < (this.graphics.y + this.graphics.height))
             {
@@ -153,55 +165,121 @@ module CharacterModule
             GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 700);
         }
 
+        setCharacterAttackAction(action)
+        {
+            this.attackAction = action;
+            this.attackCharacter();
+        }
+
+        attackCharacter()
+        {
+            //TODO - set direction
+           if(this.attackAction == CharacterActionType.MELEE)
+           {
+                this.animateMelee();
+            }
+            else if(this.attackAction == CharacterActionType.DEFENCE)
+           {
+                this.animateBlock();
+             }
+            else if(this.attackAction == CharacterActionType.RANGE)
+           {
+                this.animateRange();
+            }
+            else if(this.attackAction == CharacterActionType.SKIP) {
+
+              this.onAttackComplete();
+            }
+        }
+
         updateCharacter() {
-            if(this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
+            if(this.currentAction == CharacterModule.CharacterActionType.MOVE &&
+                this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
             {
                 if(this.graphics.body.velocity.x == 0 && this.graphics.body.velocity.y == 0)
                 {
+                    if(this.initial)
+                    {
+                        this.currentAction = CharacterModule.CharacterActionType.ATTACK;
+                        this.initial = false;
+                    }
+                    this.setCurrentAction();
                     this.animateIdle();
+                }
+            }
+            else if(this.currentAction == CharacterModule.CharacterActionType.ATTACK &&
+                this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
+            {
+                if(this.attackComplete)
+                {
+                    this.setCurrentAction();
+
+                    if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
+                    {
+                        this.animateIdle();
+                    }
+                    this.attackComplete = false;
                 }
             }
 
         }
 ////////////////////////////////////
 
-        currentAnimation = "";
+        animateIdle()
+        {
+            this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
+            this.graphics.loop = false;
+            this.currentAnimation = CharacterModule.CharacterAnimations.IDLE_ANIMATION;
+        }
 
         animateWalk(){
             this.graphics.play(CharacterModule.CharacterAnimations.RUN_ANIMATION);
+            this.graphics.loop = true;
             this.currentAnimation = CharacterModule.CharacterAnimations.RUN_ANIMATION;
 
         }
 
         animateJump(){
             this.graphics.play(CharacterModule.CharacterAnimations.JUMP_ANIMATION);
+            this.graphics.loop = true;
             this.currentAnimation = CharacterModule.CharacterAnimations.JUMP_ANIMATION;
         }
 
         animateBlock(){
-            this.graphics.play(CharacterModule.CharacterAnimations.BLOCK_ANIMATION);
+            this.graphics.play(CharacterModule.CharacterAnimations.BLOCK_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.BLOCK_ANIMATION;
+            this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
         animateMelee(){
-            this.graphics.play(CharacterModule.CharacterAnimations.MELEE_ANIMATION);
+            this.graphics.play(CharacterModule.CharacterAnimations.MELEE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.MELEE_ANIMATION;
+            this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
         animateRange(){
-            this.graphics.play(CharacterModule.CharacterAnimations.RANGE_ANIMATION);
+            this.graphics.play(CharacterModule.CharacterAnimations.RANGE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.RANGE_ANIMATION;
+            this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
         animateUltimate(){
 
+            this.graphics.play(CharacterModule.CharacterAnimations.ULTIMATE_ANIMATION, 30, false);
+            this.currentAnimation = CharacterModule.CharacterAnimations.ULTIMATE_ANIMATION;
+            this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
+        }
+
+        onAttackComplete()
+        {
+            this.graphics.events.onAnimationComplete.removeAll();
+            this.attackComplete = true;
         }
 
         animateIdle()
         {
-            this.setCurrentAction();
-
             this.graphics.play(CharacterModule.CharacterAnimations.IDLE_ANIMATION);
+            this.graphics.loop = false;
             this.currentAnimation = CharacterModule.CharacterAnimations.IDLE_ANIMATION;
         }
 
@@ -217,7 +295,8 @@ module CharacterModule
             }
             this.dispatchSignal("CharacterPosition", {  x: this.graphics.x + this.graphics.width/2,
                                                         y: this.graphics.y + this.graphics.height/2,
-                                                        actionType: this.currentAction});
+                                                        actionType: this.currentAction,
+                                                        addActionRay:true});
         }
     }
 }

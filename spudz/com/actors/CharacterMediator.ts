@@ -9,23 +9,28 @@ module CharacterModule
 
         constructor(viewComponent:MvcModule.View){
 
+            EventsModule.SignalsManager.getInstance().createBinding("move", function(){},this);
             EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
-                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
+
+                if(body.addActionRay == true)
+                {
+                    MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
+                }
                 if(body.actionType == CharacterActionType.MOVE)
                 {
                     this.moveVO.ability = ""
                     this.moveVO.destination = {x:body.x, y:body.y}
                     this.moveVO.player_health =  MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).getLife();
                     this.moveVO.player_pos = {x:body.x, y:body.y}
-                    //this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.moveVO);
+                    this.dispatchSignal("move", this.moveVO);
                 } else{
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
                 }
-
-
             }, this);
 
             super(viewComponent);
+
+            viewComponent.createCharacter('pirate');
         }
 
         onRegister(){
@@ -41,6 +46,7 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.RANGE,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
+                CharacterActionType.ATTACK,
                 CharacterModule.CharacterNotifications.ULTIMATE];
         }
 
@@ -53,7 +59,7 @@ module CharacterModule
                     this.viewComponent.updateCharacter();
                     break;
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
-                    this.viewComponent.moveCharacter(notification.body)
+                    this.viewComponent.startAction(notification.body)
                     break;
                 case CharacterModule.CharacterNotifications.BLOCK:
                     this.viewComponent.animateBlock(notification.body)
@@ -79,6 +85,9 @@ module CharacterModule
                         MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_ENERGY,
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.energy);
                     break
+                case CharacterActionType.ATTACK:
+                        this.viewComponent.setCharacterAttackAction(notification.body);
+                    break;
             }
         }
     }
