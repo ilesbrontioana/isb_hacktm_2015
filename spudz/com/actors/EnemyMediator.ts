@@ -31,7 +31,7 @@ module CharacterModule
 
             super(viewComponent);
 
-            viewComponent.createCharacter('bacon');
+            viewComponent.createCharacter('pirate');
         }
 
         onRegister(){
