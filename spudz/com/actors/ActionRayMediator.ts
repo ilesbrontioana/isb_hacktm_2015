@@ -1,21 +1,23 @@
 /**
  * Created by Ioana on 11/7/2015.
  */
+
 module CharacterModule {
     export class ActionRayMediator extends MvcModule.Mediator {
-        static NAME:string = this + "ActionRayMediator";
+
+        static NAME:string = "ActionRayMediator";
 
         constructor(viewComponent:MvcModule.View) {
             super(viewComponent);
-            EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(tile){
+            EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(tile:Phaser.Sprite){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.GRID_TOUCHED, tile);
             }, this);
         }
 
-        listNotificationInterests():Array{
+        listNotificationInterests():Array<string>{
             return [CharacterModule.CharacterNotifications.CHARACTER_POSITION,
                     GridModule.GridNotifications.GRID_CREATED,
-                CharacterModule.CharacterActionType.ATTACK,
+                    CharacterModule.CharacterActionType.ATTACK,
                     CharacterModule.CharacterNotifications.TRY_DAMAGE
                     ];
         }
@@ -23,16 +25,16 @@ module CharacterModule {
         handleNotification(notification:MvcModule.INotification) {
             switch (notification.name){
                 case CharacterModule.CharacterNotifications.CHARACTER_POSITION:
-                    this.viewComponent.addActionRayAt(notification.body.x, notification.body.y, notification.body.actionType);
+                    (this.viewComponent as ActionRayView).addActionRayAt(notification.body.x, notification.body.y, notification.body.actionType);
                     break;
                 case GridModule.GridNotifications.GRID_CREATED:
-                    this.viewComponent.setGrid(notification.body);
+                    (this.viewComponent as ActionRayView).setGrid(notification.body);
                     break;
                 case CharacterModule.CharacterNotifications.TRY_DAMAGE:
-                    MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY, this.viewComponent.attackCircle);
+                    MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY, (this.viewComponent as ActionRayView).attackCircle);
                     break;
                 case CharacterModule.CharacterActionType.ATTACK:
-                    this.viewComponent.removeActionRay();
+                    (this.viewComponent as ActionRayView).removeActionRay();
                     break;
             }
         }

@@ -8,7 +8,7 @@ module WelcomeModule{
 
         constructor(){
             super();
-            this.bmd = this.game.add.image(50,50,"ui", "button.png")
+            this.bmd = this.game.add.sprite(50,50,"ui", "button.png")
 
             this.bmd.inputEnabled = true;
             this.bmd.events.onInputDown.add(this.onStartGamePressed, this);

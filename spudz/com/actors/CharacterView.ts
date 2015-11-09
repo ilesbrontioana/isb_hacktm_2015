@@ -4,19 +4,21 @@
 module CharacterModule
 {
     export class CharacterView extends MvcModule.View{
-        graphics;
+
+        graphics:Phaser.Sprite;
 
         speed = 1000;
 
-        verticalRectangle;
-        horizontalRectangle;
+        verticalRectangle:Phaser.Sprite;
+        horizontalRectangle:Phaser.Sprite;
 
-        initial = true;
-        attackComplete = false;
-        attackAction;
+        initial:Boolean = true;
+        attackComplete:Boolean = false;
 
-        currentAction = CharacterModule.CharacterActionType.MOVE;
-        currentAnimation = "";
+        currentAction:string = CharacterModule.CharacterActionType.MOVE;
+        currentAnimation:string = "";
+
+        collideWithMapLayers:Boolean;
 
         constructor() {
             super();
@@ -26,35 +28,35 @@ module CharacterModule
 
         createBitmapDataRectangles()
         {
-            var bmd = GameControllerModule.GameController.getInstance().game.add.bitmapData(4, 4);
+            var bmd = this.game.add.bitmapData(4, 4);
             bmd.ctx.fillStyle = '#000000';
             bmd.ctx.beginPath();
             bmd.ctx.fillRect(0,0,4,4);
             bmd.ctx.closePath();
             bmd.ctx.fill();
-            GameControllerModule.GameController.getInstance().game.cache.addBitmapData("SmallRectangleBMP", bmd);
+            this.game.cache.addBitmapData("SmallRectangleBMP", bmd);
 
-            this.verticalRectangle  = GameControllerModule.GameController.getInstance().game.add.sprite(0, 0, GameControllerModule.GameController.getInstance().game.cache.getBitmapData("SmallRectangleBMP"));
-            this.horizontalRectangle  = GameControllerModule.GameController.getInstance().game.add.sprite(0, 0, GameControllerModule.GameController.getInstance().game.cache.getBitmapData("SmallRectangleBMP"));
+            this.verticalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
+            this.horizontalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
             this.verticalRectangle.alpha = 0;
             this.horizontalRectangle.alpha = 0;
             this.horizontalRectangle.width = 2000;
             this.verticalRectangle.height = 1400;
 
-            GameControllerModule.GameController.getInstance().game.physics.enable(this.horizontalRectangle, Phaser.Physics.ARCADE);
-            GameControllerModule.GameController.getInstance().game.physics.enable(this.verticalRectangle, Phaser.Physics.ARCADE);
+            this.game.physics.enable(this.horizontalRectangle, Phaser.Physics.ARCADE);
+            this.game.physics.enable(this.verticalRectangle, Phaser.Physics.ARCADE);
 
             this.horizontalRectangle.body.immovable = true;
             this.verticalRectangle.body.immovable = true;
         }
 
-        createCharacter(characterName)
+        createCharacter(characterName:string)
         {
             var x = 680;
             var y = 1240;
             var followCharacter = true;
 
-            this.graphics = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, characterName);
+            this.graphics = this.game.add.sprite(x, y, characterName);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.IDLE_ANIMATION, Phaser.Animation.generateFrameNames(
                             CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.IDLE_ANIMATION],
                             0, 18, '', 4), 30, true);
@@ -77,7 +79,7 @@ module CharacterModule
                             CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.BLOCK_ANIMATION],
                             0, 21, '', 4), 30, true);
 
-            GameControllerModule.GameController.getInstance().game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
+            this.game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
             this.graphics.body.collideWorldBounds = true;
             this.graphics.body.gravity.y = 400;
@@ -88,33 +90,31 @@ module CharacterModule
 
             if(followCharacter == true)
             {
-                GameControllerModule.GameController.getInstance().game.camera.follow(this.graphics);
+                this.game.camera.follow(this.graphics);
             }
         }
 
-        checkCollision(map){
-            this.collide = false;
-            for(var i = 0; i < map.length; i++)
+        checkCollision(layers:Array<Phaser.TilemapLayer>){
+            this.collideWithMapLayers = false;
+            for(var i = 0; i < layers.length; i++)
             {
-                GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, map[i], this.collideWithMap, null, this);
+                this.game.physics.arcade.collide(this.graphics, layers[i], this.collideWithMap, null, this);
             }
-            if(!this.collide)
+            if(!this.collideWithMapLayers)
             {
                 if(this.currentAnimation == CharacterModule.CharacterAnimations.RUN_ANIMATION)
                 {
                     this.animateJump();
                 }
             }
-            GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.collideWithRectangle, null, this);
-            GameControllerModule.GameController.getInstance().game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.collideWithRectangle, null, this);
+            this.game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.collideWithRectangle, null, this);
+            this.game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.collideWithRectangle, null, this);
 
         }
 
-        collide;
-
         collideWithMap()
         {
-           this.collide = true;
+           this.collideWithMapLayers = true;
         }
 
         collideWithRectangle()
@@ -126,68 +126,57 @@ module CharacterModule
             this.game.physics.arcade.isPaused = true;
         }
 
-        startAction(tile)
+        startAction(tile:Phaser.Sprite)
         {
             if(this.currentAction == CharacterModule.CharacterActionType.MOVE)
             {
-                this.moveCharacter(tile);
-            }
+                this.graphics.body.gravity.y = 400;
+                this.verticalRectangle.x = tile.x - tile.width;
+                this.horizontalRectangle.y = tile.y - tile.height;
 
-        }
-
-        moveCharacter(tile)
-        {
-            this.graphics.body.gravity.y = 400;
-            this.verticalRectangle.x = tile.x - tile.width;
-            this.horizontalRectangle.y = tile.y - tile.height;
-
-            if(tile.y >= (this.graphics.y - this.graphics.height) && tile.y < (this.graphics.y + this.graphics.height))
-            {
-                this.animateWalk();
-                if(tile.x < this.graphics.x)
+                if(tile.y >= (this.graphics.y - this.graphics.height) && tile.y < (this.graphics.y + this.graphics.height))
                 {
-                    this.graphics.scale.x = -1;
-                    this.graphics.body.setSize(50, this.graphics.height, -this.graphics.width + this.graphics.width/2 - 30, 0);
+                    this.animateWalk();
+                    if(tile.x < this.graphics.x)
+                    {
+                        this.graphics.scale.x = -1;
+                        this.graphics.body.setSize(50, this.graphics.height, -this.graphics.width + this.graphics.width/2 - 30, 0);
 
+                    }
+                    else
+                    {
+                        this.graphics.scale.x = 1;
+                        this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
+                    }
                 }
                 else
                 {
-                    this.graphics.scale.x = 1;
-                    this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
+                    this.animateJump();
                 }
-            }
-            else
-            {
-                this.animateJump();
+
+                this.game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 700);
             }
 
-            GameControllerModule.GameController.getInstance().game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 700);
         }
 
-        setCharacterAttackAction(action)
-        {
-            this.attackAction = action;
-            this.attackCharacter();
-        }
-
-        attackCharacter()
+        setCharacterAttackAction(attackAction:string)
         {
             //TODO - set direction
-           if(this.attackAction == CharacterActionType.MELEE)
-           {
+            if(attackAction == CharacterActionType.MELEE)
+            {
                 this.animateMelee();
             }
-            else if(this.attackAction == CharacterActionType.DEFENCE)
-           {
+            else if(attackAction == CharacterActionType.DEFENCE)
+            {
                 this.animateBlock();
-             }
-            else if(this.attackAction == CharacterActionType.RANGE)
-           {
+            }
+            else if(attackAction == CharacterActionType.RANGE)
+            {
                 this.animateRange();
             }
-            else if(this.attackAction == CharacterActionType.SKIP) {
+            else if(attackAction == CharacterActionType.SKIP) {
 
-              this.onAttackComplete();
+                this.onAttackComplete();
             }
         }
 
@@ -235,6 +224,11 @@ module CharacterModule
 
                 }
             }
+
+        }
+
+        animateTakeDamage(body:any)
+        {
 
         }
 

@@ -8,17 +8,17 @@ module MapModule
         assetPath = '../../spudz/bin/assets/map/';
 
         static maps: {[name:string]:Phaser.Tilemap; } = {};
-        static layers: {[name:string]: {[layerName:string]: Phaser.Phaser.TilemapLayer;}; } = {};
+        static layers: {[name:string]: {[layerName:string]: Phaser.TilemapLayer;}; } = {};
 
         constructor () {
         }
 
-        loadMap(name) {
+        loadMap(name:string) {
             GameControllerModule.GameController.getInstance().game.load.tilemap(name + 'map', this.assetPath + name + '.json', null, Phaser.Tilemap.TILED_JSON);
             GameControllerModule.GameController.getInstance().game.load.image(name + 'tiles', this.assetPath + name + '.png');
         }
 
-        createMap(name) {
+        createMap(name:string) {
             var map = GameControllerModule.GameController.getInstance().game.add.tilemap(name + 'map');
             map.addTilesetImage(name, name + 'tiles');
             map.setCollisionBetween(0, map.tiles.length);
@@ -26,7 +26,7 @@ module MapModule
             Map.maps[name] = map;
         }
 
-        createLayer(mapName, layerName)
+        createLayer(mapName:string, layerName:string)
         {
             var layer = Map.maps[mapName].createLayer(layerName);
             layer.resizeWorld();
@@ -42,7 +42,7 @@ module MapModule
             Map.maps[mapName].setCollisionByExclusion([], true, layer);
         }
 
-        setLayerCollision(mapName, layerName, collideUp, collideLeft, collideRight, collideDown)
+        setLayerCollision(mapName:string, layerName:string, collideUp:boolean, collideLeft:boolean, collideRight:boolean, collideDown:boolean)
         {
             var layer = Map.layers[mapName][layerName];
             var grid = layer.layer.data;

@@ -3,7 +3,7 @@
  */
 module MvcModule {
     export class View {
-        public game;
+        public game:Phaser.Game;
         public signalsManager:EventsModule.SignalsManager;
         constructor(){
             this.game = GameControllerModule.GameController.getInstance().game;

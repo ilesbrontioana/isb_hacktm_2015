@@ -3,7 +3,7 @@
  */
 module WelcomeModule{
     export class WelcomeMediator extends MvcModule.Mediator{
-        static NAME:string = this+"WelcomeMediator";
+        static NAME:string = "WelcomeMediator";
 
         constructor(viewComponent:MvcModule.View){
             super(viewComponent);
@@ -27,7 +27,7 @@ module WelcomeModule{
             });
         }
 
-        listNotificationInterests():Array{
+        listNotificationInterests():Array<string>{
             return [WelcomeModule.WelcomeNotifications.WELCOME];
         }
 

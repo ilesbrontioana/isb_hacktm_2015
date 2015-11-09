@@ -5,10 +5,11 @@ module CharacterModule
 {
     export class CharacterProxy extends MvcModule.Proxy{
 
-        static NAME:string = this + "CharacterProxy";
+        static NAME:string = "CharacterProxy";
 
         constructor(){
-           this.VO = new CharacterVO();
+            super();
+            this.VO = new CharacterVO();
         }
 
         setLife(value:number){

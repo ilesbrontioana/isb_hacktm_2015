@@ -1,6 +1,7 @@
 /**
  * Created by adm on 05.11.15.
- */
+ *//// <reference path="../../../com/managers/events/SignalsManager.ts" />
+
 module MvcModule {
     export class Mediator {
         public viewComponent:View;

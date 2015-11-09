@@ -24,8 +24,7 @@ module SoundsModule
         }
 
         loadSounds(){
-            var i;
-            for(i = 0; i < SoundsModule.SoundNames.soundNames.length; i++)
+            for(var i = 0; i < SoundsModule.SoundNames.soundNames.length; i++)
             {
                 var soundName = SoundsModule.SoundNames.soundNames[i];
                 GameControllerModule.GameController.getInstance().game.load.audio(soundName, this.assetPath + soundName + ".wav");
@@ -33,8 +32,7 @@ module SoundsModule
         }
 
         createSounds() {
-            var i;
-            for(i = 0; i < SoundsModule.SoundNames.soundNames.length; i++)
+            for(var i = 0; i < SoundsModule.SoundNames.soundNames.length; i++)
             {
                 var soundName = SoundsModule.SoundNames.soundNames[i];
                 var sound = GameControllerModule.GameController.getInstance().game.add.audio(soundName);
@@ -42,7 +40,7 @@ module SoundsModule
             }
         }
 
-        playSound(name, duration = 0, loop = false, force = false) {
+        playSound(name:string, duration:number = 0, loop:Boolean = false, force:Boolean = false) {
             if(this.sounds[name])
             {
                 if(!this.sounds[name].isPlaying && !this.sounds[name].paused)
@@ -86,7 +84,7 @@ module SoundsModule
             }
         }
 
-        stopSound(name, duration = 0)
+        stopSound(name:string, duration:number = 0)
         {
             if(this.sounds[name])
             {
@@ -105,7 +103,7 @@ module SoundsModule
             }
         }
 
-        pauseSound(name)
+        pauseSound(name:string)
         {
             if(this.sounds[name])
             {
@@ -116,7 +114,7 @@ module SoundsModule
             }
         }
 
-        resumeSound(name)
+        resumeSound(name:string)
         {
             if(this.sounds[name])
             {
@@ -127,7 +125,7 @@ module SoundsModule
             }
         }
 
-        changeSoundVolume(name, volume, duration = 0)
+        changeSoundVolume(name:string, volume:number, duration:number = 0)
         {
             if(this.sounds[name])
             {

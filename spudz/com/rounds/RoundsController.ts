@@ -3,7 +3,7 @@
  */
 module RoundsModule{
     export class RoundsCommand extends MvcModule.Controller{
-        static NAME:string = this+"RoundsController";
+        static NAME:string = "RoundsController";
 
         moveVo:ConnectionModule.MoveVO;
 
@@ -21,7 +21,7 @@ module RoundsModule{
         }
 
         onRegister(){
-            ConnectionModule = new ConnectionModule.MoveVO();
+            this.moveVo = new ConnectionModule.MoveVO();
         }
     }
 }

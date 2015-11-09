@@ -4,14 +4,18 @@
 module GridModule
 {
     export class GridMediator extends MvcModule.Mediator{
-        static NAME:string = this + "GridMediator";
+        static NAME:string = "GridMediator";
 
         constructor(viewComponent:MvcModule.View){
             super(viewComponent);
-            MvcModule.Mvc.getInstance().sendNotification(GridModule.GridNotifications.GRID_CREATED, viewComponent.getTiles());
         }
 
-        listNotificationInterests():Array{
+        onRegister()
+        {
+            MvcModule.Mvc.getInstance().sendNotification(GridModule.GridNotifications.GRID_CREATED, (this.viewComponent as GridView).getTiles());
+        }
+
+        listNotificationInterests():Array<string>{
             return [];
         }
 

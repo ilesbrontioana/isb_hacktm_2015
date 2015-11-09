@@ -6,7 +6,7 @@ module UserInterfaceModule{
 
     export class UIMediator extends MvcModule.Mediator
     {
-        static  NAME:string = this+"UIMediator";
+        static  NAME:string = "UIMediator";
 
         constructor(viewComponent:MvcModule.View){
             super(viewComponent);
@@ -16,7 +16,7 @@ module UserInterfaceModule{
             this.addListenerToSignal("sendAction", this.doPlayerAction, this);
         }
 
-        listNotificationInterests():Array{
+        listNotificationInterests():Array<string>{
             return [UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU,
                 UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU,
                 UserInterfaceModule.UINotifications.UPDATE_LIFE,
@@ -29,10 +29,10 @@ module UserInterfaceModule{
             console.log(notification.name+" "+notification.body);
             switch (notification.name){
                 case UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU:
-                    this.viewComponent.hideActionsMenu();
+                    (this.viewComponent as UIView).hideActionsMenu();
                     break;
                 case UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU:
-                    this.viewComponent.showActionsMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
+                    (this.viewComponent as UIView).showActionsMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
                     break;
                 case  UserInterfaceModule.UINotifications.UPDATE_LIFE:
                     break;

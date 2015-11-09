@@ -4,20 +4,20 @@
 module RoundsModule{
     export class RoundsMediator extends MvcModule.Mediator{
 
-        static NAME:string = this+"RoundsMediator";
+        static NAME:string = "RoundsMediator";
 
         constructor(viewComponent:MvcModule.View){
             super(viewComponent);
         }
 
-        listNotificationInterests():Array{
+        listNotificationInterests():Array<string>{
             return [RoundsModule.RoundsNotifications.UPDATE_ROUND];
         }
 
         handleNotification(notification:MvcModule.INotification) {
             switch (notification.name) {
                 case RoundsModule.RoundsNotifications.UPDATE_ROUND:
-                    MvcModule.Mvc.getInstance().retrieveProxy(RoundsModule.RoundsProxy).setRound(notification.body);
+                    (MvcModule.Mvc.getInstance().retrieveProxy(RoundsModule.RoundsProxy.NAME) as RoundsProxy).setRound(notification.body);
                     break;
             }
         }

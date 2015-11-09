@@ -56,7 +56,7 @@
 class SimpleGame {
     game: Phaser.Game;
     map:MapModule.Map;
-    background;
+    background:Phaser.Image;
 
     constructor() {
 
@@ -153,7 +153,7 @@ window.onload = () => {
 ///////////////////////////////////////////////////////////////////////////
 class testView extends MvcModule.View{
     constructor(){
-
+        super();
 
     }
 }
@@ -176,6 +176,7 @@ class StartupMediator extends MvcModule.Mediator{
 
 class testProxy extends MvcModule.Proxy{
     constructor(){
+        super();
         this.sendNotification("TestProxy", 2)
     }
 }

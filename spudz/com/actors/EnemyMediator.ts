@@ -5,16 +5,17 @@ module CharacterModule
 {
     export class EnemyMediator extends MvcModule.Mediator
     {
-        static NAME:string = this + "EnemyMediator";
+        static NAME:string = "EnemyMediator";
+
         moveVO:ConnectionModule.MoveVO;
 
         constructor(viewComponent:MvcModule.View){
 
             EventsModule.SignalsManager.getInstance().createBinding("move", function(){},this);
-            EventsModule.SignalsManager.getInstance().createBinding("CharacterDamage", function(damage){
+            EventsModule.SignalsManager.getInstance().createBinding("CharacterDamage", function(damage:number){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.DAMAGE_COMPLETE, damage);
             },this);
-            EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body){
+            EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body:any){
 
                 if(body.addActionRay == true)
                 {
@@ -28,10 +29,10 @@ module CharacterModule
         onRegister(){
             this.moveVO = new ConnectionModule.MoveVO();
 
-            this.viewComponent.createCharacter('bacon');
+            (this.viewComponent as EnemyView).createCharacter('bacon');
         }
 
-        listNotificationInterests():Array{
+        listNotificationInterests():Array<string>{
             return [CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
@@ -41,15 +42,15 @@ module CharacterModule
         }
 
         handleNotification(notification:MvcModule.INotification) {
-            MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.character = this.viewComponent.graphics;
+            MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.character = (this.viewComponent as EnemyView).graphics;
 
             switch (notification.name){
                 case CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION:
-                    this.viewComponent.checkCollision(notification.body)
-                    this.viewComponent.updateCharacter();
+                    (this.viewComponent as EnemyView).checkCollision(notification.body as Array<Phaser.TilemapLayer>);
+                    (this.viewComponent as EnemyView).updateCharacter();
                     break;
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
-                    this.viewComponent.animateTakeDamage(notification.body);
+                    (this.viewComponent as EnemyView).animateTakeDamage(notification.body);
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.life);
                     break
@@ -58,7 +59,7 @@ module CharacterModule
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.energy);
                     break
                 case  CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY:
-                    this.viewComponent.tryDamage(notification.body);
+                    (this.viewComponent as EnemyView).tryDamage(notification.body);
                     break;
             }
         }

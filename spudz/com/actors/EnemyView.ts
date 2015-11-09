@@ -10,12 +10,15 @@ module CharacterModule
             super();
         }
 
-        createCharacter(characterName)
+
+        overlapWithCircle:Boolean;
+
+        createCharacter(characterName:string)
         {
             var x = 1160;
             var y = 1240;
 
-            this.graphics = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, characterName);
+            this.graphics = this.game.add.sprite(x, y, characterName);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.IDLE_ANIMATION, Phaser.Animation.generateFrameNames(
                 CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.IDLE_ANIMATION],
                 0, 18, '', 4), 30, true);
@@ -38,7 +41,7 @@ module CharacterModule
                 CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.BLOCK_ANIMATION],
                 0, 21, '', 4), 30, true);
 
-            GameControllerModule.GameController.getInstance().game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
+            this.game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
             this.graphics.body.collideWorldBounds = true;
             this.graphics.body.gravity.y = 400;
@@ -56,13 +59,12 @@ module CharacterModule
                 addActionRay:false});
         }
 
-        overlap;
-        tryDamage(graphics)
+        tryDamage(graphics:Phaser.Sprite)
         {
-            this.overlap = false;
-            GameControllerModule.GameController.getInstance().game.physics.arcade.overlap(this.graphics, graphics, this.addDamage, null, this);
+            this.overlapWithCircle = false;
+            this.game.physics.arcade.overlap(this.graphics, graphics, this.addDamage, null, this);
             var damage = 0;
-            if(this.overlap == true)
+            if(this.overlapWithCircle == true)
             {
                 this.animateHit();
                 damage = 10;
@@ -72,7 +74,7 @@ module CharacterModule
 
         addDamage()
         {
-            this.overlap = true;
+            this.overlapWithCircle = true;
         }
 
 

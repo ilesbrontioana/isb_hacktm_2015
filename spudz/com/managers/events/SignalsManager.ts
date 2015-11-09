@@ -1,12 +1,13 @@
 /**
  * Created by adm on 04.11.15.
  */
+/// <reference path="../../../phaser.d.ts" />
+
 module EventsModule
 {
     export class SignalsManager{
         private static _instance:SignalsManager = new SignalsManager();
         public signals: ISignal = {};
-        public scope;
 
         constructor(){
             if(SignalsManager._instance){
@@ -19,7 +20,7 @@ module EventsModule
             return SignalsManager._instance;
         }
 
-        public createBinding(name:string, listener, listenerContext?, priority?, args?){
+        public createBinding(name:string, listener:Function, listenerContext?, priority?, args?:any){
             if(!this.signals[name]) {
                 var custBind:CustomBinding = new CustomBinding();
                 this.signals[name] = custBind;
@@ -30,7 +31,7 @@ module EventsModule
             this.signals[name].context = listenerContext;
         }
 
-        public dispatch(name:string, args?){
+        public dispatch(name:string, args?:any){
             var bindings = this.signals[name].bindings;
             for(var i = 0; i<bindings.length; i++){
                 bindings[i].getListener().call(this.signals[name].context, args);
@@ -44,8 +45,7 @@ module EventsModule
 
     export class CustomBinding{
         public signal:Phaser.Signal
-        public bindings:Array<SignalBinding>
-        public context;
+        public bindings:Array<Phaser.SignalBinding>
 
         constructor(){
             this.signal = new Phaser.Signal();

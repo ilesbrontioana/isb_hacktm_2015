@@ -4,10 +4,11 @@
 
 module ConnectionModule {
     export class ConnectionProxy extends MvcModule.Proxy {
-        websocket;
+        websocket:WebSocket;
         signalsToDispatch;
 
-        constructor(websocket) {
+        constructor(websocket:WebSocket) {
+            super();
             this.signalsToDispatch = [
                 ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER,
                 ConnectionModule.ConnectionSignals.START_MATCH,
@@ -31,15 +32,15 @@ module ConnectionModule {
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.REGISTER_NAME, this.registerName, this);
 
             this.websocket.cmodule = this;
-            this.websocket.onmessage = function (evt) {
+            this.websocket.onmessage = function (evt:any) {
                 this.cmodule.onMessage(evt)
             };
-            this.websocket.onerror = function (evt) {
+            this.websocket.onerror = function (evt:any) {
                 this.cmodule.onError(evt)
             };
         }
 
-        onMessage(evt) {
+        onMessage(evt:any) {
             var data = JSON.parse(evt.data);
             console.log(">>>> " + data.name + " WITH PARAMS: " + JSON.stringify(data.param));
 
@@ -57,12 +58,12 @@ module ConnectionModule {
                 }
             }
 
-            onError(evt)
+            onError(evt:any)
             {
                 console.log("Connection error: " + evt.data)
             }
 
-            findMatch(msg)
+            findMatch(msg:any)
             {
                 this.doSendObj({
                     name: 'find_match',
@@ -70,7 +71,7 @@ module ConnectionModule {
                 });
             }
 
-            selectCharacter(msg)
+            selectCharacter(msg:any)
             {
                 this.doSendObj({
                     name: 'select character',
@@ -78,7 +79,7 @@ module ConnectionModule {
                 });
             }
 
-            sendMove(move)
+            sendMove(move:any)
             {
                 this.doSendObj({
                     name: 'move',
@@ -95,7 +96,7 @@ module ConnectionModule {
                 });
             }
 
-            registerName(msg)
+            registerName(msg:any)
             {
                 this.doSendObj({
                     name: 'register_name',
@@ -103,7 +104,7 @@ module ConnectionModule {
                 });
             }
 
-            createMoveVO(data):ConnectionModule.MoveVO
+            createMoveVO(data:any):ConnectionModule.MoveVO
             {
                 var moveVO:ConnectionModule.MoveVO = new MoveVO();
                 moveVO.destination = JSON.parse(data.destination);
@@ -118,13 +119,13 @@ module ConnectionModule {
                 return moveVO;
             }
 
-            doSend(obj)
+            doSend(obj:any)
             {
                 console.log("<<<< " + obj);
                 this.websocket.send(obj);
             }
 
-            doSendObj(obj)
+            doSendObj(obj:any)
             {
                 this.doSend(JSON.stringify(obj));
             }

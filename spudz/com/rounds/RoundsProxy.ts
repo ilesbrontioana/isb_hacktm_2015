@@ -4,10 +4,11 @@
 module RoundsModule{
     export class RoundsProxy extends MvcModule.Proxy{
 
-        static NAME:string = this + "RoundsProxy";
+        static NAME:string = "RoundsProxy";
 
         constructor(){
-           this.VO = new RoundsModule.RoundsVO();
+            super();
+            this.VO = new RoundsModule.RoundsVO();
         }
 
         public setRound(round:any){

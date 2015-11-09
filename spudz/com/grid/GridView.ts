@@ -3,39 +3,38 @@
  */
 module GridModule
 {
-    export class GridView{
+    export class GridView extends MvcModule.View{
 
-        tiles = [];
+        tiles:Array<Array<GridModule.Tile>> = [];
 
         constructor (){
-            EventsModule.SignalsManager.getInstance().createBinding("GridCreated", function(){
-            }, this);
+            super();
             this.buildGrid(0, 0, 50, 35, 40, 40);
         }
 
         buildGrid(x:number, y:number, gridH:number, gridV:number, tileW:number, tileH:number){
-            var bmd = GameControllerModule.GameController.getInstance().game.add.bitmapData(tileW, tileH);
+            var bmd = this.game.add.bitmapData(tileW, tileH);
             bmd.ctx.fillStyle = '#CCCCCC';
             bmd.ctx.beginPath();
             bmd.ctx.fillRect(0, 0, tileW, tileH);
             bmd.ctx.closePath();
-            GameControllerModule.GameController.getInstance().game.cache.addBitmapData("GridElementBMD", bmd);
+            this.game.cache.addBitmapData("GridElementBMD", bmd);
             for (var i = 0; i<gridH; i++){
                 this.tiles.push([])
                 for (var j = 0; j<gridV; j++){
-                    var t:Tile = new Tile("GridElementBMD", x + tileW*i, y + tileH*j);
+                    var t:Tile = new Tile("GridElementBMD", x + tileW*i, y + tileH*j, this.game);
                     this.tiles[i].push(t);
-                    GameControllerModule.GameController.getInstance().game.physics.enable(t.graphics, Phaser.Physics.ARCADE);
+                    this.game.physics.enable(t.graphics, Phaser.Physics.ARCADE);
                 }
             }
         }
 
-        getTiles():Array
+        getTiles():Array<Array<GridModule.Tile>>
         {
             return this.tiles;
         }
 
-        getTileAt(x, y):GridModule.Tile
+        getTileAt(x:number, y:number):GridModule.Tile
         {
             for(var i = 0; i < this.tiles.length; i++) {
                 for (var j = 0; j < this.tiles[i].length; j++) {
@@ -51,9 +50,9 @@ module GridModule
     }
 
     export class Tile{
-        graphics;
-        constructor (bitmapKey:string,x:number, y:number){
-            this.graphics = GameControllerModule.GameController.getInstance().game.add.sprite(x, y, GameControllerModule.GameController.getInstance().game.cache.getBitmapData(bitmapKey));
+        graphics:Phaser.Sprite;
+        constructor (bitmapKey:string,x:number, y:number, game:Phaser.Game){
+            this.graphics = game.add.sprite(x, y, game.cache.getBitmapData(bitmapKey));
             this.graphics.alpha = 0;
         }
     }

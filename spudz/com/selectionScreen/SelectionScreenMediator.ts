@@ -30,7 +30,7 @@ module SelectionScreenModule{
             });
         }
 
-        listNotificationInterests():Array{
+        listNotificationInterests():Array<string>{
             return [WelcomeModule.WelcomeNotifications.WELCOME];
         }
 

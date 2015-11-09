@@ -20,27 +20,27 @@ module SelectionScreenModule{
 
         constructor(){
             super();
-            this.bmd = this.game.add.image(50,50,"ui", "button.png");
+            this.bmd = this.game.add.sprite(50,50,"ui", "button.png");
 
-            this.background = this.game.add.image(0,0,'background_welcome_screen');
+            this.background = this.game.add.sprite(0,0,'background_welcome_screen');
 
-            this.active_bacon = this.game.add.image(0,0,'active_bacon');
+            this.active_bacon = this.game.add.sprite(0,0,'active_bacon');
             this.active_bacon.visible = false;
 
-            this.active_pirate = this.game.add.image(0,0,'active_pirate');
+            this.active_pirate = this.game.add.sprite(0,0,'active_pirate');
             this.active_pirate.visible = false;
 
-            this.active_space = this.game.add.image(0,0,'active_space');
+            this.active_space = this.game.add.sprite(0,0,'active_space');
             this.active_space.visible = false;
 
-            this.back_button = this.game.add.image(0,0,'back_button');
-            this.menu_bar = this.game.add.image(0,0,'menu_bar');
-            this.menu_button = this.game.add.image(0,0,'menu_button');
-            this.next_button = this.game.add.image(0,0,'next_button');
+            this.back_button = this.game.add.sprite(0,0,'back_button');
+            this.menu_bar = this.game.add.sprite(0,0,'menu_bar');
+            this.menu_button = this.game.add.sprite(0,0,'menu_button');
+            this.next_button = this.game.add.sprite(0,0,'next_button');
 
-            this.non_active_bacon = this.game.add.image(0,0,'non-active_bacon');
-            this.non_active_pirate = this.game.add.image(0,0,'non-active_pirate');
-            this.non_active_space = this.game.add.image(0,0,'non-active_space');
+            this.non_active_bacon = this.game.add.sprite(0,0,'non-active_bacon');
+            this.non_active_pirate = this.game.add.sprite(0,0,'non-active_pirate');
+            this.non_active_space = this.game.add.sprite(0,0,'non-active_space');
 
             this.background.inputEnabled = true;
             this.background.events.onInputDown.add(this.onStartGamePressed, this);

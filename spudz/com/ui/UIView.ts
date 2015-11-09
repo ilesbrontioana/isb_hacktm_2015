@@ -4,7 +4,6 @@
 module UserInterfaceModule{
    export class UIView extends MvcModule.View
     {
-           game;
            uiBackground:Phaser.Group;
            cellsGroup:Phaser.Group;
            lifeGroup:Phaser.Group;
@@ -26,15 +25,14 @@ module UserInterfaceModule{
 
         constructor(){
             super();
-            this.game = GameControllerModule.GameController.getInstance().game;
-            this.uiBackground();
+            this.setUiBackground();
             this.createEnergyCells();
             this.createLife();
             this.createActionsMenu();
             this.updatePlayerNames();
         }
 
-       uiBackground(){
+       setUiBackground(){
            var lifeBackground:Phaser.Sprite = new Phaser.Sprite(this.game, 0,0, "ui", "life_frame.png")
            var enemyLifeBackground:Phaser.Sprite = new Phaser.Sprite(this.game, 1337,0, "ui", "life_frame.png")
            var vs:Phaser.Sprite = new Phaser.Sprite(this.game, lifeBackground.x + lifeBackground.width+10,10, "ui", "versus.png")
@@ -75,10 +73,10 @@ module UserInterfaceModule{
            this.actionsMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
            this.moveMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
 
-           this.btnDefence = this.game.add.image(10,20,'btnDefence');
-           this.btnMelee = this.game.add.image(60,20,'btnMelee');
-           this.btnRange = this.game.add.image(110,20,'btnRange');
-           this.btnSkip = this.game.add.image(160,20,'btnSkip');
+           this.btnDefence = this.game.add.sprite(10,20,'btnDefence');
+           this.btnMelee = this.game.add.sprite(60,20,'btnMelee');
+           this.btnRange = this.game.add.sprite(110,20,'btnRange');
+           this.btnSkip = this.game.add.sprite(160,20,'btnSkip');
 
            this.btnDefence.scale.set(.5,.5);
            this.btnMelee.scale.set(.5,.5);
