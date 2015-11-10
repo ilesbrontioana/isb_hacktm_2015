@@ -131,8 +131,8 @@ module CharacterModule
             if(this.currentAction == CharacterModule.CharacterActionType.MOVE)
             {
                 this.graphics.body.gravity.y = 400;
-                this.verticalRectangle.x = tile.x - tile.width;
-                this.horizontalRectangle.y = tile.y - tile.height;
+                this.verticalRectangle.x = tile.x + tile.width/2;
+                this.horizontalRectangle.y = tile.y + tile.height/2;
 
                 if(tile.y >= (this.graphics.y - this.graphics.height) && tile.y < (this.graphics.y + this.graphics.height))
                 {
