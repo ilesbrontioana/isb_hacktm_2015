@@ -7,9 +7,10 @@ module SoundsModule
     export class SoundNames
     {
         static soundNames = [
-            'sound1',
-            'sound2',
-            'sound3'
+            'ambiance',
+            'bacon_select',
+            'marine_select',
+            'pirate_select'
          ];
     }
 

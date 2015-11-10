@@ -9,7 +9,7 @@ module CharacterModule {
 
         constructor(viewComponent:MvcModule.View) {
             super(viewComponent);
-            EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(tile:Phaser.Sprite){
+            this.addListenerToSignal("TiledClicked", function(tile:Phaser.Sprite){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.GRID_TOUCHED, tile);
             }, this);
         }

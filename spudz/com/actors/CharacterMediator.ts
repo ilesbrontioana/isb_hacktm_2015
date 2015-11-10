@@ -19,11 +19,11 @@ module CharacterModule
 
         initListeners()
         {
-            EventsModule.SignalsManager.getInstance().createBinding("AttackOpponent", function(){
+            this.addListenerToSignal("AttackOpponent", function(){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.TRY_DAMAGE, this.viewComponent.graphics);
             },this);
 
-            EventsModule.SignalsManager.getInstance().createBinding("CharacterInfoToServer", function(){
+            this.addListenerToSignal("CharacterInfoToServer", function(){
                 this.moveVO.ability = ""
                 this.moveVO.destination = {x:this.viewComponent.graphics.x, y:this.viewComponent.graphics.y}
                 this.moveVO.player_health =  (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterProxy).getLife();
@@ -32,7 +32,7 @@ module CharacterModule
 
             },this);
 
-            EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body:any){
+            this.addListenerToSignal("CharacterPosition", function(body:any){
                 if(body.addActionRay == true)
                 {
                     MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);

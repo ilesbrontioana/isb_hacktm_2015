@@ -25,7 +25,6 @@ module CharacterModule
 
         createActionRays()
         {
-            //60 is 1 + 1/2 tiles
             var tilesSize = 40;
             var moveCircleCenterX = this.moveCircleRadius * tilesSize;
             var moveCircleCenterY = this.moveCircleRadius * tilesSize;

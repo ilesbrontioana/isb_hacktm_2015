@@ -11,20 +11,17 @@ module CharacterModule
 
         constructor(viewComponent:MvcModule.View){
 
-            EventsModule.SignalsManager.getInstance().createBinding("move", function(){},this);
-            EventsModule.SignalsManager.getInstance().createBinding("CharacterDamage", function(damage:number){
+            super(viewComponent);
+
+            this.addListenerToSignal("move", function(){},this);
+            this.addListenerToSignal("CharacterDamage", function(damage:number){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.DAMAGE_COMPLETE, damage);
             },this);
-            EventsModule.SignalsManager.getInstance().createBinding("CharacterPosition", function(body:any){
-
-                if(body.addActionRay == true)
-                {
-                    MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
-                }
+            this.addListenerToSignal("CharacterPosition", function(body:any){
             }, this);
-
-            super(viewComponent);
         }
+
+
 
         onRegister(){
             this.moveVO = new ConnectionModule.MoveVO();
