@@ -6,7 +6,7 @@ module MvcModule {
         public game:Phaser.Game;
         public signalsManager:EventsModule.SignalsManager;
         constructor(){
-            this.game = GameControllerModule.GameController.getInstance().game;
+            this.game = GraphicsModule.GraphicsManager.getInstance().game;
             this.signalsManager =  EventsModule.SignalsManager.getInstance();
         }
 

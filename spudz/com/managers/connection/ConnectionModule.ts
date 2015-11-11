@@ -4,6 +4,9 @@
 
 module ConnectionModule {
     export class ConnectionProxy extends MvcModule.Proxy {
+
+        static NAME:string = "ConnectionProxy";
+
         websocket:WebSocket;
         signalsToDispatch;
 

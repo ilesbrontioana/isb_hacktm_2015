@@ -5,46 +5,52 @@ module MapModule
 {
     export class Map{
 
-        assetPath = '../../spudz/bin/assets/map/';
+        private static _instance:Map = new Map();
 
-        static maps: {[name:string]:Phaser.Tilemap; } = {};
-        static layers: {[name:string]: {[layerName:string]: Phaser.TilemapLayer;}; } = {};
+        maps: {[name:string]:Phaser.Tilemap; } = {};
+        layers: {[name:string]: {[layerName:string]: Phaser.TilemapLayer;}; } = {};
 
-        constructor () {
+        constructor(){
+            if(Map._instance){
+                throw new Error("Te Dreq: Instantiation failed: Use Map.getInstance()");
+            }
+            Map._instance = this;
+        }
+
+        public static getInstance():Map {
+            return Map._instance;
         }
 
         loadMap(name:string) {
-            GameControllerModule.GameController.getInstance().game.load.tilemap(name + 'map', this.assetPath + name + '.json', null, Phaser.Tilemap.TILED_JSON);
-            GameControllerModule.GameController.getInstance().game.load.image(name + 'tiles', this.assetPath + name + '.png');
         }
 
         createMap(name:string) {
-            var map = GameControllerModule.GameController.getInstance().game.add.tilemap(name + 'map');
+            var map = GraphicsModule.GraphicsManager.getInstance().game.add.tilemap(name + 'map');
             map.addTilesetImage(name, name + 'tiles');
             map.setCollisionBetween(0, map.tiles.length);
 
-            Map.maps[name] = map;
+            this.maps[name] = map;
         }
 
         createLayer(mapName:string, layerName:string)
         {
-            var layer = Map.maps[mapName].createLayer(layerName);
+            var layer = this.maps[mapName].createLayer(layerName);
             layer.resizeWorld();
 
-            if(Map.layers[mapName] == null)
+            if(this.layers[mapName] == null)
             {
-                Map.layers[mapName] = {};
+                this.layers[mapName] = {};
             }
-            Map.layers[mapName][layerName] = layer;
+            this.layers[mapName][layerName] = layer;
 
-            GameControllerModule.GameController.getInstance().game.physics.enable(layer, Phaser.Physics.ARCADE);
+            GraphicsModule.GraphicsManager.getInstance().game.physics.enable(layer, Phaser.Physics.ARCADE);
 
-            Map.maps[mapName].setCollisionByExclusion([], true, layer);
+            this.maps[mapName].setCollisionByExclusion([], true, layer);
         }
 
         setLayerCollision(mapName:string, layerName:string, collideUp:boolean, collideLeft:boolean, collideRight:boolean, collideDown:boolean)
         {
-            var layer = Map.layers[mapName][layerName];
+            var layer = this.layers[mapName][layerName];
             var grid = layer.layer.data;
             for(var i = 0; i < grid.length; i++)
             {

@@ -2,15 +2,29 @@
  * Created by adm on 07.11.15.
  */
 module SelectionScreenModule{
+
     export class SelectionScreenMediator extends MvcModule.Mediator{
         static NAME:string = "SelectionScreenMediator";
 
         constructor(viewComponent:MvcModule.View){
             super(viewComponent);
+
             this.addListenerToSignal("characterSelected", function(selection:string){
                 MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenProxy.NAME).VO.selectedCharacter = selection;
             })
+
             this.addListenerToSignal("StartGame", function(){
+
+                //MvcModule.Mvc.getInstance().registerProxy(ConnectionModule.ConnectionProxy.NAME, new ConnectionModule.ConnectionProxy(new WebSocket("ws://192.168.8.2:8001/")));
+
+                MvcModule.Mvc.getInstance().registerMediator(BackgroundModule.BackgroundMediator.NAME, new BackgroundModule.BackgroundMediator(new BackgroundModule.BackgroundView()));
+
+                MapModule.Map.getInstance().createMap('Spudz');
+                MapModule.Map.getInstance().createLayer('Spudz', 'TilesLayer');
+                MapModule.Map.getInstance().setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
+                MapModule.Map.getInstance().createLayer('Spudz', 'Tiles2Layer');
+
+
                 MvcModule.Mvc.getInstance().registerMediator(CharacterModule.ActionRayMediator.NAME, new CharacterModule.ActionRayMediator(new CharacterModule.ActionRayView()));
 
                 MvcModule.Mvc.getInstance().registerMediator(GridModule.GridMediator.NAME, new GridModule.GridMediator(new GridModule.GridView()));
@@ -18,6 +32,8 @@ module SelectionScreenModule{
                 MvcModule.Mvc.getInstance().registerMediator(CharacterModule.CharacterMediator.NAME, new CharacterModule.CharacterMediator(new CharacterModule.CharacterView()));
                 MvcModule.Mvc.getInstance().registerMediator(CharacterModule.EnemyMediator.NAME, new CharacterModule.EnemyMediator(new CharacterModule.EnemyView()));
                 MvcModule.Mvc.getInstance().registerProxy(CharacterModule.CharacterProxy.NAME, new CharacterModule.CharacterProxy());
+
+                MapModule.Map.getInstance().createLayer('Spudz', 'Stuff');
 
                 MvcModule.Mvc.getInstance().registerMediator(UserInterfaceModule.UIMediator.NAME, new UserInterfaceModule.UIMediator(new UserInterfaceModule.UIView()));
                 MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.HIDE_ACTIONS_MENU);

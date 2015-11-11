@@ -6,7 +6,6 @@
 /// <reference path="com/MVC/MVC.ts" />
 
 /// <reference path="com/managers/events/SignalsManager.ts" />
-/// <reference path="com/managers/game/GameController.ts" />
 /// <reference path="com/managers/map/MapLoader.ts" />
 /// <reference path="com/managers/sounds/SoundsManager.ts" />
 /// <reference path="com/managers/graphics/GraphicsManager.ts" />
@@ -51,7 +50,17 @@
 /// <reference path="com/managers/connection/ConnectionModule.ts" />
 /// <reference path="com/managers/connection/ConnectionNotifications.ts" />
 /// <reference path="com/managers/connection/ConnectionSignals.ts" />
-/// <reference path="com/managers/connection/MoveVO.ts" /> 
+/// <reference path="com/managers/connection/MoveVO.ts" />
+
+
+/// <reference path="com/loading/LoadingView.ts" />
+/// <reference path="com/loading/LoadingMediator.ts" />
+/// <reference path="com/loading/LoadingNotifications.ts" />
+/// <reference path="com/loading/StartLoadingCommand.ts" />
+/// <reference path="com/loading/LoadingCompleteCommand.ts" />
+
+/// <reference path="com/background/BackgroundMediator.ts" />
+/// <reference path="com/background/BackgroundView.ts" />
 
 class SimpleGame {
     game: Phaser.Game;
@@ -65,120 +74,44 @@ class SimpleGame {
             preload: this.preload,
             render: this.render,
             update: this.update,
-            onStartup:this.onStartup
         });
     }
 
     preload() {
-        GameControllerModule.GameController.getInstance().game = this.game;
-        GraphicsModule.GraphicsManager.getInstance().loadAtlas("ui", "../../spudz/bin/assets/ui/", 'UI SpriteSheet.png', 'UI SpriteSheet.json');
-        GraphicsModule.GraphicsManager.getInstance().loadAtlas("pirate", "../../spudz/bin/assets/character/pirate/", 'Spritesheet_Pirate.png', 'Spritesheet_Pirate.json');
-        GraphicsModule.GraphicsManager.getInstance().loadAtlas("space", "../../spudz/bin/assets/character/space/", 'Spritesheet_Space.png', 'Spritesheet_Space.json');
-        GraphicsModule.GraphicsManager.getInstance().loadAtlas("bacon", "../../spudz/bin/assets/character/bacon/", 'Spritesheet_Bacon.png', 'Spritesheet_Bacon.json');
 
-        this.game.load.bitmapFont('font', '../../spudz/bin/assets/font/font.png', '../../spudz/bin/assets/font/font.fnt');
-        this.game.load.image('bg', '../../spudz/bin/assets/background/backgroud1.png');
+        GraphicsModule.GraphicsManager.getInstance().game = this.game;
+        EventsModule.SignalsManager.getInstance().scope = this;
 
-        this.game.load.image('btnDefence', '../../spudz/bin/assets/ui/button_defence.png');
-        this.game.load.image('btnMelee', '../../spudz/bin/assets/ui/button_melee.png');
-        this.game.load.image('btnRange', '../../spudz/bin/assets/ui/button_range.png');
-        this.game.load.image('btnSkip', '../../spudz/bin/assets/ui/button_skip.png');
-
-        this.game.load.image('background_welcome_screen', '../../spudz/bin/assets/selectionScreen/Background.png');
-        this.game.load.image('active_bacon', '../../spudz/bin/assets/selectionScreen/active_bacon.png');
-        this.game.load.image('active_pirate', '../../spudz/bin/assets/selectionScreen/active_pirate.png');
-        this.game.load.image('active_space', '../../spudz/bin/assets/selectionScreen/active_space.png');
-        this.game.load.image('back_button', '../../spudz/bin/assets/selectionScreen/back_button.png');
-        this.game.load.image('menu_bar', '../../spudz/bin/assets/selectionScreen/menu_bar.png');
-        this.game.load.image('menu_button', '../../spudz/bin/assets/selectionScreen/menu_button.png');
-        this.game.load.image('next_button', '../../spudz/bin/assets/selectionScreen/next_button.png');
-        this.game.load.image('non-active_bacon', '../../spudz/bin/assets/selectionScreen/non-active_bacon.png');
-        this.game.load.image('non-active_pirate', '../../spudz/bin/assets/selectionScreen/non-active_pirate.png');
-        this.game.load.image('non-active_space', '../../spudz/bin/assets/selectionScreen/non-active_space.png');
-
-        this.map = new MapModule.Map();
-        this.map.loadMap('Spudz');
-
-        SoundsModule.SoundsManager.getInstance().loadSounds();
+        this.game.load.image('loadingScreen', GraphicsModule.GraphicsManager.getInstance().assetPath + 'loading/Loading.jpg');
     }
+
+    create() {
+
+        MvcModule.Mvc.getInstance().registerMediator(LoadingModule.LoadingMediator.NAME, new LoadingModule.LoadingMediator(new LoadingModule.LoadingView()));
+
+        MvcModule.Mvc.getInstance().registerCommand(LoadingModule.StartLoadingCommand.NAME, new LoadingModule.StartLoadingCommand());
+        MvcModule.Mvc.getInstance().registerCommand(LoadingModule.LoadingCompleteCommand.NAME, new LoadingModule.LoadingCompleteCommand());
+        MvcModule.Mvc.getInstance().sendNotification(LoadingModule.StartLoadingCommand.NAME);
+    }
+
 
     render() {
 
     }
 
     update() {
-        MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
+        if( MapModule.Map.getInstance().layers['Spudz'])
+        {
+            MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
                 [
-                    MapModule.Map.layers['Spudz']['Tiles2Layer'],
-                    MapModule.Map.layers['Spudz']['TilesLayer']
+                    MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer'],
+                    MapModule.Map.getInstance().layers['Spudz']['TilesLayer']
                 ]);
-    }
-
-    create() {
-        this.background = this.game.add.image(0,0,'bg');
-        this.background.scale.setTo(1, 1);
-
-        EventsModule.SignalsManager.getInstance().scope = this;
-        SoundsModule.SoundsManager.getInstance().createSounds();
-
-        this.map.createMap('Spudz');
-        this.map.createLayer('Spudz', 'TilesLayer');
-        this.map.setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
-        this.map.createLayer('Spudz', 'Tiles2Layer');
-
-        //new ConnectionModule.ConnectionProxy(new WebSocket("ws://192.168.8.2:8001/"));
-
-        this.map.createLayer('Spudz', 'Stuff');
-
-        this.onStartup();
-
-        SoundsModule.SoundsManager.getInstance().playSound('ambiance', 0, true);
-
-    }
-
-    onStartup() {
-        var startUpCommand:MvcModule.Controller = new MvcModule.Controller();
-        MvcModule.Mvc.getInstance().registerCommand("Startup", startUpCommand);
-
-        MvcModule.Mvc.getInstance().registerMediator("StartupMediator",new StartupMediator(new testView()));
-        MvcModule.Mvc.getInstance().registerProxy("TestProxy", new testProxy());
-
-        MvcModule.Mvc.getInstance().sendNotification("Startup",1, "test");
+        }
     }
 }
 
 window.onload = () => {
     var game = new SimpleGame();
 };
-
-///////////////////////////////////////////////////////////////////////////
-class testView extends MvcModule.View{
-    constructor(){
-        super();
-
-    }
-}
-
-class StartupMediator extends MvcModule.Mediator{
-    constructor(viewComponent:MvcModule.View){
-        super(viewComponent);
-    }
-
-    listNotificationInterests():Array{
-        return ["Startup"];
-    }
-
-    handleNotification(notification:MvcModule.INotification){
-        //MvcModule.Mvc.getInstance().registerMediator(WelcomeModule.WelcomeMediator.NAME, new WelcomeModule.WelcomeMediator(new WelcomeModule.WelcomeView()));
-        MvcModule.Mvc.getInstance().registerMediator(SelectionScreenModule.SelectionScreenMediator.NAME, new SelectionScreenModule.SelectionScreenMediator(new SelectionScreenModule.SelectionScreenView()));
-         MvcModule.Mvc.getInstance().registerProxy(SelectionScreenModule.SelectionScreenProxy.NAME, new SelectionScreenModule.SelectionScreenProxy());
-    }
-}
-
-class testProxy extends MvcModule.Proxy{
-    constructor(){
-        super();
-        this.sendNotification("TestProxy", 2)
-    }
-}
 

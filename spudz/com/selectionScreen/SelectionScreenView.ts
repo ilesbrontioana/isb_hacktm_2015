@@ -20,6 +20,9 @@ module SelectionScreenModule{
 
         constructor(){
             super();
+
+            SoundsModule.SoundsManager.getInstance().playSound('ambiance', 0, true);
+
             this.bmd = this.game.add.sprite(50,50,"ui", "button.png");
 
             this.background = this.game.add.sprite(0,0,'background_welcome_screen');

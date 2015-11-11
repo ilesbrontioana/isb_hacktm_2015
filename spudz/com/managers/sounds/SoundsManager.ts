@@ -27,7 +27,7 @@ module SoundsModule
             for(var i = 0; i < SoundsModule.SoundNames.soundNames.length; i++)
             {
                 var soundName = SoundsModule.SoundNames.soundNames[i];
-                GameControllerModule.GameController.getInstance().game.load.audio(soundName, this.assetPath + soundName + ".wav");
+                GraphicsModule.GraphicsManager.getInstance().game.load.audio(soundName, this.assetPath + soundName + ".wav");
             }
         }
 
@@ -35,7 +35,7 @@ module SoundsModule
             for(var i = 0; i < SoundsModule.SoundNames.soundNames.length; i++)
             {
                 var soundName = SoundsModule.SoundNames.soundNames[i];
-                var sound = GameControllerModule.GameController.getInstance().game.add.audio(soundName);
+                var sound = GraphicsModule.GraphicsManager.getInstance().game.add.audio(soundName);
                 this.sounds[sound.name] = sound;
             }
         }

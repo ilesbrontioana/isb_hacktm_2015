@@ -8,7 +8,7 @@ module UserInterfaceModule{
         uiBackground:Phaser.Group;
 
         constructor(){
-            this.game = GameControllerModule.GameController.getInstance().game;
+            this.game = GraphicsModule.GraphicsManager.getInstance().game;
             this.uiBackground();
         }
 
