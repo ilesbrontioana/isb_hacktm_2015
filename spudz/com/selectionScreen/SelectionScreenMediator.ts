@@ -15,8 +15,6 @@ module SelectionScreenModule{
 
             this.addListenerToSignal("StartGame", function(){
 
-                //MvcModule.Mvc.getInstance().registerProxy(ConnectionModule.ConnectionProxy.NAME, new ConnectionModule.ConnectionProxy(new WebSocket("ws://192.168.8.2:8001/")));
-
                 MvcModule.Mvc.getInstance().registerMediator(BackgroundModule.BackgroundMediator.NAME, new BackgroundModule.BackgroundMediator(new BackgroundModule.BackgroundView()));
 
                 MapModule.Map.getInstance().createMap('Spudz');
