@@ -52,12 +52,15 @@
 /// <reference path="com/managers/connection/ConnectionSignals.ts" />
 /// <reference path="com/managers/connection/MoveVO.ts" />
 
+/// <reference path="com/managers/loading/LoadingManager.ts" />
+
 
 /// <reference path="com/loading/LoadingView.ts" />
 /// <reference path="com/loading/LoadingMediator.ts" />
 /// <reference path="com/loading/LoadingNotifications.ts" />
 /// <reference path="com/loading/StartLoadingCommand.ts" />
 /// <reference path="com/loading/LoadingCompleteCommand.ts" />
+/// <reference path="com/loading/LoadingProxy.ts" />
 
 /// <reference path="com/background/BackgroundMediator.ts" />
 /// <reference path="com/background/BackgroundView.ts" />
@@ -89,8 +92,11 @@ class SimpleGame {
 
         MvcModule.Mvc.getInstance().registerMediator(LoadingModule.LoadingMediator.NAME, new LoadingModule.LoadingMediator(new LoadingModule.LoadingView()));
 
+        MvcModule.Mvc.getInstance().registerProxy(LoadingModule.LoadingProxy.NAME, new LoadingModule.LoadingProxy());
+
         MvcModule.Mvc.getInstance().registerCommand(LoadingModule.StartLoadingCommand.NAME, new LoadingModule.StartLoadingCommand());
         MvcModule.Mvc.getInstance().registerCommand(LoadingModule.LoadingCompleteCommand.NAME, new LoadingModule.LoadingCompleteCommand());
+
         MvcModule.Mvc.getInstance().sendNotification(LoadingModule.StartLoadingCommand.NAME);
     }
 
