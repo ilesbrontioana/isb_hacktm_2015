@@ -16,6 +16,8 @@ module LoadingModule
 
             MvcModule.Mvc.getInstance().sendNotification(SelectionScreenModule.SelectionScreenNotifications.WELCOME);
 
+            MvcModule.Mvc.getInstance().registerProxy(ConnectionModule.ConnectionProxy.NAME, new ConnectionModule.ConnectionProxy(new WebSocket("ws://razvanpat.info.tm:8001/")));
+
         }
     }
 }

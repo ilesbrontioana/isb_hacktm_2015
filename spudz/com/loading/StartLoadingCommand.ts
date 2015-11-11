@@ -40,25 +40,7 @@ module LoadingModule
             GraphicsModule.GraphicsManager.getInstance().loadImage('non-active_pirate', 'selectionScreen/', 'non-active_pirate.png');
             GraphicsModule.GraphicsManager.getInstance().loadImage('non-active_space', 'selectionScreen/', 'non-active_space.png');
 
-           this.startLoading();
-        }
-
-        startLoading()
-        {
-            GraphicsModule.GraphicsManager.getInstance().game.load.onFileComplete.add(this.fileComplete, this);
-            GraphicsModule.GraphicsManager.getInstance().game.load.onLoadComplete.add(this.loadComplete, this);
-            GraphicsModule.GraphicsManager.getInstance().game.load.start();
-        }
-
-        fileComplete(progress, cacheKey, success, totalLoaded, totalFiles)
-        {
-            MvcModule.Mvc.getInstance().sendNotification(LoadingModule.LoadingNotifications.UPDATE_LOADING_PROGRESS, progress);
-        }
-
-        loadComplete()
-        {
-            MvcModule.Mvc.getInstance().sendNotification(LoadingModule.LoadingNotifications.LOADING_COMPLETE);
-            MvcModule.Mvc.getInstance().sendNotification(LoadingModule.LoadingCompleteCommand.NAME);
+            (MvcModule.Mvc.getInstance().retrieveProxy(LoadingProxy.NAME) as LoadingProxy).startLoading();
         }
 
     }
