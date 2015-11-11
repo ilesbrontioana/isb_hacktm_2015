@@ -50,14 +50,14 @@ module LoadingModule
                 this.loadingBarTween.stop();
             }
 
-            if (value > 0.99)
+            if (value > 99)
             {
                 this.loadingBar.width = width;
                 this.loadingBarComplete = true;
             }
             else
             {
-                this.loadingBarTween = this.game.add.tween(this.loadingBar).to({width:width }, 1000 - value * 1000);
+                this.loadingBarTween = this.game.add.tween(this.loadingBar).to({width:width }, 1000 - value * 10);
                 this.loadingBarTween.start();
             }
         }
