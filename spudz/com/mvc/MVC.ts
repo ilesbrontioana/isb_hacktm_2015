@@ -4,9 +4,13 @@
 /// <reference path="notification/INotification.ts" />
 /// <reference path="notification/Notification.ts" />
 /// <reference path="controller/Controller.ts" />
+/// <reference path="controller/IController.ts" />
 /// <reference path="proxy/Proxy.ts" />
+/// <reference path="proxy/IProxy.ts" />
 /// <reference path="mediator/Mediator.ts" />
-/// <reference path="mediator/View.ts" />
+/// <reference path="mediator/IMediator.ts" />
+/// <reference path="view/View.ts" />
+/// <reference path="view/IView.ts" />
 
 module MvcModule{
     export class Mvc{
@@ -28,51 +32,80 @@ module MvcModule{
             return Mvc._instance;
         }
 
-        public registerCommand(notificationName:string, command:Controller) {
-            if(!this.commands[notificationName]){
-                this.commands[notificationName] = new Array<Controller>();
+        public registerNotification(notificationName:string){
+            if(!this.notifications[notificationName]){
+                this.notifications[notificationName] = new Array<IMediator>();
             }
-            command.onRegister();
-            this.commands[notificationName].push(command);
         }
 
-        public registerProxy(proxyName:string, proxy:Proxy){
+        public unregisterNotification(notificationName:string){
+            delete this.notifications[notificationName];
+        }
+
+        public registerCommand(commandName:string, command:IController) {
+            if(!this.commands[commandName]){
+                this.commands[commandName] = command;
+            }
+
+            command.onRegister();
+        }
+
+        public unregisterCommand(commandName:string){
+            this.commands[commandName].onUnregister();
+            delete this.commands[commandName];
+        }
+
+        public registerProxy(proxyName:string, proxy:IProxy){
             if(!this.proxies[proxyName]){
                 this.proxies[proxyName] = proxy;
             }
+            proxy.onRegister();
         }
 
-        public registerMediator(mediatorName:string, mediator:Mediator){
+        public retrieveProxy(proxyName:string):IProxy{
+            return this.proxies[proxyName];
+        }
+
+        public unregisterProxy(proxyName:string){
+            this.proxies[proxyName].onUnregister();
+            delete this.proxies[proxyName];
+        }
+
+        public registerMediator(mediatorName:string, mediator:IMediator){
             if(!this.mediators[mediatorName]){
                 this.mediators[mediatorName] = mediator;
                 mediator.onRegister();
                 for(var i=0; i<mediator.listNotificationInterests().length; i++){
-                    this.registerNotification(mediator.listNotificationInterests()[i], mediator);
+                    this.registerNotification(mediator.listNotificationInterests()[i]);
+                    this.notifications[mediator.listNotificationInterests()[i]].push(mediator)
                 }
             }
         }
 
-        private registerNotification(notificationName:string, mediator:Mediator){
-            if(!this.notifications[notificationName]){
-                this.notifications[notificationName] = new Array<Mediator>();
+        public unregisterMediator(mediatorName:string){
+            var targetMediator = this.mediators[mediatorName]
+            var interestedNotifications = targetMediator.listNotificationInterests();
+            for(var i=0; i<interestedNotifications.length; i++){
+              var listeningMediators = this.notifications[interestedNotifications[i]];
+                for(var j=0; j<listeningMediators.length; j++){
+                    if(listeningMediators[j] === targetMediator){
+                        listeningMediators.splice(j,1);
+                    }
+                }
             }
-            this.notifications[notificationName].push(mediator);
+
+            targetMediator.onUnregister();
+            delete this.mediators[mediatorName];
         }
 
         public sendNotification(notificationName:string, body?:any, type?:string){
             if(this.commands[notificationName]) {
-                for (var i = 0; i < this.commands[notificationName].length; i++) {
-                    var notification:Notification = new Notification();
-                    notification.body = body;
-                    notification.name = notificationName;
-                    this.commands[notificationName][i].execute({name: notificationName, body: body});
-                }
+                var notification:Notification = new Notification();
+                notification.body = body;
+                notification.name = notificationName;
+                this.commands[notificationName].execute({name: notificationName, body: body});
             }
             this.notifyMediators(notificationName, body, type);
-        }
-
-        public retrieveProxy(proxyName:string):Proxy{
-            return this.proxies[proxyName];
         }
 
         private notifyMediators(notificationName:string, body:any, type?:string){
@@ -88,18 +121,18 @@ module MvcModule{
     }
 
     export interface ICommandIndex{
-        [mediatorName:string]:Array
+        [commandName:string]:IController
     }
 
     export interface INotificationIndex {
-        [notificationName:string]:Array
+        [notificationName:string]:Array<IMediator>
     }
 
     export interface IProxyIndex{
-        [proxyName:string]:Proxy;
+        [proxyName:string]:IProxy;
     }
 
     export interface IMediatorIndex{
-        [mediatorName:string]:Mediator
+        [mediatorName:string]:IMediator
     }
 }
