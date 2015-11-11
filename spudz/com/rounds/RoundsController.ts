@@ -7,6 +7,11 @@ module RoundsModule{
 
         moveVo:ConnectionModule.MoveVO;
 
+        constructor()
+        {
+            super(RoundsCommand.NAME);
+        }
+
         execute(notification:MvcModule.INotification){
             this.moveVo.destination = notification.body.destination;
             this.moveVo.ability = notification.body.ability;

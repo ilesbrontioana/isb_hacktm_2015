@@ -7,7 +7,7 @@ module GridModule
         static NAME:string = "GridMediator";
 
         constructor(viewComponent:MvcModule.View){
-            super(viewComponent);
+            super(GridMediator.NAME, viewComponent);
         }
 
         onRegister()

@@ -5,6 +5,8 @@ module CharacterModule
 {
     export class CharacterView extends MvcModule.View{
 
+        static NAME:string = "CharacterView";
+
         graphics:Phaser.Sprite;
 
         speed = 1000;
@@ -21,7 +23,7 @@ module CharacterModule
         collideWithMapLayers:Boolean;
 
         constructor() {
-            super();
+            super(CharacterView.NAME);
 
             this.createBitmapDataRectangles();
         }

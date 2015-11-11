@@ -5,7 +5,7 @@ module SelectionScreenModule{
     export class SelectionScreenProxy extends MvcModule.Proxy{
         static NAME:string = "SelectionScreenProxy";
         constructor(){
-            super();
+            super(SelectionScreenProxy.NAME);
             this.VO = new SelectionScreenVO();
         }
 

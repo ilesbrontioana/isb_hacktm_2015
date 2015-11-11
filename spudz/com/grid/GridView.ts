@@ -4,11 +4,11 @@
 module GridModule
 {
     export class GridView extends MvcModule.View{
-
+        static NAME:string = "GridView";
         tiles:Array<Array<GridModule.Tile>> = [];
 
         constructor (){
-            super();
+            super(GridView.NAME);
             this.buildGrid(0, 0, 50, 35, 40, 40);
         }
 

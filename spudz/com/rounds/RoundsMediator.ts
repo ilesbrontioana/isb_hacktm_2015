@@ -7,7 +7,7 @@ module RoundsModule{
         static NAME:string = "RoundsMediator";
 
         constructor(viewComponent:MvcModule.View){
-            super(viewComponent);
+            super(RoundsMediator.NAME, viewComponent);
         }
 
         listNotificationInterests():Array<string>{

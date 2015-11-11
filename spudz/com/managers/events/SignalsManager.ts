@@ -20,7 +20,7 @@ module EventsModule
             return SignalsManager._instance;
         }
 
-        public createBinding(name:string, listener:Function, listenerContext?, priority?, args?:any){
+        public createBinding(name:string, listener:Function, listenerContext?:any, priority?:number, args?:any){
             if(!this.signals[name]) {
                 var custBind:CustomBinding = new CustomBinding();
                 this.signals[name] = custBind;

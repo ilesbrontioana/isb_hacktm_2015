@@ -4,6 +4,7 @@
 module SelectionScreenModule{
     export class SelectionScreenView extends MvcModule.View{
 
+        static NAME:string = "SelectionScreenView";
         bmd:Phaser.Sprite;
 
         background:Phaser.Sprite;
@@ -19,7 +20,7 @@ module SelectionScreenModule{
         non_active_space:Phaser.Sprite;
 
         constructor(){
-            super();
+            super(SelectionScreenView.NAME);
 
             SoundsModule.SoundsManager.getInstance().playSound('ambiance', 0, true);
 
@@ -45,8 +46,8 @@ module SelectionScreenModule{
             this.non_active_pirate = this.game.add.sprite(0,0,'non-active_pirate');
             this.non_active_space = this.game.add.sprite(0,0,'non-active_space');
 
-            this.background.inputEnabled = true;
-            this.background.events.onInputDown.add(this.onStartGamePressed, this);
+            //this.background.inputEnabled = true;
+            //this.background.events.onInputDown.add(this.onStartGamePressed, this);
 
             this.non_active_bacon.x = 100;
             this.non_active_bacon.y = 100;

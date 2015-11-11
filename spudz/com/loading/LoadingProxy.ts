@@ -9,7 +9,7 @@ module LoadingModule
 
         constructor()
         {
-            super();
+            super(LoadingProxy.NAME);
 
             LoadingModule.LoadingManager.getInstance().addOnFileComplete(this.fileComplete);
             LoadingModule.LoadingManager.getInstance().addOnComplete(this.loadComplete);
@@ -20,7 +20,7 @@ module LoadingModule
             LoadingModule.LoadingManager.getInstance().startLoading();
         }
 
-        fileComplete(progress, cacheKey, success, totalLoaded, totalFiles)
+        fileComplete(progress:any, cacheKey:any, success:any, totalLoaded:any, totalFiles:any)
         {
             MvcModule.Mvc.getInstance().sendNotification(LoadingModule.LoadingNotifications.UPDATE_LOADING_PROGRESS, progress);
         }

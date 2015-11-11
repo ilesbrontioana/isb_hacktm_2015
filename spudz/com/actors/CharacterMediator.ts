@@ -11,7 +11,7 @@ module CharacterModule
 
         constructor(viewComponent:MvcModule.View){
 
-            super(viewComponent);
+            super(CharacterMediator.NAME, viewComponent);
 
             this.initListeners();
 

@@ -3,8 +3,10 @@
  */
 module RoundsModule{
     export class RoundsView extends  MvcModule.View{
+
+        static NAME:string = "RoundsView";
         constructor(){
-            super();
+            super(RoundsView.NAME);
         }
     }
 }

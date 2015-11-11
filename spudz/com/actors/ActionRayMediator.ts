@@ -8,7 +8,7 @@ module CharacterModule {
         static NAME:string = "ActionRayMediator";
 
         constructor(viewComponent:MvcModule.View) {
-            super(viewComponent);
+            super(ActionRayMediator.NAME, viewComponent);
             this.addListenerToSignal("TiledClicked", function(tile:Phaser.Sprite){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.GRID_TOUCHED, tile);
             }, this);

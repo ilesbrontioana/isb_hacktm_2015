@@ -11,7 +11,7 @@ module CharacterModule
 
         constructor(viewComponent:MvcModule.View){
 
-            super(viewComponent);
+            super(EnemyMediator.NAME, viewComponent);
 
             this.addListenerToSignal("move", function(){},this);
             this.addListenerToSignal("CharacterDamage", function(damage:number){

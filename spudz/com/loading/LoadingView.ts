@@ -5,6 +5,7 @@ module LoadingModule
 {
     export class LoadingView extends MvcModule.View
     {
+        static NAME:string = "LoadingView";
         background:Phaser.Image;
 
         loadingBar:Phaser.Image;
@@ -16,7 +17,7 @@ module LoadingModule
 
         constructor()
         {
-            super();
+            super(LoadingView.NAME);
 
             this.background = this.game.add.image(0, 0, "loadingScreen");
             this.background.width = this.game.width;
@@ -43,7 +44,7 @@ module LoadingModule
             }
 
             //update the width of the colored progress bar to correspond to given percent
-            var width:Number = this.loadingBarWidth * value;
+            var width:number = this.loadingBarWidth * value;
 
             if(this.loadingBarTween)
             {

@@ -7,7 +7,12 @@ module LoadingModule
     {
         static NAME:string = "LoadingCompleteCommand";
 
-        public execute(notification:INotification)
+        constructor()
+        {
+            super(LoadingCompleteCommand.NAME);
+        }
+
+        public execute(notification:MvcModule.INotification)
         {
             MvcModule.Mvc.getInstance().registerMediator(SelectionScreenModule.SelectionScreenMediator.NAME, new SelectionScreenModule.SelectionScreenMediator(new SelectionScreenModule.SelectionScreenView()));
             MvcModule.Mvc.getInstance().registerProxy(SelectionScreenModule.SelectionScreenProxy.NAME, new SelectionScreenModule.SelectionScreenProxy());

@@ -4,10 +4,12 @@
 module WelcomeModule{
     export class WelcomeView extends MvcModule.View{
 
+        static NAME:string = "WelcomeView";
+
         bmd:Phaser.Sprite;
 
         constructor(){
-            super();
+            super(WelcomeView.NAME);
             this.bmd = this.game.add.sprite(50,50,"ui", "button.png")
 
             this.bmd.inputEnabled = true;

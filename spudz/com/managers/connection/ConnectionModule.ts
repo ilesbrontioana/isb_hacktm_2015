@@ -8,10 +8,10 @@ module ConnectionModule {
         static NAME:string = "ConnectionProxy";
 
         websocket:WebSocket;
-        signalsToDispatch;
+        signalsToDispatch:Array<string>;
 
         constructor(websocket:WebSocket) {
-            super();
+            super(ConnectionProxy.NAME);
             this.signalsToDispatch = [
                 ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER,
                 ConnectionModule.ConnectionSignals.START_MATCH,

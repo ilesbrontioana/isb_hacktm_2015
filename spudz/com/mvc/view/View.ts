@@ -9,7 +9,7 @@ module MvcModule {
         public signalsManager:EventsModule.SignalsManager;
         constructor(name:string){
             this.name = name;
-            this.game = GameControllerModule.GameController.getInstance().game;
+            this.game = GraphicsModule.GraphicsManager.getInstance().game;
             this.signalsManager =  EventsModule.SignalsManager.getInstance();
         }
 

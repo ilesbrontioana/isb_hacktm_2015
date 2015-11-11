@@ -6,6 +6,8 @@ module CharacterModule
     import View = MvcModule.View;
     export class ActionRayView extends View
     {
+        static NAME:string = "ActionRayView";
+
         tiles:Array<Array<GridModule.Tile>> = [];
 
         moveCircle:Phaser.Sprite;
@@ -16,7 +18,7 @@ module CharacterModule
 
         constructor()
         {
-            super();
+            super(ActionRayView.NAME);
             this.createActionRays();
 
             EventsModule.SignalsManager.getInstance().createBinding("TiledClicked", function(){

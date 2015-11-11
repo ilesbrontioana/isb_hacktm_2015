@@ -83,7 +83,6 @@ class SimpleGame {
     preload() {
 
         GraphicsModule.GraphicsManager.getInstance().game = this.game;
-        EventsModule.SignalsManager.getInstance().scope = this;
 
         this.game.load.image('loadingScreen', GraphicsModule.GraphicsManager.getInstance().assetPath + 'loading/Loading.jpg');
     }

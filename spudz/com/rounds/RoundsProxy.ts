@@ -7,7 +7,7 @@ module RoundsModule{
         static NAME:string = "RoundsProxy";
 
         constructor(){
-            super();
+            super(RoundsProxy.NAME);
             this.VO = new RoundsModule.RoundsVO();
         }
 

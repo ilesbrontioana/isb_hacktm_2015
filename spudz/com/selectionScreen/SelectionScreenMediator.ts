@@ -7,7 +7,7 @@ module SelectionScreenModule{
         static NAME:string = "SelectionScreenMediator";
 
         constructor(viewComponent:MvcModule.View){
-            super(viewComponent);
+            super(SelectionScreenMediator.NAME, viewComponent);
 
             this.addListenerToSignal("characterSelected", function(selection:string){
                 MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenProxy.NAME).VO.selectedCharacter = selection;

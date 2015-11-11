@@ -6,5 +6,10 @@ module BackgroundModule
     export class BackgroundMediator extends MvcModule.Mediator
     {
         static NAME:string = "BackgroundMediator";
+
+        constructor(viewComponent:MvcModule.IView)
+        {
+            super(BackgroundMediator.NAME, viewComponent);
+        }
     }
 }

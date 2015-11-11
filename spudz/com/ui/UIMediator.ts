@@ -9,7 +9,7 @@ module UserInterfaceModule{
         static  NAME:string = "UIMediator";
 
         constructor(viewComponent:MvcModule.View){
-            super(viewComponent);
+            super(UIMediator.NAME, viewComponent);
         }
 
         onRegister(){

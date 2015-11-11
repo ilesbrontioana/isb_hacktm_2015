@@ -7,9 +7,9 @@ module LoadingModule
     {
         static NAME:string = "LoaderMediator";
 
-        constructor(viewComponent)
+        constructor(viewComponent:MvcModule.IView)
         {
-            super(viewComponent);
+            super(LoadingMediator.NAME, viewComponent);
         }
 
         listNotificationInterests():Array<string>{

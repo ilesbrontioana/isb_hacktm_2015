@@ -8,6 +8,11 @@ module LoadingModule
     {
         static NAME:string = "StartLoadingCommand";
 
+        constructor()
+        {
+            super(StartLoadingCommand.NAME);
+        }
+
         public execute(notification:INotification) {
 
             SoundsModule.SoundsManager.getInstance().loadSounds();

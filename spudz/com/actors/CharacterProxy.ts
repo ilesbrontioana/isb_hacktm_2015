@@ -8,7 +8,8 @@ module CharacterModule
         static NAME:string = "CharacterProxy";
 
         constructor(){
-            super();
+            super(CharacterProxy.NAME);
+
             this.VO = new CharacterVO();
         }
 
