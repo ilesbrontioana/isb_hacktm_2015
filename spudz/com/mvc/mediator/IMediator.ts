@@ -11,7 +11,9 @@ module MvcModule{
         handleNotification(notification:INotification):void
         dispatchSignal(signalName:string, args?:any):void
         addListenerToSignal(signalName:string, listener:Function, listenerContext?:any, priority?:number, args?:any):void
+        removeListener(signalName:string, listener:Function):void
         getViewComponent():IView
         setViewComponent(viewComponent:IView):void
+        sendNotification(notificationName:string, body?:any, type?:string);
     }
 }

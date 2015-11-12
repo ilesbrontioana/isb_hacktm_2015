@@ -20,7 +20,7 @@ module EventsModule
             return SignalsManager._instance;
         }
 
-        public createBinding(name:string, listener:Function, listenerContext?:any, priority?:number, args?:any){
+        public createBinding(signalName:string, listener:Function, listenerContext?:any, priority?:number, args?:any){
             if(!this.signals[name]) {
                 var custBind:CustomBinding = new CustomBinding();
                 this.signals[name] = custBind;
@@ -36,6 +36,15 @@ module EventsModule
             for(var i = 0; i<bindings.length; i++){
                 bindings[i].getListener().call(this.signals[name].context, args);
             }
+        }
+
+        public removeListener(signalName:string, listener:Function){
+             var bindings = this.signals[signalName].bindings;
+                for(var i = 0; i<bindings.length; i++){
+                    if(bindings[i].getListener() === listener){
+                        bindings.splice(i,1);
+                    }
+                }
         }
     }
 

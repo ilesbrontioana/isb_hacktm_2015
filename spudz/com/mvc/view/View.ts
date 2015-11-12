@@ -22,7 +22,7 @@ module MvcModule {
         }
 
         public removeListener(signalName:string, listener:Function){
-
+            this.signalsManager.removeListener(signalName, listener);
         }
     }
 }

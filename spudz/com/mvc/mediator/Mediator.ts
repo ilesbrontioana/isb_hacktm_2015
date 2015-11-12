@@ -39,7 +39,7 @@ module MvcModule {
         }
 
         public removeListener(signalName:string, listener:Function){
-
+            this.signalsManager.removeListener(signalName, listener);
         }
 
         public setViewComponent(viewComponent:IView){
@@ -48,6 +48,10 @@ module MvcModule {
 
         public getViewComponent():IView{
             return this.viewComponent;
+        }
+
+        public sendNotification(notificationName:string, body?:any, type?:string) {
+            Mvc.getInstance().sendNotification(notificationName, body, type);
         }
     }
 }
