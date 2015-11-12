@@ -97,24 +97,6 @@ module SelectionScreenModule{
             this.signalsManager.dispatch("characterSelected", "space");
         }
 
-        startGame(){
-            this.dispatchSignal("StartGame");
-
-            this.bmd.visible = false;
-
-            this.background.visible = false;
-            this.active_bacon.visible = false;
-            this.active_pirate.visible = false;
-            this.active_space.visible = false;
-            this.back_button.visible = false;
-            this.menu_bar.visible = false;
-            this.menu_button.visible = false;
-            this.next_button.visible = false;
-            this.non_active_bacon.visible = false;
-            this.non_active_pirate.visible = false;
-            this.non_active_space.visible = false;
-        }
-
         addOpponent(selection:string)
         {
             this.opponentSelection = selection;
@@ -154,7 +136,25 @@ module SelectionScreenModule{
 
             GraphicsModule.GraphicsManager.getInstance().game.time.events.add(Phaser.Timer.SECOND * 2, function()
             {
-                this.startGame();
+                this.dispatchSignal("StartGame");
+
+
+
+                this.bmd.visible = false;
+
+                this.background.visible = false;
+                this.active_bacon.visible = false;
+                this.active_pirate.visible = false;
+                this.active_space.visible = false;
+                this.back_button.visible = false;
+                this.menu_bar.visible = false;
+                this.menu_button.visible = false;
+                this.next_button.visible = false;
+                this.non_active_bacon.visible = false;
+                this.non_active_pirate.visible = false;
+                this.non_active_space.visible = false;
+
+
             }.bind(this), this);
         }
 
