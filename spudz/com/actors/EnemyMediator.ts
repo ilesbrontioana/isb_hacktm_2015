@@ -23,7 +23,7 @@ module CharacterModule
 
         onRegister(){
             (this.viewComponent as EnemyView).createCharacter(
-                (MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenProxy).getOpponentSelection());
+                (MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getOpponentSelection());
         }
 
         listNotificationInterests():Array<string>{
