@@ -10,10 +10,12 @@ module ConnectionModule{
         static MOVE: string = "move";
         static MOVE_SKIP: string = "move_skip";
         static REGISTER_NAME: string = "register_name";
+        static PLAYER_READY: string = "player_ready";
 
         //server to client
         static OPPONENT_CHARACTER: string = "opponent_character";
         static START_MATCH: string = "start_match";
+        static MATCH_FOUND: string = "match_found";
         static RECONCILIATION: string = "reconciliation";
         static WIN: string = "win";
         static OPPONENT_DISCONNECTED: string = "opponent_disconnected";

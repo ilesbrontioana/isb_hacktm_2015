@@ -11,7 +11,13 @@ module SelectionScreenModule{
 
             this.addListenerToSignal("characterSelected", function(selection:string){
                 MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenProxy.NAME).VO.selectedCharacter = selection;
-            })
+                EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, selection);
+            });
+
+            this.addListenerToSignal("opponent_character", function(params:any)
+            {
+                    //(viewComponent as SelectionScreenView).addOponent()
+            });
 
             this.addListenerToSignal("StartGame", function(){
 
@@ -44,12 +50,14 @@ module SelectionScreenModule{
         }
 
         listNotificationInterests():Array<string>{
-            return [WelcomeModule.WelcomeNotifications.WELCOME];
+            return [WelcomeModule.WelcomeNotifications.WELCOME, ConnectionModule.ConnectionSignals.MATCH_FOUND];
         }
 
         handleNotification(notification:MvcModule.INotification) {
             switch (notification.name) {
-
+                case  ConnectionModule.ConnectionSignals.MATCH_FOUND:
+                    EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.PLAYER_READY);
+                    break;
             }
         }
     }

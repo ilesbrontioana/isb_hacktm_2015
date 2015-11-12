@@ -29,6 +29,7 @@ module ConnectionModule {
         init() {
             //register signals
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.FIND_MATCH, this.findMatch, this);
+            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.PLAYER_READY, this.playerReady, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, this.selectCharacter, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE_SKIP, this.skipMove, this);
@@ -53,6 +54,9 @@ module ConnectionModule {
                     MvcModule.Mvc.getInstance().sendNotification(RoundsModule.RoundsCommand.NAME, moveVO);
                 }
             }
+            else {
+                MvcModule.Mvc.getInstance().sendNotification(data.name, data.param);
+            }
 
             //ask for match making,
             if (data.name == 'welcome') {
@@ -71,6 +75,14 @@ module ConnectionModule {
         {
             this.doSendObj({
                 name: 'find_match',
+                param: msg
+            });
+        }
+
+        playerReady(msg:any)
+        {
+            this.doSendObj({
+                name: 'player_ready',
                 param: msg
             });
         }
