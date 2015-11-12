@@ -63,6 +63,7 @@ module ConnectionModule {
 
         onError(evt:any)
         {
+            //TODO - show error to client
             console.log("Connection error: " + evt.data)
         }
 
@@ -133,7 +134,7 @@ module ConnectionModule {
             this.doSend(JSON.stringify(obj));
         }
 
-        isInArray(value, array)
+        isInArray(value:string, array:Array<string>)
         {
             var count = array.length;
             for (var i = 0; i < count; i++) {

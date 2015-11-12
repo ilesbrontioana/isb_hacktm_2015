@@ -7,17 +7,20 @@ module LoadingModule
     {
         static NAME:string = "LoadingProxy";
 
-        constructor()
+        loader:IAbstractLoader;
+
+        constructor(loader)
         {
             super(LoadingProxy.NAME);
 
-            LoadingModule.LoadingManager.getInstance().addOnFileComplete(this.fileComplete);
-            LoadingModule.LoadingManager.getInstance().addOnComplete(this.loadComplete);
+            this.loader = loader;
+            this.loader.addOnFileComplete(this.fileComplete);
+            this.loader.addOnComplete(this.loadComplete);
         }
 
         startLoading()
         {
-            LoadingModule.LoadingManager.getInstance().startLoading();
+            this.loader.startLoading();
         }
 
         fileComplete(progress:any, cacheKey:any, success:any, totalLoaded:any, totalFiles:any)
@@ -27,7 +30,6 @@ module LoadingModule
 
         loadComplete()
         {
-            MvcModule.Mvc.getInstance().sendNotification(LoadingModule.LoadingNotifications.LOADING_COMPLETE);
             MvcModule.Mvc.getInstance().sendNotification(LoadingModule.LoadingCompleteCommand.NAME);
         }
 

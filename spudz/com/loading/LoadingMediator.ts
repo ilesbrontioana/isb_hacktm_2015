@@ -14,7 +14,7 @@ module LoadingModule
 
         listNotificationInterests():Array<string>{
             return [
-                LoadingNotifications.LOADING_COMPLETE,
+                LoadingModule.LoadingCompleteCommand.NAME,
                 LoadingNotifications.UPDATE_LOADING_PROGRESS
             ];
         }
@@ -24,7 +24,7 @@ module LoadingModule
                 case LoadingModule.LoadingNotifications.UPDATE_LOADING_PROGRESS:
                     (this.viewComponent as LoadingView).updateProgress(notification.body);
                     break;
-                case LoadingModule.LoadingNotifications.LOADING_COMPLETE:
+                case LoadingModule.LoadingCompleteCommand.NAME:
                     (this.viewComponent as LoadingView).removePreloader();
                     break;
             }
