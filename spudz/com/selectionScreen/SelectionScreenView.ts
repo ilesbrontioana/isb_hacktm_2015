@@ -97,8 +97,9 @@ module SelectionScreenModule{
             this.signalsManager.dispatch("characterSelected", "space");
         }
 
-        onStartGamePressed(){
+        startGame(){
             this.dispatchSignal("StartGame");
+
             this.bmd.visible = false;
 
             this.background.visible = false;
@@ -153,7 +154,7 @@ module SelectionScreenModule{
 
             GraphicsModule.GraphicsManager.getInstance().game.time.events.add(Phaser.Timer.SECOND * 2, function()
             {
-                this.dispatchSignal("StartGame");
+                this.startGame();
             }.bind(this), this);
         }
 
