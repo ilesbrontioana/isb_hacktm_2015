@@ -5,10 +5,18 @@ module LoadingModule
 {
     export interface IAbstractLoader
     {
-        startLoading();
+        startLoading():void;
 
-        addOnFileComplete(callback:Function);
+        addOnFileComplete(callback:Function):void;
 
-        addOnComplete(callback:Function);
+        addOnComplete(callback:Function):void;
+
+        loadAtlas(key:string, path:string, imageName:string, jsonName:string):void;
+
+        loadMap(key:string, path:string):void;
+
+        loadBitmapFont(key:string, path:string):void;
+
+        loadImage(key:string, path:string, imageName:string):void;
     }
 }
