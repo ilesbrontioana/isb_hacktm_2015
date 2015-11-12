@@ -72,6 +72,7 @@ module SelectionScreenModule{
             this.non_active_bacon.x = 100;
             this.non_active_pirate.visible = false;
             this.non_active_space.visible = false;
+            SoundsModule.SoundsManager.getInstance().playSound("bacon_select");
         }
 
         onPirateSelected(){
@@ -79,6 +80,7 @@ module SelectionScreenModule{
             this.non_active_bacon.visible = false;
             this.non_active_space.visible = false;
             this.non_active_pirate.x = 100;
+            SoundsModule.SoundsManager.getInstance().playSound("pirate_select");
         }
 
         onSpaceSelected(){
@@ -86,6 +88,7 @@ module SelectionScreenModule{
             this.non_active_bacon.visible = false;
             this.non_active_pirate.visible = false;
             this.non_active_space.x = 100;
+            SoundsModule.SoundsManager.getInstance().playSound("marine_select");
         }
 
         onStartGamePressed(){

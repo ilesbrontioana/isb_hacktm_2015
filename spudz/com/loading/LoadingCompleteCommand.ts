@@ -14,10 +14,12 @@ module LoadingModule
 
         public execute(notification:MvcModule.INotification)
         {
+            SoundsModule.SoundsManager.getInstance().createSounds();
+
+
             MvcModule.Mvc.getInstance().registerMediator(SelectionScreenModule.SelectionScreenMediator.NAME, new SelectionScreenModule.SelectionScreenMediator(new SelectionScreenModule.SelectionScreenView()));
             MvcModule.Mvc.getInstance().registerProxy(SelectionScreenModule.SelectionScreenProxy.NAME, new SelectionScreenModule.SelectionScreenProxy());
 
-            SoundsModule.SoundsManager.getInstance().createSounds();
 
             MvcModule.Mvc.getInstance().sendNotification(SelectionScreenModule.SelectionScreenNotifications.WELCOME);
 
