@@ -68,7 +68,7 @@ class SimpleGame {
     game: Phaser.Game;
     map:MapModule.Map;
     background:Phaser.Image;
-    loader;
+    loader:LoadingModule.IAbstractLoader;
 
     constructor() {
 
@@ -85,7 +85,7 @@ class SimpleGame {
         GraphicsModule.GraphicsManager.getInstance().game = this.game;
         this.loader = new LoadingModule.PhaserLoader();
 
-        this.game.load.image('loadingScreen', GraphicsModule.GraphicsManager.getInstance().assetPath + 'loading/Loading.jpg');
+        this.game.load.image('loadingScreen', '../../spudz/bin/assets/loading/Loading.jpg');
     }
 
     create() {

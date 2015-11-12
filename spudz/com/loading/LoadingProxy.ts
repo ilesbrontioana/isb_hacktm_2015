@@ -9,7 +9,10 @@ module LoadingModule
 
         loader:IAbstractLoader;
 
-        constructor(loader)
+        //TODO - remove from here
+        assetPath:string = '../../spudz/bin/assets/';
+
+        constructor(loader:LoadingModule.IAbstractLoader)
         {
             super(LoadingProxy.NAME);
 
@@ -21,6 +24,26 @@ module LoadingModule
         startLoading()
         {
             this.loader.startLoading();
+        }
+
+        loadAtlas(key:string, path:string, imageName:string, jsonName:string)
+        {
+            this.loader.loadAtlas(key, this.assetPath + path, imageName, jsonName);
+        }
+
+        loadMap(key:string, path:string)
+        {
+            this.loader.loadMap(key, this.assetPath + path);
+        }
+
+        loadBitmapFont(key:string, path:string)
+        {
+            this.loader.loadBitmapFont(key, this.assetPath + path);
+        }
+
+        loadImage(key:string, path:string, imageName:string)
+        {
+            this.loader.loadImage(key, this.assetPath + path, imageName);
         }
 
         fileComplete(progress:any, cacheKey:any, success:any, totalLoaded:any, totalFiles:any)
