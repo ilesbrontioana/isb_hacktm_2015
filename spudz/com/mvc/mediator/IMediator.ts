@@ -14,6 +14,6 @@ module MvcModule{
         removeListener(signalName:string, listener:Function):void
         getViewComponent():IView
         setViewComponent(viewComponent:IView):void
-        sendNotification(notificationName:string, body?:any, type?:string);
+        sendNotification(notificationName:string, body?:any, type?:string):void
     }
 }
