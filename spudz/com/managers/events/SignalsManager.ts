@@ -21,20 +21,20 @@ module EventsModule
         }
 
         public createBinding(signalName:string, listener:Function, listenerContext?:any, priority?:number, args?:any){
-            if(!this.signals[name]) {
+            if(!this.signals[signalName]) {
                 var custBind:CustomBinding = new CustomBinding();
-                this.signals[name] = custBind;
+                this.signals[signalName] = custBind;
             }
 
-            var signalBinding:Phaser.SignalBinding = new Phaser.SignalBinding(this.signals[name].signal, listener, false, listenerContext, priority, args);
-            this.signals[name].bindings.push(signalBinding);
-            this.signals[name].context = listenerContext;
+            var signalBinding:Phaser.SignalBinding = new Phaser.SignalBinding(this.signals[signalName].signal, listener, false, listenerContext, priority, args);
+            this.signals[signalName].bindings.push(signalBinding);
+            this.signals[signalName].context = listenerContext;
         }
 
-        public dispatch(name:string, args?:any){
-            var bindings = this.signals[name].bindings;
+        public dispatch(signalName:string, args?:any){
+            var bindings = this.signals[signalName].bindings;
             for(var i = 0; i<bindings.length; i++){
-                bindings[i].getListener().call(this.signals[name].context, args);
+                bindings[i].getListener().call(this.signals[signalName].context, args);
             }
         }
 
