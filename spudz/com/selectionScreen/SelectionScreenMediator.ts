@@ -14,11 +14,6 @@ module SelectionScreenModule{
                 EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, selection);
             });
 
-            this.addListenerToSignal("opponent_character", function(params:any)
-            {
-                    //(viewComponent as SelectionScreenView).addOponent()
-            });
-
             this.addListenerToSignal("StartGame", function(){
 
                 MvcModule.Mvc.getInstance().registerMediator(BackgroundModule.BackgroundMediator.NAME, new BackgroundModule.BackgroundMediator(new BackgroundModule.BackgroundView()));
@@ -49,14 +44,24 @@ module SelectionScreenModule{
             });
         }
 
+        onRegister()
+        {
+            MvcModule.Mvc.getInstance().registerMediator(ServerMockModule.ServerMockMediator.NAME, new ServerMockModule.ServerMockMediator(new ServerMockModule.ServerMockView()));
+        }
+
         listNotificationInterests():Array<string>{
-            return [WelcomeModule.WelcomeNotifications.WELCOME, ConnectionModule.ConnectionSignals.MATCH_FOUND];
+            return [ConnectionModule.ConnectionSignals.MATCH_FOUND,
+                    ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER];
         }
 
         handleNotification(notification:MvcModule.INotification) {
             switch (notification.name) {
                 case  ConnectionModule.ConnectionSignals.MATCH_FOUND:
                     EventsModule.SignalsManager.getInstance().dispatch(ConnectionModule.ConnectionSignals.PLAYER_READY);
+                    break;
+                case ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER:
+                    MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenProxy.NAME).VO.opponentSelection = notification.body as string;
+                    (this.viewComponent as SelectionScreenView).addOpponent(notification.body as string);
                     break;
             }
         }

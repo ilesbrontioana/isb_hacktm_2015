@@ -7,8 +7,6 @@ module CharacterModule
     {
         static NAME:string = "EnemyMediator";
 
-        moveVO:ConnectionModule.MoveVO;
-
         constructor(viewComponent:MvcModule.View){
 
             super(EnemyMediator.NAME, viewComponent);
@@ -24,9 +22,8 @@ module CharacterModule
 
 
         onRegister(){
-            this.moveVO = new ConnectionModule.MoveVO();
-
-            (this.viewComponent as EnemyView).createCharacter('bacon');
+            (this.viewComponent as EnemyView).createCharacter(
+                (MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenProxy).getOpponentSelection());
         }
 
         listNotificationInterests():Array<string>{

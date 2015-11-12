@@ -12,5 +12,9 @@ module SelectionScreenModule{
         public getSelection():string{
             return this.VO.selectedCharacter;
         }
+
+        public getOpponentSelection():string{
+            return this.VO.opponentSelection;
+        }
     }
 }
