@@ -19,6 +19,9 @@ module SelectionScreenModule{
         non_active_pirate:Phaser.Sprite;
         non_active_space:Phaser.Sprite;
 
+        opponentSelection:string = "";
+        canAddOpponent:boolean = false;
+
         constructor(){
             super(SelectionScreenView.NAME);
 
@@ -68,44 +71,115 @@ module SelectionScreenModule{
         }
 
         onBaconSelected(){
-            this.signalsManager.dispatch("characterSelected", "bacon");
             this.non_active_bacon.x = 100;
             this.non_active_pirate.visible = false;
             this.non_active_space.visible = false;
             SoundsModule.SoundsManager.getInstance().playSound("bacon_select");
+            this.addTimerToAddOpponent();
+            this.signalsManager.dispatch("characterSelected", "bacon");
         }
 
         onPirateSelected(){
-            this.signalsManager.dispatch("characterSelected", "pirate");
             this.non_active_bacon.visible = false;
             this.non_active_space.visible = false;
             this.non_active_pirate.x = 100;
             SoundsModule.SoundsManager.getInstance().playSound("pirate_select");
+            this.addTimerToAddOpponent();
+            this.signalsManager.dispatch("characterSelected", "pirate");
         }
 
         onSpaceSelected(){
-            this.signalsManager.dispatch("characterSelected", "space");
             this.non_active_bacon.visible = false;
             this.non_active_pirate.visible = false;
             this.non_active_space.x = 100;
             SoundsModule.SoundsManager.getInstance().playSound("marine_select");
+            this.addTimerToAddOpponent();
+            this.signalsManager.dispatch("characterSelected", "space");
         }
 
-        onStartGamePressed(){
-            this.dispatchSignal("StartGame");
-            this.bmd.visible = false;
+        addOpponent(selection:string)
+        {
+            this.opponentSelection = selection;
 
-            this.background.visible = false;
-            this.active_bacon.visible = false;
-            this.active_pirate.visible = false;
-            this.active_space.visible = false;
-            this.back_button.visible = false;
-            this.menu_bar.visible = false;
-            this.menu_button.visible = false;
-            this.next_button.visible = false;
-            this.non_active_bacon.visible = false;
-            this.non_active_pirate.visible = false;
-            this.non_active_space.visible = false;
+            if(this.canAddOpponent)
+            {
+                this.addOpponentGraphics();
+            }
+        }
+
+        addOpponentGraphics()
+        {
+            if(this.opponentSelection == "pirate")
+            {
+                this.active_pirate.x = 1200;
+                this.active_pirate.y = 90;
+                this.active_pirate.scale.x = -1;
+                this.active_pirate.visible = true;
+                SoundsModule.SoundsManager.getInstance().playSound("pirate_select");
+            }
+            else if(this.opponentSelection == "bacon")
+            {
+                this.active_bacon.x = 1200;
+                this.active_bacon.y = 90;
+                this.active_bacon.scale.x = -1;
+                this.active_bacon.visible = true;
+                SoundsModule.SoundsManager.getInstance().playSound("bacon_select");
+            }
+            else
+            {
+                this.active_space.x = 1200;
+                this.active_space.y = 90;
+                this.active_space.scale.x = -1;
+                this.active_space.visible = true;
+                SoundsModule.SoundsManager.getInstance().playSound("marine_select");
+            }
+
+            GraphicsModule.GraphicsManager.getInstance().game.time.events.add(Phaser.Timer.SECOND * 2, function()
+            {
+                this.dispatchSignal("StartGame");
+
+
+
+                this.bmd.visible = false;
+
+                this.background.visible = false;
+                this.active_bacon.visible = false;
+                this.active_pirate.visible = false;
+                this.active_space.visible = false;
+                this.back_button.visible = false;
+                this.menu_bar.visible = false;
+                this.menu_button.visible = false;
+                this.next_button.visible = false;
+                this.non_active_bacon.visible = false;
+                this.non_active_pirate.visible = false;
+                this.non_active_space.visible = false;
+
+
+            }.bind(this), this);
+        }
+
+        addTimerToAddOpponent()
+        {
+
+            this.non_active_bacon.inputEnabled = false;
+            this.non_active_pirate.inputEnabled = false;
+            this.non_active_space.inputEnabled = false;
+
+            this.non_active_bacon.events.onInputDown.removeAll();
+            this.non_active_pirate.events.onInputDown.removeAll();
+            this.non_active_space.events.onInputDown.removeAll();
+
+            GraphicsModule.GraphicsManager.getInstance().game.time.events.add(Phaser.Timer.SECOND * 2, function()
+            {
+                if(this.opponentSelection != "")
+                {
+                    this.addOpponentGraphics();
+                }
+                else
+                {
+                    this.canAddOpponent = true;
+                }
+            }.bind(this), this);
         }
     }
 }

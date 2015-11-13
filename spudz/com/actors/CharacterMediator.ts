@@ -3,7 +3,6 @@
  */
 module CharacterModule
 {
-    import SelectionScreenProxy = SelectionScreenModule.SelectionScreenProxy;
     export class CharacterMediator extends MvcModule.Mediator{
         static NAME:string = "CharacterMediator";
 
@@ -47,7 +46,7 @@ module CharacterModule
 
         onRegister(){
             this.moveVO = new ConnectionModule.MoveVO();
-            (this.viewComponent as CharacterView).createCharacter((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenProxy).getSelection());
+            (this.viewComponent as CharacterView).createCharacter((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getSelection());
         }
 
         listNotificationInterests():Array<string>{

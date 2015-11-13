@@ -31,7 +31,7 @@ module ConnectionModule {
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.FIND_MATCH, this.findMatch, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.PLAYER_READY, this.playerReady, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, this.selectCharacter, this);
-            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove, this);
+            EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE, this.sendMove.bind(this), this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.MOVE_SKIP, this.skipMove, this);
             EventsModule.SignalsManager.getInstance().createBinding(ConnectionModule.ConnectionSignals.REGISTER_NAME, this.registerName, this);
 
@@ -95,13 +95,13 @@ module ConnectionModule {
             });
         }
 
-        sendMove(move:any)
+        sendMove(msg:any)
         {
             this.doSendObj({
                 name: 'move',
-                param: move
+                param: msg
             });
-            console.log("SEND TO SERVER MOVE "+move);
+            console.log("SEND TO SERVER MOVE "+msg);
         }
 
         skipMove()

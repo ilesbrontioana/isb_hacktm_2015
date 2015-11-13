@@ -65,6 +65,9 @@
 /// <reference path="com/background/BackgroundMediator.ts" />
 /// <reference path="com/background/BackgroundView.ts" />
 
+/// <reference path="com/serverMock/ServerMockView.ts" />
+/// <reference path="com/serverMock/ServerMockMediator.ts" />
+
 class SimpleGame {
     game: Phaser.Game;
     map:MapModule.Map;
