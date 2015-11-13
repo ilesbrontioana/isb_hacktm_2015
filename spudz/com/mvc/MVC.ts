@@ -11,24 +11,32 @@
 /// <reference path="mediator/IMediator.ts" />
 /// <reference path="view/View.ts" />
 /// <reference path="view/IView.ts" />
+/// <reference path="IMVC.ts" />
+/// <reference path="abstract/ISignalsManager.ts" />
 
 module MvcModule{
-    export class Mvc{
-        private static _instance:Mvc = new Mvc();
+    export class Mvc implements  IMVC{
+        private static _instance:IMVC
 
         public commands:ICommandIndex = {};
         public notifications:INotificationIndex = {};
         public proxies:IProxyIndex = {};
         public mediators:IMediatorIndex = {};
 
-        constructor(){
+        public signalsManager:ISignalsManager;
+
+        constructor(
+            ISignalsManager:ISignalsManager //injected
+        ){
             if(Mvc._instance){
-                throw new Error("Te Dreq: Instantiation failed: Use SignalsManager.getInstance()");
+                throw new Error("Te Dreq: Instantiation failed: Use Mvc.getInstance()");
             }
             Mvc._instance = this;
+            this.signalsManager = ISignalsManager;
+            console.log(this.signalsManager);
         }
 
-        public static getInstance():Mvc {
+        public static getInstance():IMVC {
             return Mvc._instance;
         }
 

@@ -2,6 +2,7 @@
  * Created by adm on 12.10.15.
  */
 /// <reference path="phaser.d.ts" />
+/// <reference path="inversify.d.ts" />
 
 /// <reference path="com/MVC/MVC.ts" />
 
@@ -71,7 +72,6 @@ class SimpleGame {
     loader:LoadingModule.IAbstractLoader;
 
     constructor() {
-
         this.game = new Phaser.Game(1334, 740, Phaser.AUTO, 'content', {
             create: this.create,
             preload: this.preload,
@@ -81,6 +81,11 @@ class SimpleGame {
     }
 
     preload() {
+        var kernel = new inversify.Kernel();
+        kernel.bind(new inversify.TypeBinding<MvcModule.ISignalsManager>("ISignalsManager", EventsModule.SignalsManager, inversify.TypeBindingScopeEnum.Singleton));
+        kernel.bind(new inversify.TypeBinding<MvcModule.IMVC>("IMVC", MvcModule.Mvc, inversify.TypeBindingScopeEnum.Singleton));
+
+        var mvc = kernel.resolve<MvcModule.IMVC>("IMVC");
 
         GraphicsModule.GraphicsManager.getInstance().game = this.game;
         this.loader = new LoadingModule.PhaserLoader();
@@ -89,7 +94,6 @@ class SimpleGame {
     }
 
     create() {
-
         MvcModule.Mvc.getInstance().registerMediator(LoadingModule.LoadingMediator.NAME, new LoadingModule.LoadingMediator(new LoadingModule.LoadingView()));
 
         MvcModule.Mvc.getInstance().registerProxy(LoadingModule.LoadingProxy.NAME, new LoadingModule.LoadingProxy(this.loader));

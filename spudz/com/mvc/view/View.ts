@@ -6,11 +6,11 @@ module MvcModule {
         public game:Phaser.Game;
         public name:string;
 
-        public signalsManager:EventsModule.SignalsManager;
+        public signalsManager:ISignalsManager;
         constructor(name:string){
             this.name = name;
             this.game = GraphicsModule.GraphicsManager.getInstance().game;
-            this.signalsManager =  EventsModule.SignalsManager.getInstance();
+            this.signalsManager =  Mvc.getInstance().signalsManager;
         }
 
         public dispatchSignal(signalName:string, args?:any){

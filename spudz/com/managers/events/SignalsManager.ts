@@ -5,8 +5,8 @@
 
 module EventsModule
 {
-    export class SignalsManager{
-        private static _instance:SignalsManager = new SignalsManager();
+    export class SignalsManager implements MvcModule.ISignalsManager{
+        private static _instance:SignalsManager;
         public signals: ISignal = {};
 
         constructor(){

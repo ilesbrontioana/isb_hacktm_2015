@@ -8,6 +8,7 @@ module MvcModule{
         onRegister():void
         onUnregister():void
         listNotificationInterests():Array<string>
+        addSignalListeners():void
         handleNotification(notification:INotification):void
         dispatchSignal(signalName:string, args?:any):void
         addListenerToSignal(signalName:string, listener:Function, listenerContext?:any, priority?:number, args?:any):void
