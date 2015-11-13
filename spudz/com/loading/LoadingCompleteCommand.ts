@@ -19,6 +19,8 @@ module LoadingModule
             MvcModule.Mvc.getInstance().registerMediator(SelectionScreenModule.SelectionScreenMediator.NAME, new SelectionScreenModule.SelectionScreenMediator(new SelectionScreenModule.SelectionScreenView()));
             MvcModule.Mvc.getInstance().registerProxy(SelectionScreenModule.SelectionScreenProxy.NAME, new SelectionScreenModule.SelectionScreenProxy());
 
+            MvcModule.Mvc.getInstance().registerCommand(RoundsModule.StartMatchCommand.NAME, new RoundsModule.StartMatchCommand());
+
             //MvcModule.Mvc.getInstance().registerProxy(ConnectionModule.ConnectionProxy.NAME, new ConnectionModule.ConnectionProxy(new WebSocket("ws://razvanpat.info.tm:8001/")));
 
         }

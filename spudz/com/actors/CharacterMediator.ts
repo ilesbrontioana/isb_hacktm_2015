@@ -55,6 +55,7 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
                 CharacterModule.CharacterNotifications.DAMAGE_COMPLETE,
+                ConnectionModule.ConnectionSignals.YOUR_TURN,
                 CharacterActionType.ATTACK];
         }
 
@@ -80,6 +81,9 @@ module CharacterModule
                     break
                 case CharacterActionType.ATTACK:
                     (this.viewComponent as CharacterView).setCharacterAttackAction(notification.body);
+                    break;
+                case ConnectionModule.ConnectionSignals.YOUR_TURN:
+                    (this.viewComponent as CharacterView).characterTurn();
                     break;
                 case CharacterModule.CharacterNotifications.DAMAGE_COMPLETE:
                     this.moveVO.ability = ""

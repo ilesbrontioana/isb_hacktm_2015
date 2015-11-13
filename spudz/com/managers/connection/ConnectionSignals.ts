@@ -14,7 +14,8 @@ module ConnectionModule{
 
         //server to client
         static OPPONENT_CHARACTER: string = "opponent_character";
-        static START_MATCH: string = "start_match";
+        static YOUR_TURN: string = "your_turn";
+        static MATCH_STARTED: string = "match_started";
         static MATCH_FOUND: string = "match_found";
         static RECONCILIATION: string = "reconciliation";
         static WIN: string = "win";

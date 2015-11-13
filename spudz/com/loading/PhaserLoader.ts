@@ -40,7 +40,7 @@ module LoadingModule
 
         public loadBitmapFont(key:string, path:string)
         {
-            this.game.load.bitmapFont('font', path + key + '.png', path + key + '.fnt');
+            this.game.load.bitmapFont(key, path + key + '.png', path + key + '.fnt');
         }
 
         public loadImage(key:string, path:string, imageName:string)

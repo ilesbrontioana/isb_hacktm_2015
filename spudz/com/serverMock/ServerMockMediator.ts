@@ -4,6 +4,7 @@
 module ServerMockModule
 {
     import IView = MvcModule.IView;
+    import SignalsManager = EventsModule.SignalsManager;
     export class ServerMockMediator extends MvcModule.Mediator
     {
         static NAME:string = "ServerMockMediator";
@@ -38,6 +39,27 @@ module ServerMockModule
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER, opponentSelection);
                 }.bind(this), this);
             });
+        }
+
+        listNotificationInterests():Array<string>{
+            return [RoundsModule.RoundsNotifications.FIGHT];
+        }
+
+        handleNotification(notification:MvcModule.INotification) {
+            switch (notification.name) {
+                case RoundsModule.RoundsNotifications.FIGHT:
+                    //var turn:number = Math.random() * 2;
+                    //if(turn < 1)
+                    //{
+                    //    MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE);
+                    //}
+                    //else
+                    //{
+                    MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
+                    //}
+                    break;
+
+            }
         }
     }
 }

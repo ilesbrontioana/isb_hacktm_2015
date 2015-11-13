@@ -33,6 +33,7 @@
 /// <reference path="com/rounds/RoundsView.ts" />
 /// <reference path="com/rounds/RoundsVO.ts" />
 /// <reference path="com/rounds/RoundsNotifications.ts" />
+/// <reference path="com/rounds/StartMatchCommand.ts" />
 
 /// <reference path="com/welcomeScreen/WelcomeMediator.ts" />
 /// <reference path="com/welcomeScreen/WelcomeNotifications.ts" />

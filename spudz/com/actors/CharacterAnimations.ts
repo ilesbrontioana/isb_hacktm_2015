@@ -27,7 +27,7 @@ module CharacterModule
                 "block" : 'block_pirate'
 
             },
-            "space" : {
+            "marine" : {
                 "idle" : 'idle_space',
                 "jump" : 'jump_space',
                 "run" : 'space_run',

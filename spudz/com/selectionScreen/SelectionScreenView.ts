@@ -94,7 +94,7 @@ module SelectionScreenModule{
             this.non_active_space.x = 100;
             SoundsModule.SoundsManager.getInstance().playSound("marine_select");
             this.addTimerToAddOpponent();
-            this.signalsManager.dispatch("characterSelected", "space");
+            this.signalsManager.dispatch("characterSelected", "marine");
         }
 
         addOpponent(selection:string)
@@ -183,15 +183,3 @@ module SelectionScreenModule{
         }
     }
 }
-
-//this.game.load.image('active_bacon', '../../spudz/bin/assets/selectionScreen/active_bacon.png');
-//this.game.load.image('active_pirate', '../../spudz/bin/assets/selectionScreen/active_pirate.png');
-//this.game.load.image('active_space', '../../spudz/bin/assets/selectionScreen/active_space.png');
-//this.game.load.image('back_button', '../../spudz/bin/assets/selectionScreen/back_button.png');
-//this.game.load.image('background_welcome_screen', '../../spudz/bin/assets/selectionScreen/Background.png');
-//this.game.load.image('menu_bar', '../../spudz/bin/assets/selectionScreen/menu_bar.png');
-//this.game.load.image('menu_button', '../../spudz/bin/assets/selectionScreen/menu_button.png');
-//this.game.load.image('next_button', '../../spudz/bin/assets/selectionScreen/next_button.png');
-//this.game.load.image('non-active_bacon', '../../spudz/bin/assets/selectionScreen/active_bacon.png');
-//this.game.load.image('non-active_pirate', '../../spudz/bin/assets/selectionScreen/non-active_pirate.png');
-//this.game.load.image('non-active_space', '../../spudz/bin/assets/selectionScreen/non-active_space.png');

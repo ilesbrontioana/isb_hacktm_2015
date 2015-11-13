@@ -185,7 +185,7 @@ module CharacterModule
         characterTurn()
         {
             this.game.physics.arcade.isPaused = false;
-            this.setCurrentAction();
+            this.setCurrentAction(CharacterModule.CharacterActionType.MOVE);
         }
 
         updateCharacter() {
@@ -203,7 +203,6 @@ module CharacterModule
                     {
                         this.sendToServer();
                     }
-                    this.setCurrentAction();
                     this.animateIdle();
                 }
             }
@@ -292,16 +291,9 @@ module CharacterModule
             this.attackComplete = true;
         }
 
-        setCurrentAction()
+        setCurrentAction(currentAction)
         {
-            if(this.currentAction == CharacterActionType.ATTACK)
-            {
-                this.currentAction = CharacterActionType.MOVE;
-            }
-            else
-            {
-                this.currentAction = CharacterActionType.ATTACK;
-            }
+            this.currentAction = currentAction;
             this.sendPosition();
         }
 

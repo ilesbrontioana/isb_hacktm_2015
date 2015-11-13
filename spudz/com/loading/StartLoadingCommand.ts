@@ -19,7 +19,7 @@ module LoadingModule
 
             (MvcModule.Mvc.getInstance().retrieveProxy(LoadingProxy.NAME) as LoadingProxy).loadAtlas('ui', 'ui/', 'UI SpriteSheet.png', 'UI SpriteSheet.json');
             (MvcModule.Mvc.getInstance().retrieveProxy(LoadingProxy.NAME) as LoadingProxy).loadAtlas('pirate', 'character/pirate/', 'Spritesheet_Pirate.png', 'Spritesheet_Pirate.json');
-            (MvcModule.Mvc.getInstance().retrieveProxy(LoadingProxy.NAME) as LoadingProxy).loadAtlas('space', 'character/space/', 'Spritesheet_Space.png', 'Spritesheet_Space.json');
+            (MvcModule.Mvc.getInstance().retrieveProxy(LoadingProxy.NAME) as LoadingProxy).loadAtlas('marine', 'character/space/', 'Spritesheet_Space.png', 'Spritesheet_Space.json');
             (MvcModule.Mvc.getInstance().retrieveProxy(LoadingProxy.NAME) as LoadingProxy).loadAtlas('bacon', 'character/bacon/', 'Spritesheet_Bacon.png', 'Spritesheet_Bacon.json');
 
             (MvcModule.Mvc.getInstance().retrieveProxy(LoadingProxy.NAME) as LoadingProxy).loadMap('Spudz', 'map/');
