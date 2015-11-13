@@ -15,13 +15,10 @@
 /// <reference path="abstract/ISignalsManager.ts" />
 
 module MvcModule{
-    export class Mvc implements  IMVC{
+    export class Mvc implements IMVC{
         private static _instance:IMVC
 
-        public commands:ICommandIndex = {};
-        public notifications:INotificationIndex = {};
-        public proxies:IProxyIndex = {};
-        public mediators:IMediatorIndex = {};
+        public cores:IMvcCoreIndex = {};
 
         public signalsManager:ISignalsManager;
 
@@ -33,11 +30,83 @@ module MvcModule{
             }
             Mvc._instance = this;
             this.signalsManager = ISignalsManager;
-            console.log(this.signalsManager);
+
+            this.registerCore("default");
         }
 
         public static getInstance():IMVC {
             return Mvc._instance;
+        }
+
+        public registerCore(coreName:String){
+            this.cores[coreName] = new MvcCore(coreName);
+        }
+
+        public removeCore(coreName:string){
+            delete this.cores[coreName];
+        }
+
+        public registerNotification(notificationName:string, scope:string = 'default'){
+            this.cores[scope].registerNotification(notificationName);
+        }
+
+        public unregisterNotification(notificationName:string, scope:string = 'default'){
+            this.cores[scope].unregisterNotification(notificationName)
+        }
+
+        public registerCommand(commandName:string, command:IController, scope:string = 'default') {
+            this.cores[scope].registerCommand(commandName, command)
+        }
+
+        public unregisterCommand(commandName:string, scope:string = 'default'){
+            this.cores[scope].unregisterCommand(commandName);
+        }
+
+        public registerProxy(proxyName:string, proxy:IProxy, scope:string = 'default'){
+            this.cores[scope].registerProxy(proxyName, proxy)
+        }
+
+        public retrieveProxy(proxyName:string, scope:string = 'default'):IProxy{
+            return this.cores[scope].retrieveProxy(proxyName)
+        }
+
+        public unregisterProxy(proxyName:string, scope:string = 'default'){
+            this.cores[scope].unregisterProxy(proxyName);
+        }
+
+        public registerMediator(mediatorName:string, mediator:IMediator, scope:string = 'default'){
+            this.cores[scope].registerMediator(mediatorName, mediator)
+        }
+
+        public unregisterMediator(mediatorName:string, scope:string = 'default'){
+            this.cores[scope].unregisterMediator(mediatorName)
+        }
+
+        public sendNotification(notificationName:string, body?:any, scope:string = 'default',type?:string){
+            this.cores[scope].sendNotification(notificationName, body, type);
+        }
+
+        public sendGlobalNotification(notificationName:string, body?:any,type?:string){
+            for(i in this.cores){
+                this.cores[i].sendNotification(notificationName, body, type);
+            }
+        }
+
+    }
+
+    export class MvcCore implements IMVCCore{
+
+        static NAME:string;
+
+        public name:string;
+        public commands:ICommandIndex = {};
+        public notifications:INotificationIndex = {};
+        public proxies:IProxyIndex = {};
+        public mediators:IMediatorIndex = {};
+
+        constructor(coreName:string){
+            this.name = coreName;
+            console.log("registered Scope "+this.name);
         }
 
         public registerNotification(notificationName:string){
@@ -94,7 +163,7 @@ module MvcModule{
             var targetMediator = this.mediators[mediatorName]
             var interestedNotifications = targetMediator.listNotificationInterests();
             for(var i=0; i<interestedNotifications.length; i++){
-              var listeningMediators = this.notifications[interestedNotifications[i]];
+                var listeningMediators = this.notifications[interestedNotifications[i]];
                 for(var j=0; j<listeningMediators.length; j++){
                     if(listeningMediators[j] === targetMediator){
                         listeningMediators.splice(j,1);
@@ -142,5 +211,9 @@ module MvcModule{
 
     export interface IMediatorIndex{
         [mediatorName:string]:IMediator
+    }
+
+    export interface IMvcCoreIndex{
+        [mediatorName:string]:IMVCCore
     }
 }
