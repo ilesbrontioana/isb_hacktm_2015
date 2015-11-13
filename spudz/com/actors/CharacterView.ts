@@ -301,7 +301,7 @@ module CharacterModule
             this.attackComplete = true;
         }
 
-        setCurrentAction(currentAction)
+        setCurrentAction(currentAction:string)
         {
             this.currentAction = currentAction;
             this.sendPosition();
