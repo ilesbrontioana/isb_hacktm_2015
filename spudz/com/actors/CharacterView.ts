@@ -55,7 +55,7 @@ module CharacterModule
         createCharacter(characterName:string)
         {
             var x = 680;
-            var y = 1240;
+            var y = 1244;
             var followCharacter = true;
 
             this.graphics = this.game.add.sprite(x, y, characterName);
@@ -126,6 +126,8 @@ module CharacterModule
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
             this.game.physics.arcade.isPaused = true;
+            this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
+            this.animateIdle();
         }
 
         startAction(tile:Phaser.Sprite)
@@ -189,6 +191,14 @@ module CharacterModule
         }
 
         updateCharacter() {
+            if(MapModule.Map.getInstance().layers['Spudz'])
+            {
+                this.checkCollision([
+                    MapModule.Map.getInstance().layers['Spudz']['TilesLayer'],
+                    MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer']
+                ]);
+            }
+
             if(this.currentAction == CharacterModule.CharacterActionType.MOVE &&
                 this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
             {
@@ -291,7 +301,7 @@ module CharacterModule
             this.attackComplete = true;
         }
 
-        setCurrentAction(currentAction)
+        setCurrentAction(currentAction:string)
         {
             this.currentAction = currentAction;
             this.sendPosition();

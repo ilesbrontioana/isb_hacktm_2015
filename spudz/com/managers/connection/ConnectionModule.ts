@@ -14,7 +14,7 @@ module ConnectionModule {
             super(ConnectionProxy.NAME);
             this.signalsToDispatch = [
                 ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER,
-                ConnectionModule.ConnectionSignals.START_MATCH,
+                ConnectionModule.ConnectionSignals.MATCH_STARTED,
                 ConnectionModule.ConnectionSignals.MOVE,
                 ConnectionModule.ConnectionSignals.RECONCILIATION,
                 ConnectionModule.ConnectionSignals.WIN,

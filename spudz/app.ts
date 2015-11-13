@@ -108,20 +108,12 @@ class SimpleGame {
         MvcModule.Mvc.getInstance().sendNotification(LoadingModule.StartLoadingCommand.NAME);
     }
 
-
     render() {
 
     }
 
     update() {
-        if( MapModule.Map.getInstance().layers['Spudz'])
-        {
-            MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
-                [
-                    MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer'],
-                    MapModule.Map.getInstance().layers['Spudz']['TilesLayer']
-                ]);
-        }
+        MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.UPDATE_CHARACTER);
     }
 }
 
