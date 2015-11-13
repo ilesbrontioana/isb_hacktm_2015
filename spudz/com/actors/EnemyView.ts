@@ -16,7 +16,7 @@ module CharacterModule
         createCharacter(characterName:string)
         {
             var x = 1160;
-            var y = 1240;
+            var y = 1244;
 
             this.graphics = this.game.add.sprite(x, y, characterName);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.IDLE_ANIMATION, Phaser.Animation.generateFrameNames(
@@ -53,10 +53,12 @@ module CharacterModule
 
         sendPosition()
         {
-            this.dispatchSignal("CharacterPosition", {  x: this.graphics.x + this.graphics.width/2,
-                y: this.graphics.y + this.graphics.height/2,
-                actionType: this.currentAction,
-                addActionRay:false});
+            //nothing to do
+        }
+
+        sendToServer()
+        {
+            //nothing to do
         }
 
         tryDamage(graphics:Phaser.Sprite)

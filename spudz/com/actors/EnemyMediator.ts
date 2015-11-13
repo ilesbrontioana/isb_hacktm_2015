@@ -11,12 +11,9 @@ module CharacterModule
 
             super(EnemyMediator.NAME, viewComponent);
 
-            this.addListenerToSignal("move", function(){},this);
             this.addListenerToSignal("CharacterDamage", function(damage:number){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.DAMAGE_COMPLETE, damage);
             },this);
-            this.addListenerToSignal("CharacterPosition", function(body:any){
-            }, this);
         }
 
 
@@ -27,11 +24,11 @@ module CharacterModule
         }
 
         listNotificationInterests():Array<string>{
-            return [CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
+            return [CharacterModule.CharacterNotifications.UPDATE_CHARACTER,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
-                CharacterModule.CharacterNotifications.TRY_DAMAGE,
                 CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY,
+                ConnectionModule.ConnectionSignals.MOVE
             ];
         }
 
@@ -39,8 +36,7 @@ module CharacterModule
             MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.character = (this.viewComponent as EnemyView).graphics;
 
             switch (notification.name){
-                case CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION:
-                    (this.viewComponent as EnemyView).checkCollision(notification.body as Array<Phaser.TilemapLayer>);
+                case CharacterModule.CharacterNotifications.UPDATE_CHARACTER:
                     (this.viewComponent as EnemyView).updateCharacter();
                     break;
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
@@ -54,6 +50,8 @@ module CharacterModule
                     break
                 case  CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY:
                     (this.viewComponent as EnemyView).tryDamage(notification.body);
+                    break;
+                case ConnectionModule.ConnectionSignals.MOVE:
                     break;
             }
         }

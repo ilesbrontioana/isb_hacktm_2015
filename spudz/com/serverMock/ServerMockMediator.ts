@@ -9,6 +9,8 @@ module ServerMockModule
     {
         static NAME:string = "ServerMockMediator";
 
+        noOfActions = 0;
+
 
         constructor(viewComponent:MvcModule.IView)
         {
@@ -39,6 +41,16 @@ module ServerMockModule
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER, opponentSelection);
                 }.bind(this), this);
             });
+
+            this.addListenerToSignal(ConnectionModule.ConnectionSignals.MOVE, function (param:any) {
+                this.noOfActions++;
+                if(this.noOfActions == 2)
+                {
+                    MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.END_TURN);
+                    this.noOfActions = 0;
+                    this.opponentMove();
+                }
+            }, this);
         }
 
         listNotificationInterests():Array<string>{
@@ -48,17 +60,29 @@ module ServerMockModule
         handleNotification(notification:MvcModule.INotification) {
             switch (notification.name) {
                 case RoundsModule.RoundsNotifications.FIGHT:
+                    this.noOfActions = 0;
                     //var turn:number = Math.random() * 2;
                     //if(turn < 1)
                     //{
-                    //    MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE);
+                    //    this.opponentMove();
                     //}
                     //else
                     //{
-                    MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
+                          MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
                     //}
+
                     break;
 
+            }
+        }
+
+        opponentMove()
+        {
+            MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE);
+            this.noOfActions++;
+            if(this.noOfActions == 2)
+            {
+                MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
             }
         }
     }

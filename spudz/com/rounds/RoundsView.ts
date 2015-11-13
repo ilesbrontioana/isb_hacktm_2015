@@ -10,7 +10,7 @@ module RoundsModule{
 
         constructor(){
             super(RoundsView.NAME);
-            this.counterText = this.game.add.bitmapText(1334/2, 200, 'font','THREE', 50);
+            this.counterText = this.game.add.bitmapText(1334/2, 200, 'font','THREE', 100);
             this.counterText.anchor.setTo(0.5, 0.5);
             this.counterText.fixedToCamera = true;
         }

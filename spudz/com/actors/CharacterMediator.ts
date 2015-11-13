@@ -50,7 +50,7 @@ module CharacterModule
         }
 
         listNotificationInterests():Array<string>{
-            return [CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION,
+            return [CharacterModule.CharacterNotifications.UPDATE_CHARACTER,
                 CharacterModule.CharacterNotifications.GRID_TOUCHED,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
@@ -63,8 +63,7 @@ module CharacterModule
             MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.character = (this.viewComponent as CharacterView).graphics;
 
             switch (notification.name){
-                case CharacterModule.CharacterNotifications.CHECK_MAP_COLLISION:
-                    (this.viewComponent as CharacterView).checkCollision(notification.body as Array<Phaser.TilemapLayer>);
+                case CharacterModule.CharacterNotifications.UPDATE_CHARACTER:
                     (this.viewComponent as CharacterView).updateCharacter();
                     break;
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
