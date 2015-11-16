@@ -2,9 +2,9 @@
  * Created by adm on 12.10.15.
  */
 /// <reference path="phaser.d.ts" />
-/// <reference path="inversify.d.ts" />
 
 /// <reference path="com/MVC/MVC.ts" />
+/// <reference path="com/MVC/MVCBoiler.ts" />
 
 /// <reference path="com/managers/events/SignalsManager.ts" />
 /// <reference path="com/managers/map/MapLoader.ts" />
@@ -69,13 +69,25 @@
 /// <reference path="com/serverMock/ServerMockView.ts" />
 /// <reference path="com/serverMock/ServerMockMediator.ts" />
 
-class SimpleGame {
+class SimpleGame extends MvcModule.MVCBoiler{
     game: Phaser.Game;
     map:MapModule.Map;
     background:Phaser.Image;
     loader:LoadingModule.IAbstractLoader;
 
     constructor() {
+        super();
+    }
+
+    configureInjections(){
+        super.configureInjections();
+    }
+
+    resolveInjections(){
+        super.resolveInjections();
+    }
+
+    onStart(){
         this.game = new Phaser.Game(1334, 740, Phaser.AUTO, 'content', {
             create: this.create,
             preload: this.preload,
@@ -85,12 +97,6 @@ class SimpleGame {
     }
 
     preload() {
-        var kernel = new inversify.Kernel();
-        kernel.bind(new inversify.TypeBinding<MvcModule.ISignalsManager>("ISignalsManager", EventsModule.SignalsManager, inversify.TypeBindingScopeEnum.Singleton));
-        kernel.bind(new inversify.TypeBinding<MvcModule.IMVC>("IMVC", MvcModule.Mvc, inversify.TypeBindingScopeEnum.Singleton));
-
-        var mvc = kernel.resolve<MvcModule.IMVC>("IMVC");
-
         GraphicsModule.GraphicsManager.getInstance().game = this.game;
         this.loader = new LoadingModule.PhaserLoader();
 
