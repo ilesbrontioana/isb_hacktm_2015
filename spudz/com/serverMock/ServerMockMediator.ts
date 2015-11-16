@@ -51,7 +51,6 @@ module ServerMockModule
 
             this.addListenerToSignal(ConnectionModule.ConnectionSignals.MOVE, function (param:any) {
                 this.noOfActions++;
-                console.log(this.noOfActions);
                 if(this.noOfActions == 2)
                 {
                     console.log("server : end turn");
@@ -60,6 +59,11 @@ module ServerMockModule
                     this.opponentMove();
                 }
             }, this);
+
+            this.addListenerToSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE, function(param:any)
+            {
+                this.opponentMove();
+            }, this)
         }
 
         listNotificationInterests():Array<string>{
@@ -91,21 +95,24 @@ module ServerMockModule
 
         opponentMove()
         {
-            console.log("server : opponent move");
-            if(this.noOfActions == 0)
+            this.noOfActions++;
+            if(this.noOfActions == 1)
             {
+                console.log("server : opponent move");
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getMoveAction());
             }
-            else
+            else if(this.noOfActions == 2)
             {
+                console.log("server : opponent attack");
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getAttackAction());
             }
-            this.noOfActions++;
-            if(this.noOfActions == 2)
+            else if(this.noOfActions == 3)
             {
                 console.log("server : your turn");
+                this.noOfActions = 0;
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
             }
+
         }
 
         getMoveAction():ConnectionModule.MoveVO{
@@ -114,25 +121,18 @@ module ServerMockModule
 
             var xOffset:number;
             var yOffset:number;
-            var randomX = Math.random() * 12;
+            var randomX = Math.floor(Math.random() * 12);
 
             if(randomX < 6)
             {
-                xOffset = -Math.floor(40 * randomX);
+                xOffset = - 40 * randomX;
             }
             else
             {
-                xOffset = Math.floor(20 * randomX);
+                xOffset = 40 * (randomX % 6);
             }
-            var randomY = Math.random() * 12;
-            if(randomY < 6)
-            {
-                yOffset = -Math.floor(40 * randomY);
-            }
-            else
-            {
-                yOffset = Math.floor(20 * randomY);
-            }
+            var randomY = Math.floor(Math.random() * 6);
+            yOffset = - 40 * randomY;
 
             var newEnemyPosition:Phaser.Point = new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
                 this.enemyProxy.getCharacter().position.y + yOffset);

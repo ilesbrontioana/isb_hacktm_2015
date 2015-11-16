@@ -51,6 +51,17 @@ module CharacterModule
             this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
         }
 
+        onAttackComplete()
+        {
+            this.graphics.events.onAnimationComplete.removeAll();
+            this.attackComplete = true;
+            if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
+            {
+                this.animateIdle();
+            }
+            this.sendToServer();
+        }
+
         sendPosition()
         {
             //nothing to do
@@ -58,7 +69,7 @@ module CharacterModule
 
         sendToServer()
         {
-            //nothing to do
+            this.dispatchSignal("OpponentInfoToServer");
         }
 
         tryDamage(graphics:Phaser.Sprite)

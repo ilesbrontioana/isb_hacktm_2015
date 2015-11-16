@@ -61,26 +61,26 @@ module CharacterModule
 
             this.graphics = this.game.add.sprite(x, y, characterName);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.IDLE_ANIMATION, Phaser.Animation.generateFrameNames(
-                            CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.IDLE_ANIMATION],
-                            0, 18, '', 4), 30, true);
+                CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.IDLE_ANIMATION],
+                0, 18, '', 4), 30, true);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.JUMP_ANIMATION, Phaser.Animation.generateFrameNames(
-                            CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.JUMP_ANIMATION],
-                            0, 24, '', 4), 30, true);
+                CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.JUMP_ANIMATION],
+                0, 24, '', 4), 30, true);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.MELEE_ANIMATION, Phaser.Animation.generateFrameNames(
-                            CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.MELEE_ANIMATION],
-                            1, 23, '', 4), 30, true);
+                CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.MELEE_ANIMATION],
+                1, 23, '', 4), 30, true);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.RUN_ANIMATION, Phaser.Animation.generateFrameNames(
-                            CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.RUN_ANIMATION],
-                            0, 15, '', 4), 30, true);
+                CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.RUN_ANIMATION],
+                0, 15, '', 4), 30, true);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.RANGE_ANIMATION, Phaser.Animation.generateFrameNames(
-                            CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.RANGE_ANIMATION],
-                            0, 42, '', 4), 30, true);
+                CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.RANGE_ANIMATION],
+                0, 42, '', 4), 30, true);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.DAMAGE_ANIMATION, Phaser.Animation.generateFrameNames(
-                            CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.DAMAGE_ANIMATION],
-                            0, 12, '', 4), 30, true);
+                CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.DAMAGE_ANIMATION],
+                0, 12, '', 4), 30, true);
             this.graphics.animations.add(CharacterModule.CharacterAnimations.BLOCK_ANIMATION, Phaser.Animation.generateFrameNames(
-                            CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.BLOCK_ANIMATION],
-                            0, 21, '', 4), 30, true);
+                CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.BLOCK_ANIMATION],
+                0, 21, '', 4), 30, true);
 
             this.game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
@@ -117,7 +117,7 @@ module CharacterModule
 
         collideWithMap()
         {
-           this.collideWithMapLayers = true;
+            this.collideWithMapLayers = true;
         }
 
         collideWithRectangle()
@@ -134,31 +134,31 @@ module CharacterModule
 
         startMoving(x:number, y:number, width:number, height:number)
         {
-                this.graphics.body.gravity.y = 400;
-                this.verticalRectangle.x = x + width/2;
-                this.horizontalRectangle.y = y + height/2;
+            this.graphics.body.gravity.y = 400;
+            this.verticalRectangle.x = x + width/2;
+            this.horizontalRectangle.y = y + height/2;
 
-                if(y >= (this.graphics.y - this.graphics.height) && y < (this.graphics.y + this.graphics.height))
+            if(y >= (this.graphics.y - this.graphics.height) && y < (this.graphics.y + this.graphics.height))
+            {
+                this.animateWalk();
+                if(x < this.graphics.x)
                 {
-                    this.animateWalk();
-                    if(x < this.graphics.x)
-                    {
-                        this.graphics.scale.x = -1;
-                        this.graphics.body.setSize(50, this.graphics.height, -this.graphics.width + this.graphics.width/2 - 30, 0);
+                    this.graphics.scale.x = -1;
+                    this.graphics.body.setSize(50, this.graphics.height, -this.graphics.width + this.graphics.width/2 - 30, 0);
 
-                    }
-                    else
-                    {
-                        this.graphics.scale.x = 1;
-                        this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
-                    }
                 }
                 else
                 {
-                    this.animateJump();
+                    this.graphics.scale.x = 1;
+                    this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
                 }
+            }
+            else
+            {
+                this.animateJump();
+            }
 
-                this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
+            this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
         }
 
         setCharacterAttackAction(attackAction:string)

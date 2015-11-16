@@ -37,6 +37,10 @@ module CharacterModule
                 this.enemyProxy.setLife(this.enemyProxy.getLife() - damage);
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_COMPLETE, damage);
             },this);
+
+            this.addListenerToSignal("OpponentInfoToServer", function(){
+                this.dispatchSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE);
+            },this);
         }
 
         listNotificationInterests():Array<string>{
@@ -70,6 +74,7 @@ module CharacterModule
                 case ConnectionModule.ConnectionSignals.MOVE:
                     if(notification.body.ability == "")
                     {
+                        (this.viewComponent as EnemyView).characterTurn();
                         //TODO - hardcoded, remove 40, get from grid
                         (this.viewComponent as EnemyView).startMoving(notification.body.destination.x, notification.body.destination.y,
                             40, 40);

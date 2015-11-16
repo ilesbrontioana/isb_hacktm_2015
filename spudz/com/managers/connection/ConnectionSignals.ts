@@ -8,6 +8,7 @@ module ConnectionModule{
         static FIND_MATCH: string = "find_match";
         static SELECT_CHARACTER: string = "select_character";
         static MOVE: string = "move";
+        static OPPONENT_MOVE: string = "opponent_move";
         static MOVE_SKIP: string = "move_skip";
         static REGISTER_NAME: string = "register_name";
         static PLAYER_READY: string = "player_ready";
