@@ -23,10 +23,7 @@ module CharacterModule
             },this);
 
             this.addListenerToSignal("CharacterInfoToServer", function(){
-                this.moveVO.ability = ""
-                this.moveVO.destination = {x:this.viewComponent.graphics.x, y:this.viewComponent.graphics.y}
-                this.moveVO.player_health =  (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterProxy).getLife();
-                this.moveVO.player_pos = {x:this.viewComponent.graphics.x, y:this.viewComponent.graphics.y}
+                this.updateMoveVO(0);
                 this.dispatchSignal("move", this.moveVO);
 
             },this);
@@ -85,14 +82,19 @@ module CharacterModule
                     (this.viewComponent as CharacterView).characterTurn();
                     break;
                 case CharacterModule.CharacterNotifications.DAMAGE_COMPLETE:
-                    this.moveVO.ability = ""
-                    this.moveVO.destination = new Phaser.Point((this.viewComponent as CharacterView).graphics.x,(this.viewComponent as CharacterView).graphics.y);
-                    this.moveVO.player_health =  (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterProxy).getLife();
-                    this.moveVO.player_pos = new Phaser.Point((this.viewComponent as CharacterView).graphics.x, (this.viewComponent as CharacterView).graphics.y);
-                    this.moveVO.opponent_health = this.moveVO.opponent_health - notification.body;
+                    this.updateMoveVO(notification.body);
                     this.dispatchSignal("move", this.moveVO);
                     break;
             }
+        }
+
+        updateMoveVO(damage:number)
+        {
+            this.moveVO.ability = (this.viewComponent as CharacterView).currentAction;
+            this.moveVO.destination = new Phaser.Point((this.viewComponent as CharacterView).graphics.x,(this.viewComponent as CharacterView).graphics.y);
+            this.moveVO.player_health =  (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterProxy).getLife();
+            this.moveVO.player_pos = new Phaser.Point((this.viewComponent as CharacterView).graphics.x, (this.viewComponent as CharacterView).graphics.y);
+            this.moveVO.opponent_health = this.moveVO.opponent_health - damage;
         }
     }
 }

@@ -10,10 +10,6 @@ module CharacterModule
         constructor(viewComponent:MvcModule.View){
 
             super(EnemyMediator.NAME, viewComponent);
-
-            this.addListenerToSignal("CharacterDamage", function(damage:number){
-                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.DAMAGE_COMPLETE, damage);
-            },this);
         }
 
 
@@ -21,6 +17,14 @@ module CharacterModule
         onRegister(){
             (this.viewComponent as EnemyView).createCharacter(
                 (MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getOpponentSelection());
+            this.initListeners();
+        }
+
+        initListeners()
+        {
+            this.addListenerToSignal("CharacterDamage", function(damage:number){
+                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.DAMAGE_COMPLETE, damage);
+            },this);
         }
 
         listNotificationInterests():Array<string>{

@@ -24,15 +24,17 @@ module ServerMockModule
                 var randomTime:number = Math.random() * 5;
                 GraphicsModule.GraphicsManager.getInstance().game.time.events.add(Phaser.Timer.SECOND * randomTime, function()
                 {
-                    var opponentSelection:string;
-                    var opponentSelectionNo = Math.random() * 3;
+                    var opponentSelection:string = selection;
+                    var otherSelections:Array<string> = this.getOtherSelections(selection);
+
+                    var opponentSelectionNo = Math.random() * 2;
                     if(opponentSelectionNo < 1)
                     {
-                        opponentSelection = "pirate";
+                        opponentSelection = otherSelections[0];
                     }
                     else if(opponentSelectionNo < 2)
                     {
-                        opponentSelection = "bacon";
+                        opponentSelection = otherSelections[1];
                     }
                     else
                     {
@@ -40,7 +42,7 @@ module ServerMockModule
                     }
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER, opponentSelection);
                 }.bind(this), this);
-            });
+            }, this);
 
             this.addListenerToSignal(ConnectionModule.ConnectionSignals.MOVE, function (param:any) {
                 this.noOfActions++;
@@ -68,7 +70,7 @@ module ServerMockModule
                     //}
                     //else
                     //{
-                          MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
+                    MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
                     //}
 
                     break;
@@ -84,6 +86,14 @@ module ServerMockModule
             {
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
             }
+        }
+
+        getOtherSelections(selection):Array<string>
+        {
+            var all:Array<string> = ["marine", "bacon", "pirate"];
+            var index = all.indexOf(selection);
+            all.splice(index, 1);
+            return all;
         }
     }
 }
