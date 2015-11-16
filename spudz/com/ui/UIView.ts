@@ -134,11 +134,7 @@ module UserInterfaceModule{
 
         hideAll()
         {
-            this.btnDefence.visible = false;
-            this.btnMelee.visible = false;
-            this.btnRange.visible = false;
-            this.btnSkip.visible = false;
-            this.actionsMenuButton.visible = false;
+            this.actionsGroup.visible = false;
         }
 
 
