@@ -38,7 +38,7 @@ module MvcModule{
             return Mvc._instance;
         }
 
-        public registerCore(coreName:String){
+        public registerCore(coreName:string){
             this.cores[coreName] = new MvcCore(coreName);
         }
 
@@ -87,7 +87,7 @@ module MvcModule{
         }
 
         public sendGlobalNotification(notificationName:string, body?:any,type?:string){
-            for(i in this.cores){
+            for(var i in this.cores){
                 this.cores[i].sendNotification(notificationName, body, type);
             }
         }

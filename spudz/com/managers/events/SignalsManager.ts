@@ -55,6 +55,7 @@ module EventsModule
     export class CustomBinding{
         public signal:Phaser.Signal
         public bindings:Array<Phaser.SignalBinding>
+        public context:any;
 
         constructor(){
             this.signal = new Phaser.Signal();

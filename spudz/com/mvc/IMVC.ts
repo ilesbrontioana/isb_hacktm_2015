@@ -5,21 +5,21 @@ module MvcModule{
     export interface IMVC{
         signalsManager:ISignalsManager;
 
-        registerNotification(notificationName:string, scope:string = 'default'):void
-        unregisterNotification(notificationName:string, scope:string = 'default'):void
+        registerNotification(notificationName:string, scope?:string):void
+        unregisterNotification(notificationName:string, scope:string ):void
 
-        registerCommand(commandName:string, command:IController, scope:string = 'default'):void
-        unregisterCommand(commandName:string, scope:string = 'default'):void
+        registerCommand(commandName:string, command:IController, scope?:string ):void
+        unregisterCommand(commandName:string, scope:string ):void
 
-        registerProxy(proxyName:string, proxy:IProxy, scope:string = 'default'):void
-        retrieveProxy(proxyName:string, scope:string = 'default'):IProxy
-        unregisterProxy(proxyName:string, scope:string = 'default'):void
+        registerProxy(proxyName:string, proxy:IProxy, scope?:string ):void
+        retrieveProxy(proxyName:string, scope?:string ):IProxy
+        unregisterProxy(proxyName:string, scope?:string ):void
 
-        registerMediator(mediatorName:string, mediator:IMediator, scope:string = 'default'):void
-        unregisterMediator(mediatorName:string, scope:string = 'default'):void
+        registerMediator(mediatorName:string, mediator:IMediator, scope?:string ):void
+        unregisterMediator(mediatorName:string, scope?:string ):void
 
-        sendNotification(notificationName:string, body?:any, scope:string = 'default',type?:string):void
-        sendGlobalNotification(notificationName:string, body?:any,type?:string)
+        sendNotification(notificationName:string, body?:any, scope?:string ,type?:string):void
+        sendGlobalNotification(notificationName:string, body?:any,type?:string):void
     }
 
     export interface IMVCCore{
