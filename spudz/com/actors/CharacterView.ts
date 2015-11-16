@@ -19,6 +19,7 @@ module CharacterModule
 
         currentAction:string = CharacterModule.CharacterActionType.MOVE;
         currentAnimation:string = "";
+        attackAction:string = "";
 
         collideWithMapLayers:Boolean;
 
@@ -165,6 +166,7 @@ module CharacterModule
 
         setCharacterAttackAction(attackAction:string)
         {
+            this.attackAction = attackAction;
             //TODO - set direction
             if(attackAction == CharacterActionType.MELEE)
             {
@@ -186,6 +188,7 @@ module CharacterModule
 
         characterTurn()
         {
+            this.attackAction = "";
             this.game.physics.arcade.isPaused = false;
             this.setCurrentAction(CharacterModule.CharacterActionType.MOVE);
         }
