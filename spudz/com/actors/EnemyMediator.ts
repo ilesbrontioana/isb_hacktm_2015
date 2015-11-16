@@ -7,23 +7,35 @@ module CharacterModule
     {
         static NAME:string = "EnemyMediator";
 
+        characterProxy:CharacterModule.CharacterProxy;
+        enemyProxy:CharacterModule.EnemyProxy;
+
         constructor(viewComponent:MvcModule.View){
 
             super(EnemyMediator.NAME, viewComponent);
         }
 
-
-
         onRegister(){
-            (this.viewComponent as EnemyView).createCharacter(
-                (MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getOpponentSelection());
+
             this.initListeners();
+
+            this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
+            this.enemyProxy.setCharacterName((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getOpponentSelection());
+
+            (this.viewComponent as CharacterView).createCharacter(this.enemyProxy.getCharacterName());
+
+            this.enemyProxy.setCharacter((this.viewComponent as EnemyView).graphics);
+
+            this.characterProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterModule.CharacterProxy);
+
         }
+
 
         initListeners()
         {
             this.addListenerToSignal("CharacterDamage", function(damage:number){
-                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.DAMAGE_COMPLETE, damage);
+                this.enemyProxy.setLife(this.enemyProxy.getLife() - damage);
+                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_COMPLETE, damage);
             },this);
         }
 
@@ -31,7 +43,7 @@ module CharacterModule
             return [CharacterModule.CharacterNotifications.UPDATE_CHARACTER,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
-                CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY,
+                CharacterModule.CharacterNotifications.ATTACK_ENEMY,
                 ConnectionModule.ConnectionSignals.MOVE
             ];
         }
@@ -47,15 +59,25 @@ module CharacterModule
                     (this.viewComponent as EnemyView).animateTakeDamage(notification.body);
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.life);
-                    break
+                    break;
                 case CharacterModule.CharacterNotifications.DRAIN_ENERGY:
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_ENERGY,
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.energy);
-                    break
-                case  CharacterModule.CharacterNotifications.TRY_DAMAGE_WITH_RAY:
+                    break;
+                case  CharacterModule.CharacterNotifications.ATTACK_ENEMY:
                     (this.viewComponent as EnemyView).tryDamage(notification.body);
                     break;
                 case ConnectionModule.ConnectionSignals.MOVE:
+                    if(notification.body.ability == "")
+                    {
+                        //TODO - hardcoded, remove 40, get from grid
+                        (this.viewComponent as EnemyView).startMoving(notification.body.destination.x, notification.body.destination.y,
+                            40, 40);
+                    }
+                    else
+                    {
+                        (this.viewComponent as EnemyView).setCharacterAttackAction(notification.body.ability);
+                    }
                     break;
             }
         }

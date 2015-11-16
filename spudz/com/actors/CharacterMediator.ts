@@ -8,23 +8,41 @@ module CharacterModule
 
         moveVO:ConnectionModule.MoveVO;
 
+        characterProxy:CharacterModule.CharacterProxy;
+        enemyProxy:CharacterModule.EnemyProxy;
+
         constructor(viewComponent:MvcModule.View){
 
             super(CharacterMediator.NAME, viewComponent);
 
+        }
+
+        onRegister(){
+
             this.initListeners();
+            this.moveVO = new ConnectionModule.MoveVO();
+
+            this.characterProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterModule.CharacterProxy);
+            this.characterProxy.setCharacterName((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getSelection());
+
+            (this.viewComponent as CharacterView).createCharacter(this.characterProxy.getCharacterName());
+
+            this.characterProxy.setCharacter((this.viewComponent as CharacterView).graphics);
+
+            this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
 
         }
 
         initListeners()
         {
             this.addListenerToSignal("AttackOpponent", function(){
-                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.TRY_DAMAGE, this.viewComponent.graphics);
+                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_ENEMY,
+                        this.characterProxy.getActionRay());
             },this);
 
             this.addListenerToSignal("CharacterInfoToServer", function(){
-                this.updateMoveVO(0);
-                this.dispatchSignal("move", this.moveVO);
+                this.updateCharacterVO();
+                this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.getMoveVO());
 
             },this);
 
@@ -41,17 +59,12 @@ module CharacterModule
 
         }
 
-        onRegister(){
-            this.moveVO = new ConnectionModule.MoveVO();
-            (this.viewComponent as CharacterView).createCharacter((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getSelection());
-        }
-
         listNotificationInterests():Array<string>{
             return [CharacterModule.CharacterNotifications.UPDATE_CHARACTER,
                 CharacterModule.CharacterNotifications.GRID_TOUCHED,
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
-                CharacterModule.CharacterNotifications.DAMAGE_COMPLETE,
+                CharacterModule.CharacterNotifications.ATTACK_COMPLETE,
                 ConnectionModule.ConnectionSignals.YOUR_TURN,
                 CharacterActionType.ATTACK];
         }
@@ -64,37 +77,49 @@ module CharacterModule
                     (this.viewComponent as CharacterView).updateCharacter();
                     break;
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
-                    (this.viewComponent as CharacterView).startAction(notification.body as Phaser.Sprite)
+                    var tile:Phaser.Sprite = notification.body as Phaser.Sprite;
+                    (this.viewComponent as CharacterView).startMoving(tile.x, tile.y, tile.width, tile.height)
                     break;
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
                     (this.viewComponent as CharacterView).animateTakeDamage(notification.body);
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.life);
-                    break
+                    break;
                 case CharacterModule.CharacterNotifications.DRAIN_ENERGY:
                         MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_ENERGY,
                         MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.energy);
-                    break
+                    break;
                 case CharacterActionType.ATTACK:
                     (this.viewComponent as CharacterView).setCharacterAttackAction(notification.body);
                     break;
                 case ConnectionModule.ConnectionSignals.YOUR_TURN:
                     (this.viewComponent as CharacterView).characterTurn();
                     break;
-                case CharacterModule.CharacterNotifications.DAMAGE_COMPLETE:
-                    this.updateMoveVO(notification.body);
-                    this.dispatchSignal("move", this.moveVO);
+                case CharacterModule.CharacterNotifications.ATTACK_COMPLETE:
+                    this.updateCharacterVO();
+                    this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.getMoveVO());
                     break;
             }
         }
 
-        updateMoveVO(damage:number)
+        updateCharacterVO()
         {
-            this.moveVO.ability = (this.viewComponent as CharacterView).currentAction;
-            this.moveVO.destination = new Phaser.Point((this.viewComponent as CharacterView).graphics.x,(this.viewComponent as CharacterView).graphics.y);
-            this.moveVO.player_health =  (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterProxy).getLife();
-            this.moveVO.player_pos = new Phaser.Point((this.viewComponent as CharacterView).graphics.x, (this.viewComponent as CharacterView).graphics.y);
-            this.moveVO.opponent_health = this.moveVO.opponent_health - damage;
+            this.characterProxy.setEnergy(this.characterProxy.getEnergy() - 5);
+            this.characterProxy.setAbility((this.viewComponent as CharacterView).attackAction);
+        }
+
+        getMoveVO():ConnectionModule.MoveVO
+        {
+            this.moveVO.ability = this.characterProxy.getAbility();
+            this.moveVO.destination = this.characterProxy.getCharacter().position;
+            this.moveVO.player_pos = this.characterProxy.getCharacter().position;
+            this.moveVO.player_energy = this.characterProxy.getEnergy();
+            this.moveVO.player_health = this.characterProxy.getLife();
+            this.moveVO.opponent_energy = this.enemyProxy.getEnergy();
+            this.moveVO.opponent_health = this.enemyProxy.getLife();
+            this.moveVO.opponent_pos = this.enemyProxy.getCharacter().position;
+
+            return this.moveVO;
         }
     }
 }

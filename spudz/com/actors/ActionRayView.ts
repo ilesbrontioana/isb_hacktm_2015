@@ -13,6 +13,8 @@ module CharacterModule
         moveCircle:Phaser.Sprite;
         attackCircle:Phaser.Sprite;
 
+        currentCircle:Phaser.Sprite;
+
         moveCircleRadius:number = 6;
         attackCircleRadius:number = 12;
 
@@ -77,20 +79,17 @@ module CharacterModule
 
         addActionRayAt(x:number, y:number, actionType:string)
         {
-            var tileAtPoint:GridModule.Tile = this.getTileAt(x, y);
-
-            var circle:Phaser.Sprite;
             if(actionType == CharacterModule.CharacterActionType.ATTACK)
             {
-                circle = this.attackCircle
+                this.currentCircle = this.attackCircle
             }
             else {
-                circle = this.moveCircle
+                this.currentCircle = this.moveCircle
             }
 
-            circle.x = x;
-            circle.y = y;
-            circle.alpha = 0.5;
+            this.currentCircle.x = x;
+            this.currentCircle.y = y;
+            this.currentCircle.alpha = 0.5;
 
         }
 

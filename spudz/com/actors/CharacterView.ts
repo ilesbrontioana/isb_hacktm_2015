@@ -129,20 +129,19 @@ module CharacterModule
             this.game.physics.arcade.isPaused = true;
             this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
             this.animateIdle();
+            this.sendToServer();
         }
 
-        startAction(tile:Phaser.Sprite)
+        startMoving(x:number, y:number, width:number, height:number)
         {
-            if(this.currentAction == CharacterModule.CharacterActionType.MOVE)
-            {
                 this.graphics.body.gravity.y = 400;
-                this.verticalRectangle.x = tile.x + tile.width/2;
-                this.horizontalRectangle.y = tile.y + tile.height/2;
+                this.verticalRectangle.x = x + width/2;
+                this.horizontalRectangle.y = y + height/2;
 
-                if(tile.y >= (this.graphics.y - this.graphics.height) && tile.y < (this.graphics.y + this.graphics.height))
+                if(y >= (this.graphics.y - this.graphics.height) && y < (this.graphics.y + this.graphics.height))
                 {
                     this.animateWalk();
-                    if(tile.x < this.graphics.x)
+                    if(x < this.graphics.x)
                     {
                         this.graphics.scale.x = -1;
                         this.graphics.body.setSize(50, this.graphics.height, -this.graphics.width + this.graphics.width/2 - 30, 0);
@@ -159,9 +158,7 @@ module CharacterModule
                     this.animateJump();
                 }
 
-                this.game.physics.arcade.moveToXY(this.graphics, tile.x, tile.y, 700);
-            }
-
+                this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
         }
 
         setCharacterAttackAction(attackAction:string)
@@ -212,33 +209,9 @@ module CharacterModule
                         this.currentAction = CharacterModule.CharacterActionType.ATTACK;
                         this.initial = false;
                     }
-                    else
-                    {
-                        this.sendToServer();
-                    }
                     this.animateIdle();
                 }
             }
-            else if(this.currentAction == CharacterModule.CharacterActionType.ATTACK &&
-                this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
-            {
-                if(this.attackComplete)
-                {
-
-                    if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
-                    {
-                        this.animateIdle();
-                        this.dispatchSignal("AttackOpponent");
-                    }
-                    else if(this.currentAction != CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
-                    {
-                        this.sendToServer();
-                    }
-                    this.attackComplete = false;
-
-                }
-            }
-
         }
 
         animateTakeDamage(body:any)
@@ -302,6 +275,15 @@ module CharacterModule
         {
             this.graphics.events.onAnimationComplete.removeAll();
             this.attackComplete = true;
+            if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
+            {
+                this.animateIdle();
+                this.dispatchSignal("AttackOpponent");
+            }
+            else if(this.currentAction != CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
+            {
+                this.sendToServer();
+            }
         }
 
         setCurrentAction(currentAction:string)

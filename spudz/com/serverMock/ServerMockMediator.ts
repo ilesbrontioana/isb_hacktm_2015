@@ -3,14 +3,16 @@
  */
 module ServerMockModule
 {
-    import IView = MvcModule.IView;
-    import SignalsManager = EventsModule.SignalsManager;
     export class ServerMockMediator extends MvcModule.Mediator
     {
         static NAME:string = "ServerMockMediator";
 
+        moveVO:ConnectionModule.MoveVO;
+
         noOfActions = 0;
 
+        characterProxy:CharacterModule.CharacterProxy;
+        enemyProxy:CharacterModule.EnemyProxy;
 
         constructor(viewComponent:MvcModule.IView)
         {
@@ -19,6 +21,8 @@ module ServerMockModule
 
         onRegister()
         {
+            this.moveVO = new ConnectionModule.MoveVO();
+
             this.addListenerToSignal(ConnectionModule.ConnectionSignals.SELECT_CHARACTER, function (selection:string) {
 
                 var randomTime:number = Math.random() * 5;
@@ -40,14 +44,17 @@ module ServerMockModule
                     {
                         opponentSelection = "marine";
                     }
+                    console.log("server : opponent selection");
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER, opponentSelection);
                 }.bind(this), this);
             }, this);
 
             this.addListenerToSignal(ConnectionModule.ConnectionSignals.MOVE, function (param:any) {
                 this.noOfActions++;
+                console.log(this.noOfActions);
                 if(this.noOfActions == 2)
                 {
+                    console.log("server : end turn");
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.END_TURN);
                     this.noOfActions = 0;
                     this.opponentMove();
@@ -62,6 +69,9 @@ module ServerMockModule
         handleNotification(notification:MvcModule.INotification) {
             switch (notification.name) {
                 case RoundsModule.RoundsNotifications.FIGHT:
+                    this.characterProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterModule.CharacterProxy);
+                    this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
+
                     this.noOfActions = 0;
                     //var turn:number = Math.random() * 2;
                     //if(turn < 1)
@@ -70,6 +80,7 @@ module ServerMockModule
                     //}
                     //else
                     //{
+                    console.log("server : your turn");
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
                     //}
 
@@ -80,12 +91,94 @@ module ServerMockModule
 
         opponentMove()
         {
-            MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE);
+            console.log("server : opponent move");
+            if(this.noOfActions == 0)
+            {
+                MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getMoveAction());
+            }
+            else
+            {
+                MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getAttackAction());
+            }
             this.noOfActions++;
             if(this.noOfActions == 2)
             {
+                console.log("server : your turn");
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
             }
+        }
+
+        getMoveAction():ConnectionModule.MoveVO{
+
+            this.moveVO.ability = "";
+
+            var xOffset:number;
+            var yOffset:number;
+            var randomX = Math.random() * 12;
+
+            if(randomX < 6)
+            {
+                xOffset = -Math.floor(40 * randomX);
+            }
+            else
+            {
+                xOffset = Math.floor(20 * randomX);
+            }
+            var randomY = Math.random() * 12;
+            if(randomY < 6)
+            {
+                yOffset = -Math.floor(40 * randomY);
+            }
+            else
+            {
+                yOffset = Math.floor(20 * randomY);
+            }
+
+            var newEnemyPosition:Phaser.Point = new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
+                this.enemyProxy.getCharacter().position.y + yOffset);
+            this.moveVO.destination = newEnemyPosition;
+            this.moveVO.player_pos = newEnemyPosition;
+
+            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 5;
+            this.moveVO.player_health = this.enemyProxy.getLife();
+            this.moveVO.opponent_energy = this.characterProxy.getEnergy();
+            this.moveVO.opponent_health = this.characterProxy.getLife();
+            this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
+
+            return this.moveVO;
+        }
+
+        getAttackAction():ConnectionModule.MoveVO{
+            var abilityNo = Math.random() * 4;
+            var ability:string = "";
+            if(abilityNo < 1)
+            {
+                ability = CharacterModule.CharacterActionType.DEFENCE;
+            }
+            else if(abilityNo < 2)
+            {
+                ability = CharacterModule.CharacterActionType.MELEE;
+            }
+            else if(abilityNo < 3)
+            {
+                ability = CharacterModule.CharacterActionType.RANGE;
+            }
+            else
+            {
+                ability = CharacterModule.CharacterActionType.SKIP;
+            }
+            this.moveVO.ability = ability;
+
+            this.moveVO.destination = this.enemyProxy.getCharacter().position;
+            this.moveVO.player_pos = this.enemyProxy.getCharacter().position;
+
+            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 5;
+            this.moveVO.player_health = this.enemyProxy.getLife();
+            this.moveVO.opponent_energy = this.characterProxy.getEnergy();
+            this.moveVO.opponent_health = this.characterProxy.getLife();
+            this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
+
+            return this.moveVO;
         }
 
         getOtherSelections(selection):Array<string>

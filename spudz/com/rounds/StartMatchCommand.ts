@@ -21,14 +21,14 @@ module RoundsModule
             MapModule.Map.getInstance().setLayerCollision('Spudz', 'TilesLayer', true, false, false, false);
             MapModule.Map.getInstance().createLayer('Spudz', 'Tiles2Layer');
 
-
             MvcModule.Mvc.getInstance().registerMediator(CharacterModule.ActionRayMediator.NAME, new CharacterModule.ActionRayMediator(new CharacterModule.ActionRayView()));
-
             MvcModule.Mvc.getInstance().registerMediator(GridModule.GridMediator.NAME, new GridModule.GridMediator(new GridModule.GridView()));
+
+            MvcModule.Mvc.getInstance().registerProxy(CharacterModule.CharacterProxy.NAME, new CharacterModule.CharacterProxy());
+            MvcModule.Mvc.getInstance().registerProxy(CharacterModule.EnemyProxy.NAME, new CharacterModule.EnemyProxy());
 
             MvcModule.Mvc.getInstance().registerMediator(CharacterModule.CharacterMediator.NAME, new CharacterModule.CharacterMediator(new CharacterModule.CharacterView()));
             MvcModule.Mvc.getInstance().registerMediator(CharacterModule.EnemyMediator.NAME, new CharacterModule.EnemyMediator(new CharacterModule.EnemyView()));
-            MvcModule.Mvc.getInstance().registerProxy(CharacterModule.CharacterProxy.NAME, new CharacterModule.CharacterProxy());
 
             MapModule.Map.getInstance().createLayer('Spudz', 'Stuff');
 

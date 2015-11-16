@@ -1,16 +1,17 @@
 /**
- * Created by adm on 07.11.15.
+ * Created by Ioana on 11/16/2015.
  */
 module CharacterModule
 {
-    export class CharacterProxy extends MvcModule.Proxy{
-
-        static NAME:string = "CharacterProxy";
+    export class EnemyProxy extends MvcModule.Proxy
+    {
+        static NAME:string = "EnemyProxy";
 
         constructor(){
-            super(CharacterProxy.NAME);
 
-            this.VO = new CharacterVO();
+            super(EnemyProxy.NAME);
+
+            this.VO = new CharacterModule.EnemyVO();
         }
 
         setCharacterName(characterName:string)
@@ -32,7 +33,6 @@ module CharacterModule
         {
             return this.VO.character;
         }
-
         setLife(value:number){
             this.VO.life = value;
         }
@@ -47,26 +47,6 @@ module CharacterModule
 
         getEnergy():number{
             return this.VO.energy;
-        }
-
-        setAbility(action:string)
-        {
-            this.VO.ability = action;
-        }
-
-        getAbility():string
-        {
-            return this.VO.ability;
-        }
-
-        setActionRay(actionRay:Phaser.Sprite)
-        {
-            this.VO.actionRay = actionRay;
-        }
-
-        getActionRay():Phaser.Sprite
-        {
-            return this.VO.actionRay;
         }
     }
 }

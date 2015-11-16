@@ -10,6 +10,8 @@ module CharacterModule
         public character:Phaser.Sprite;
         public nickname:string;
         public characterName:string;
+        public ability:string;
+        public actionRay:Phaser.Sprite;
 
         constructor(){
 

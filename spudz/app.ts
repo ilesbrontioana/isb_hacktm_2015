@@ -22,6 +22,8 @@
 /// <reference path="com/actors/CharacterVO.ts" />
 /// <reference path="com/actors/EnemyMediator.ts" />
 /// <reference path="com/actors/EnemyView.ts" />
+/// <reference path="com/actors/EnemyProxy.ts" />
+/// <reference path="com/actors/EnemyVO.ts" />
 
 /// <reference path="com/grid/GridMediator.ts" />
 /// <reference path="com/grid/GridView.ts" />
