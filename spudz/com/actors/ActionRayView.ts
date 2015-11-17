@@ -68,7 +68,6 @@ module CharacterModule
             this.attackCircle.alpha = 0.5;
             this.attackCircle.visible = false;
             this.attackCircle.anchor.setTo(0.5, 0.5);
-            this.attackCircle.events.onInputDown.add(this.circleTouched, this);
             this.game.physics.enable(this.attackCircle, Phaser.Physics.ARCADE);
 
 

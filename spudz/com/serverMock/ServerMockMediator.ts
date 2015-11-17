@@ -181,7 +181,7 @@ module ServerMockModule
             return this.moveVO;
         }
 
-        getOtherSelections(selection):Array<string>
+        getOtherSelections(selection:string):Array<string>
         {
             var all:Array<string> = ["marine", "bacon", "pirate"];
             var index = all.indexOf(selection);

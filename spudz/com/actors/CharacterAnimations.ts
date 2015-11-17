@@ -47,4 +47,41 @@ module CharacterModule
             }
         };
     }
+
+    export class CharacterAnimationsSounds
+    {
+        static sounds: {[name:string]:{[name:string]: string}; } = {
+            "pirate" : {
+                "jump" : 'pirate_jump',
+                "land" : 'pirate_land',
+                "run" : 'pirate_run',
+                "melee" : 'pirate_sword',
+                "range" : 'pirate_bomb',
+                "damage" : 'Layer ',
+                "damageVoice" : 'Hit_space',
+                "block" : 'block_pirate'
+
+            },
+            "marine" : {
+                "jump" : 'marine_jump',
+                "land" : 'marine_land',
+                "run" : 'pirate_run',
+                "melee" : 'marine_pumn',
+                "range" : 'marine_shotgun',
+                "damage" : 'Hit_space',
+                "damageVoice" : 'Hit_space',
+                "block" : 'block '
+            },
+            "bacon" : {
+                "jump" : 'bacon jump',
+                "land" : 'bacon_land',
+                "run" : 'pirate_run',
+                "range" : 'bacon_pistol',
+                "melee" : 'bacon maraca_cha_cha',
+                "damage" : 'Hit_bacon',
+                "damageVoice" : 'Hit_space',
+                "block" : 'block_bacon'
+            }
+        };
+    }
 }

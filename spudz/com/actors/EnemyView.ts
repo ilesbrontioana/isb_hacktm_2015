@@ -15,6 +15,8 @@ module CharacterModule
 
         createCharacter(characterName:string)
         {
+            this.characterName = characterName;
+
             var x = 1160;
             var y = 1244;
 

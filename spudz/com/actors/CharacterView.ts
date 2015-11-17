@@ -23,6 +23,8 @@ module CharacterModule
 
         collideWithMapLayers:Boolean;
 
+        characterName:string;
+
         constructor() {
             super(CharacterView.NAME);
 
@@ -55,6 +57,8 @@ module CharacterModule
 
         createCharacter(characterName:string)
         {
+            this.characterName = characterName;
+
             var x = 680;
             var y = 1244;
             var followCharacter = true;
@@ -118,6 +122,10 @@ module CharacterModule
         collideWithMap()
         {
             this.collideWithMapLayers = true;
+            if(this.currentAnimation == CharacterModule.CharacterAnimations.JUMP_ANIMATION)
+            {
+                SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["land"]);
+            }
         }
 
         collideWithRectangle()
@@ -223,12 +231,14 @@ module CharacterModule
 
 
         animateWalk(){
+            SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["run"]);
             this.graphics.play(CharacterModule.CharacterAnimations.RUN_ANIMATION);
             this.currentAnimation = CharacterModule.CharacterAnimations.RUN_ANIMATION;
 
         }
 
         animateJump(){
+            SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["jump"]);
             this.graphics.play(CharacterModule.CharacterAnimations.JUMP_ANIMATION);
             this.currentAnimation = CharacterModule.CharacterAnimations.JUMP_ANIMATION;
         }
@@ -240,24 +250,30 @@ module CharacterModule
         }
 
         animateBlock(){
+            SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["block"]);
             this.graphics.play(CharacterModule.CharacterAnimations.BLOCK_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.BLOCK_ANIMATION;
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
         animateMelee(){
+            SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["melee"]);
+
             this.graphics.play(CharacterModule.CharacterAnimations.MELEE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.MELEE_ANIMATION;
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
         animateRange(){
+            SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["range"]);
+
             this.graphics.play(CharacterModule.CharacterAnimations.RANGE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.RANGE_ANIMATION;
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
         animateUltimate(){
+            SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["ultimate"]);
 
             this.graphics.play(CharacterModule.CharacterAnimations.ULTIMATE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.ULTIMATE_ANIMATION;
@@ -265,6 +281,7 @@ module CharacterModule
         }
 
         animateHit(){
+            SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["damage"]);
 
             this.graphics.play(CharacterModule.CharacterAnimations.DAMAGE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.DAMAGE_ANIMATION;
