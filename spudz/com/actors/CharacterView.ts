@@ -11,17 +11,22 @@ module CharacterModule
 
         speed = 1000;
 
-        verticalRectangle:Phaser.Sprite;
-        horizontalRectangle:Phaser.Sprite;
+        //verticalRectangle:Phaser.Sprite;
+        //horizontalRectangle:Phaser.Sprite;
 
-        initial:Boolean = true;
-        attackComplete:Boolean = false;
+        tween:Phaser.Tween;
+        tweenObject:Phaser.Sprite;
+
+        moving:boolean = false;
+
+        initial:boolean = true;
+        attackComplete:boolean = false;
 
         currentAction:string = CharacterModule.CharacterActionType.MOVE;
         currentAnimation:string = "";
         attackAction:string = "";
 
-        collideWithMapLayers:Boolean;
+        collideWithMapLayers:boolean;
 
         characterName:string;
 
@@ -41,18 +46,19 @@ module CharacterModule
             bmd.ctx.fill();
             this.game.cache.addBitmapData("SmallRectangleBMP", bmd);
 
-            this.verticalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
-            this.horizontalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
+            this.tweenObject  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
+            //this.verticalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
+            //this.horizontalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
             //this.verticalRectangle.alpha = 0;
             //this.horizontalRectangle.alpha = 0;
-            this.horizontalRectangle.width = 2000;
-            this.verticalRectangle.height = 1400;
+            //this.horizontalRectangle.width = 2000;
+            //this.verticalRectangle.height = 1400;
 
-            this.game.physics.enable(this.horizontalRectangle, Phaser.Physics.ARCADE);
-            this.game.physics.enable(this.verticalRectangle, Phaser.Physics.ARCADE);
-
-            this.horizontalRectangle.body.immovable = true;
-            this.verticalRectangle.body.immovable = true;
+            //this.game.physics.enable(this.horizontalRectangle, Phaser.Physics.ARCADE);
+            //this.game.physics.enable(this.verticalRectangle, Phaser.Physics.ARCADE);
+            //
+            //this.horizontalRectangle.body.immovable = true;
+            //this.verticalRectangle.body.immovable = true;
         }
 
         createCharacter(characterName:string)
@@ -88,6 +94,8 @@ module CharacterModule
 
             this.game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
+            this.graphics.body.immovable = true;
+
             this.graphics.body.collideWorldBounds = true;
             this.graphics.body.gravity.y = 400;
 
@@ -114,8 +122,8 @@ module CharacterModule
                     this.animateJump();
                 }
             }
-            this.game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.collideWithRectangle, null, this);
-            this.game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.collideWithRectangle, null, this);
+            //this.game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.moveComplete, null, this);
+            //this.game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.moveComplete, null, this);
 
         }
 
@@ -128,22 +136,10 @@ module CharacterModule
             }
         }
 
-        collideWithRectangle()
-        {
-            this.verticalRectangle.x = 0;
-            this.horizontalRectangle.y = 0;
-            this.graphics.body.velocity.x = 0;
-            this.graphics.body.velocity.y = 0;
-            this.graphics.body.gravity.y = 0;
-            this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
-            this.animateIdle();
-            this.sendToServer();
-        }
-
         startMoving(x:number, y:number, width:number, height:number)
         {
-            this.verticalRectangle.x = x + width/2;
-            this.horizontalRectangle.y = y + height/2;
+            //this.verticalRectangle.x = x + width/2;
+            //this.horizontalRectangle.y = y + height/2;
 
             if(y >= (this.graphics.y - this.graphics.height) && y < (this.graphics.y + this.graphics.height))
             {
@@ -165,7 +161,45 @@ module CharacterModule
                 this.animateJump();
             }
 
+            this.tweenObject.x = x;
+            this.tweenObject.y = y;
+
+            //this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
+            var distance = this.game.physics.arcade.distanceBetween(this.graphics, this.tweenObject);
+            var tweenDuration = distance/this.speed;
+
+            this.tweenObject.x = this.graphics.x;
+            this.tweenObject.y = this.graphics.y;
+
+            this.tween = this.game.add.tween(this.tweenObject).to(
+                {   x: x,
+                    y: y
+                }, tweenDuration * 1000, "Linear", true);
+
+            this.tween.onComplete.removeAll();
+            this.tween.onComplete.add( this.moveComplete ,this);
+
+            this.tween.start();
+
+            this.moving = true;
+
+            //this.graphics.body.gravity.y = 0;
+
             this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
+
+        }
+
+        moveComplete()
+        {
+            //this.verticalRectangle.x = 0;
+            //this.horizontalRectangle.y = 0;
+            this.graphics.body.velocity.x = 0;
+            this.graphics.body.velocity.y = 0;
+            this.graphics.body.gravity.y = 0;
+            this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
+            this.animateIdle();
+            this.sendToServer();
+            this.moving = false;
         }
 
         setCharacterAttackAction(attackAction:string)
@@ -198,11 +232,21 @@ module CharacterModule
         }
 
         updateCharacter() {
+
+            if(this.moving)
+            {
+                //this.graphics.body.position.x = this.tweenObject.x;
+                //this.graphics.body.position.y = this.tweenObject.y;
+
+                //this.graphics.body.velocity.x -= 30;
+                //this.graphics.body.velocity.y -= 30;
+
+            }
             if(MapModule.Map.getInstance().layers['Spudz'])
             {
                 this.checkCollision([
-                    MapModule.Map.getInstance().layers['Spudz']['TilesLayer']
-                    //MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer']
+                    MapModule.Map.getInstance().layers['Spudz']['TilesLayer'],
+                    MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer']
                 ]);
             }
 

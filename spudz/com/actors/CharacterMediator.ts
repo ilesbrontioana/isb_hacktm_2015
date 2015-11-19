@@ -70,8 +70,6 @@ module CharacterModule
         }
 
         handleNotification(notification:MvcModule.INotification) {
-            MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.character = (this.viewComponent as CharacterView).graphics;
-
             switch (notification.name){
                 case CharacterModule.CharacterNotifications.UPDATE_CHARACTER:
                     (this.viewComponent as CharacterView).updateCharacter();
