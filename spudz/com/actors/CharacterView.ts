@@ -43,8 +43,8 @@ module CharacterModule
 
             this.verticalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
             this.horizontalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
-            this.verticalRectangle.alpha = 0;
-            this.horizontalRectangle.alpha = 0;
+            //this.verticalRectangle.alpha = 0;
+            //this.horizontalRectangle.alpha = 0;
             this.horizontalRectangle.width = 2000;
             this.verticalRectangle.height = 1400;
 
@@ -134,7 +134,7 @@ module CharacterModule
             this.horizontalRectangle.y = 0;
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
-            this.game.physics.arcade.isPaused = true;
+            this.graphics.body.gravity.y = 0;
             this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
             this.animateIdle();
             this.sendToServer();
@@ -142,7 +142,6 @@ module CharacterModule
 
         startMoving(x:number, y:number, width:number, height:number)
         {
-            this.graphics.body.gravity.y = 400;
             this.verticalRectangle.x = x + width/2;
             this.horizontalRectangle.y = y + height/2;
 
@@ -194,7 +193,7 @@ module CharacterModule
         characterTurn()
         {
             this.attackAction = "";
-            this.game.physics.arcade.isPaused = false;
+            this.graphics.body.gravity.y = 400;
             this.setCurrentAction(CharacterModule.CharacterActionType.MOVE);
         }
 
@@ -202,8 +201,8 @@ module CharacterModule
             if(MapModule.Map.getInstance().layers['Spudz'])
             {
                 this.checkCollision([
-                    MapModule.Map.getInstance().layers['Spudz']['TilesLayer'],
-                    MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer']
+                    MapModule.Map.getInstance().layers['Spudz']['TilesLayer']
+                    //MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer']
                 ]);
             }
 
