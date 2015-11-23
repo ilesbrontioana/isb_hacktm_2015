@@ -26,8 +26,6 @@ module CharacterModule
         currentAnimation:string = "";
         attackAction:string = "";
 
-        collideWithMapLayers:boolean;
-
         characterName:string;
 
         constructor() {
@@ -101,70 +99,52 @@ module CharacterModule
 
             this.graphics.body.speed = this.speed;
 
-            this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
+            this.graphics.anchor.setTo(0.5, 0.5);
+
+            this.graphics.body.setSize(this.graphics.width/2, this.graphics.height, this.graphics.width/4, 0);
 
             if(followCharacter == true)
             {
                 this.game.camera.follow(this.graphics);
             }
+
+            this.animateJump();
         }
 
         checkCollision(layers:Array<Phaser.TilemapLayer>){
-            this.collideWithMapLayers = false;
             for(var i = 0; i < layers.length; i++)
             {
-                this.game.physics.arcade.collide(this.graphics, layers[i], this.collideWithMap, null, this);
-            }
-            if(!this.collideWithMapLayers)
-            {
-                if(this.currentAnimation == CharacterModule.CharacterAnimations.RUN_ANIMATION)
-                {
-                    this.animateJump();
-                }
-            }
-            //this.game.physics.arcade.collide(this.graphics, this.verticalRectangle, this.moveComplete, null, this);
-            //this.game.physics.arcade.collide(this.graphics, this.horizontalRectangle, this.moveComplete, null, this);
-
-        }
-
-        collideWithMap()
-        {
-            this.collideWithMapLayers = true;
-            if(this.currentAnimation == CharacterModule.CharacterAnimations.JUMP_ANIMATION)
-            {
-                SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["land"]);
+                this.game.physics.arcade.collide(this.graphics, layers[i]);
             }
         }
 
         startMoving(x:number, y:number, width:number, height:number)
         {
-            //this.verticalRectangle.x = x + width/2;
-            //this.horizontalRectangle.y = y + height/2;
-
-            if(y >= (this.graphics.y - this.graphics.height) && y < (this.graphics.y + this.graphics.height))
+            if(y >= (this.graphics.body.position.y - this.graphics.height/2))
             {
                 this.animateWalk();
-                if(x < this.graphics.x)
-                {
-                    this.graphics.scale.x = -1;
-                    this.graphics.body.setSize(50, this.graphics.height, -this.graphics.width + this.graphics.width/2 - 30, 0);
-
-                }
-                else
-                {
-                    this.graphics.scale.x = 1;
-                    this.graphics.body.setSize(50, this.graphics.height, this.graphics.width/2 - 30, 0);
-                }
+                y = this.graphics.position.y;
             }
             else
             {
                 this.animateJump();
             }
 
+            if(x < this.graphics.x)
+            {
+                this.graphics.scale.x = -1;
+                this.graphics.body.position.x -= this.graphics.width;
+
+            }
+            else
+            {
+                this.graphics.scale.x = 1;
+                this.graphics.body.position.x += this.graphics.width;
+            }
+
             this.tweenObject.x = x;
             this.tweenObject.y = y;
 
-            //this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
             var distance = this.game.physics.arcade.distanceBetween(this.graphics, this.tweenObject);
             var tweenDuration = distance/this.speed;
 
@@ -183,16 +163,12 @@ module CharacterModule
 
             this.moving = true;
 
-            //this.graphics.body.gravity.y = 0;
-
             this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
 
         }
 
         moveComplete()
         {
-            //this.verticalRectangle.x = 0;
-            //this.horizontalRectangle.y = 0;
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
             this.graphics.body.gravity.y = 0;
@@ -224,24 +200,33 @@ module CharacterModule
             }
         }
 
+        waitToMove:boolean;
+
         characterTurn()
         {
             this.attackAction = "";
             this.graphics.body.gravity.y = 400;
-            this.setCurrentAction(CharacterModule.CharacterActionType.MOVE);
+
+            if(!this.graphics.body.onFloor())
+            {
+                this.waitToMove = true;
+                this.animateJump();
+            }
+            else
+            {
+                this.waitToMove = false;
+                this.setCurrentAction(CharacterModule.CharacterActionType.MOVE);
+            }
         }
 
         updateCharacter() {
 
-            if(this.moving)
-            {
-                //this.graphics.body.position.x = this.tweenObject.x;
-                //this.graphics.body.position.y = this.tweenObject.y;
-
-                //this.graphics.body.velocity.x -= 30;
-                //this.graphics.body.velocity.y -= 30;
-
-            }
+            //if(this.moving)
+            //{
+            //    this.graphics.body.position.x = this.tweenObject.x;
+            //    this.graphics.body.position.y = this.tweenObject.y;
+            //
+            //}
             if(MapModule.Map.getInstance().layers['Spudz'])
             {
                 this.checkCollision([
@@ -249,6 +234,26 @@ module CharacterModule
                     MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer']
                 ]);
             }
+
+            if(this.graphics.body.onFloor())
+            {
+                if(this.waitToMove)
+                {
+                    this.waitToMove = false;
+                    this.setCurrentAction(CharacterModule.CharacterActionType.MOVE);
+                }
+                if(this.currentAnimation == CharacterModule.CharacterAnimations.JUMP_ANIMATION)
+                {
+                    SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["land"]);
+                }
+            }
+            //else
+            //{
+            //    if(this.currentAnimation == CharacterModule.CharacterAnimations.RUN_ANIMATION)
+            //    {
+            //        this.animateJump();
+            //    }
+            //}
 
             if(this.currentAction == CharacterModule.CharacterActionType.MOVE &&
                 this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
@@ -354,8 +359,8 @@ module CharacterModule
 
         sendPosition()
         {
-            this.dispatchSignal("CharacterPosition", {  x: this.graphics.x + this.graphics.width/2,
-                y: this.graphics.y + this.graphics.height/2,
+            this.dispatchSignal("CharacterPosition", {  x: this.graphics.x
+                y: this.graphics.y,
                 actionType: this.currentAction,
                 addActionRay:true});
         }
