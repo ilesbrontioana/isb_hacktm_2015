@@ -45,29 +45,15 @@ module CharacterModule
             this.game.cache.addBitmapData("SmallRectangleBMP", bmd);
 
             this.tweenObject  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
-            //this.verticalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
-            //this.horizontalRectangle  = this.game.add.sprite(0, 0, this.game.cache.getBitmapData("SmallRectangleBMP"));
-            //this.verticalRectangle.alpha = 0;
-            //this.horizontalRectangle.alpha = 0;
-            //this.horizontalRectangle.width = 2000;
-            //this.verticalRectangle.height = 1400;
-
-            //this.game.physics.enable(this.horizontalRectangle, Phaser.Physics.ARCADE);
-            //this.game.physics.enable(this.verticalRectangle, Phaser.Physics.ARCADE);
-            //
-            //this.horizontalRectangle.body.immovable = true;
-            //this.verticalRectangle.body.immovable = true;
+            this.tweenObject.alpha = 0;
         }
 
-        createCharacter(characterName:string)
+        createCharacter(characterName:string, x:number, y:number, followCharacter)
         {
             this.characterName = characterName;
 
-            var x = 680;
-            var y = 1244;
-            var followCharacter = true;
-
             this.graphics = this.game.add.sprite(x, y, characterName);
+
             this.graphics.animations.add(CharacterModule.CharacterAnimations.IDLE_ANIMATION, Phaser.Animation.generateFrameNames(
                 CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.IDLE_ANIMATION],
                 0, 18, '', 4), 30, true);
@@ -90,17 +76,14 @@ module CharacterModule
                 CharacterModule.CharacterAnimationsAssets.assets[characterName][CharacterModule.CharacterAnimations.BLOCK_ANIMATION],
                 0, 21, '', 4), 30, true);
 
+            this.graphics.anchor.setTo(0.5, 0.5);
+
             this.game.physics.enable(this.graphics, Phaser.Physics.ARCADE);
 
             this.graphics.body.immovable = true;
-
             this.graphics.body.collideWorldBounds = true;
             this.graphics.body.gravity.y = 400;
-
-            this.graphics.body.speed = this.speed;
-
-            this.graphics.anchor.setTo(0.5, 0.5);
-
+            //TODO - set correct size for each character
             this.graphics.body.setSize(this.graphics.width/2, this.graphics.height, this.graphics.width/4, 0);
 
             if(followCharacter == true)
@@ -108,10 +91,13 @@ module CharacterModule
                 this.game.camera.follow(this.graphics);
             }
 
-            this.animateJump();
+            if(!this.graphics.body.onFloor())
+            {
+                this.animateJump();
+            }
         }
 
-        checkCollision(layers:Array<Phaser.TilemapLayer>){
+        checkCollisionWithMap(layers:Array<Phaser.TilemapLayer>){
             for(var i = 0; i < layers.length; i++)
             {
                 this.game.physics.arcade.collide(this.graphics, layers[i]);
@@ -221,15 +207,9 @@ module CharacterModule
 
         updateCharacter() {
 
-            //if(this.moving)
-            //{
-            //    this.graphics.body.position.x = this.tweenObject.x;
-            //    this.graphics.body.position.y = this.tweenObject.y;
-            //
-            //}
             if(MapModule.Map.getInstance().layers['Spudz'])
             {
-                this.checkCollision([
+                this.checkCollisionWithMap([
                     MapModule.Map.getInstance().layers['Spudz']['TilesLayer'],
                     MapModule.Map.getInstance().layers['Spudz']['Tiles2Layer']
                 ]);
@@ -237,6 +217,7 @@ module CharacterModule
 
             if(this.graphics.body.onFloor())
             {
+                //if landing when physics resume, change action
                 if(this.waitToMove)
                 {
                     this.waitToMove = false;
@@ -359,10 +340,10 @@ module CharacterModule
 
         sendPosition()
         {
-            this.dispatchSignal("CharacterPosition", {  x: this.graphics.x
-                y: this.graphics.y,
-                actionType: this.currentAction,
-                addActionRay:true});
+            this.dispatchSignal("CharacterPosition", {  x: this.graphics.x,
+                                                        y: this.graphics.y,
+                                                        actionType: this.currentAction,
+                                                        addActionRay:true});
         }
 
         sendToServer()

@@ -25,7 +25,9 @@ module CharacterModule
             this.characterProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterModule.CharacterProxy);
             this.characterProxy.setCharacterName((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getSelection());
 
-            (this.viewComponent as CharacterView).createCharacter(this.characterProxy.getCharacterName());
+            var x = 680;
+            var y = 1244;
+            (this.viewComponent as CharacterView).createCharacter(this.characterProxy.getCharacterName(), x, y, true);
 
             this.characterProxy.setCharacter((this.viewComponent as CharacterView).graphics);
 

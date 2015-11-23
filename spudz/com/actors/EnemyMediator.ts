@@ -22,7 +22,9 @@ module CharacterModule
             this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
             this.enemyProxy.setCharacterName((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getOpponentSelection());
 
-            (this.viewComponent as CharacterView).createCharacter(this.enemyProxy.getCharacterName());
+            var x = 1160;
+            var y = 1244;
+            (this.viewComponent as CharacterView).createCharacter(this.enemyProxy.getCharacterName(), x, y, false);
 
             this.enemyProxy.setCharacter((this.viewComponent as EnemyView).graphics);
 
