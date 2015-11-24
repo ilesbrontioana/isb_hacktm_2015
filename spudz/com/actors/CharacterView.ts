@@ -11,15 +11,10 @@ module CharacterModule
 
         speed = 1000;
 
-        //verticalRectangle:Phaser.Sprite;
-        //horizontalRectangle:Phaser.Sprite;
-
         tween:Phaser.Tween;
         tweenObject:Phaser.Sprite;
 
         moving:boolean = false;
-
-        initial:boolean = true;
         attackComplete:boolean = false;
 
         currentAction:string = CharacterModule.CharacterActionType.MOVE;
@@ -160,7 +155,6 @@ module CharacterModule
             this.graphics.body.gravity.y = 0;
             this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
             this.animateIdle();
-            this.sendToServer();
             this.moving = false;
         }
 
@@ -241,11 +235,6 @@ module CharacterModule
             {
                 if(this.graphics.body.velocity.x == 0 && this.graphics.body.velocity.y == 0)
                 {
-                    if(this.initial)
-                    {
-                        this.currentAction = CharacterModule.CharacterActionType.ATTACK;
-                        this.initial = false;
-                    }
                     this.animateIdle();
                 }
             }
@@ -348,7 +337,7 @@ module CharacterModule
 
         sendToServer()
         {
-            this.dispatchSignal("CharacterInfoToServer");
+            this.dispatchSignal("SendMoveToServer");
         }
     }
 }

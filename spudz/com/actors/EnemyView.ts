@@ -22,17 +22,55 @@ module CharacterModule
             {
                 this.animateIdle();
             }
-            this.sendToServer();
+            if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
+            {
+                this.dispatchSignal("CharacterDamage", this.currentDamage);
+                this.animateIdle();
+            }
+            else
+            {
+                this.sendToServer();
+            }
+        }
+
+        setCharacterAttackAction(attackAction:string)
+        {
+            this.attackAction = attackAction;
+        }
+
+        moveComplete()
+        {
+            super.moveComplete();
+            if(this.currentAction == CharacterModule.CharacterActionType.ATTACK)
+            {
+                if(this.attackAction == CharacterActionType.MELEE)
+                {
+                    this.animateMelee();
+                }
+                else if(this.attackAction == CharacterActionType.DEFENCE)
+                {
+                    this.animateBlock();
+                }
+                else if(this.attackAction == CharacterActionType.RANGE)
+                {
+                    this.animateRange();
+                }
+                else if(this.attackAction == CharacterActionType.SKIP)
+                {
+
+                    this.onAttackComplete();
+                }
+            }
         }
 
         sendPosition()
         {
-            //nothing to do
+
         }
 
         sendToServer()
         {
-            this.dispatchSignal("OpponentInfoToServer");
+            this.dispatchSignal("OpponentActionsComplete");
         }
 
         tryDamage(circle:Phaser.Sprite)
@@ -47,20 +85,9 @@ module CharacterModule
 
         addDamage()
         {
-            this.animateHit();
-            this.currentDamage = 10;
+            //this.animateHit();
+            //this.currentDamage = 10;
         }
-
-        onAttackComplete()
-        {
-            if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
-            {
-                this.dispatchSignal("CharacterDamage", this.currentDamage);
-            }
-            super.onAttackComplete();
-
-        }
-
 
     }
 }

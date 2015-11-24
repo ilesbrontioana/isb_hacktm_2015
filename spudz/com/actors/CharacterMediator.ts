@@ -26,7 +26,7 @@ module CharacterModule
             this.characterProxy.setCharacterName((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getSelection());
 
             var x = 680;
-            var y = 1244;
+            var y = 1255;
             (this.viewComponent as CharacterView).createCharacter(this.characterProxy.getCharacterName(), x, y, true);
 
             this.characterProxy.setCharacter((this.viewComponent as CharacterView).graphics);
@@ -42,17 +42,13 @@ module CharacterModule
                         this.characterProxy.getActionRay());
             },this);
 
-            this.addListenerToSignal("CharacterInfoToServer", function(){
-                this.updateCharacterVO();
+            this.addListenerToSignal("SendMoveToServer", function(){
                 this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.getMoveVO());
 
             },this);
 
             this.addListenerToSignal("CharacterPosition", function(body:any){
-                if(body.addActionRay == true)
-                {
-                    MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
-                }
+                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
                 if(body.actionType == CharacterActionType.ATTACK)
                 {
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
@@ -96,20 +92,15 @@ module CharacterModule
                     (this.viewComponent as CharacterView).characterTurn();
                     break;
                 case CharacterModule.CharacterNotifications.ATTACK_COMPLETE:
-                    this.updateCharacterVO();
                     this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.getMoveVO());
                     break;
             }
         }
 
-        updateCharacterVO()
-        {
-            this.characterProxy.setEnergy(this.characterProxy.getEnergy() - 5);
-            this.characterProxy.setAbility((this.viewComponent as CharacterView).attackAction);
-        }
-
         getMoveVO():ConnectionModule.MoveVO
         {
+            this.characterProxy.setEnergy(this.characterProxy.getEnergy() - 10);
+            this.characterProxy.setAbility((this.viewComponent as CharacterView).attackAction);
             this.moveVO.ability = this.characterProxy.getAbility();
             this.moveVO.destination = this.characterProxy.getCharacter().position;
             this.moveVO.player_pos = this.characterProxy.getCharacter().position;

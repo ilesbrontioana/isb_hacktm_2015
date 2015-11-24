@@ -9,8 +9,6 @@ module ServerMockModule
 
         moveVO:ConnectionModule.MoveVO;
 
-        noOfActions = 0;
-
         characterProxy:CharacterModule.CharacterProxy;
         enemyProxy:CharacterModule.EnemyProxy;
 
@@ -50,19 +48,15 @@ module ServerMockModule
             }, this);
 
             this.addListenerToSignal(ConnectionModule.ConnectionSignals.MOVE, function (param:any) {
-                this.noOfActions++;
-                if(this.noOfActions == 2)
-                {
                     console.log("server : end turn");
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.END_TURN);
-                    this.noOfActions = 0;
                     this.opponentMove();
-                }
             }, this);
 
-            this.addListenerToSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE, function(param:any)
+            this.addListenerToSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE_COMPLETE, function(param:any)
             {
-                this.opponentMove();
+                console.log("server : your turn");
+                MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
             }, this)
         }
 
@@ -76,7 +70,6 @@ module ServerMockModule
                     this.characterProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterModule.CharacterProxy);
                     this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
 
-                    this.noOfActions = 0;
                     //var turn:number = Math.random() * 2;
                     //if(turn < 1)
                     //{
@@ -84,8 +77,8 @@ module ServerMockModule
                     //}
                     //else
                     //{
-                    console.log("server : your turn");
-                    MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
+                        console.log("server : your turn");
+                        MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
                     //}
 
                     break;
@@ -95,60 +88,12 @@ module ServerMockModule
 
         opponentMove()
         {
-            this.noOfActions++;
-            if(this.noOfActions == 1)
-            {
-                console.log("server : opponent move");
-                MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getMoveAction());
-            }
-            else if(this.noOfActions == 2)
-            {
                 console.log("server : opponent attack");
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getAttackAction());
-            }
-            else if(this.noOfActions == 3)
-            {
-                console.log("server : your turn");
-                this.noOfActions = 0;
-                MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
-            }
-
-        }
-
-        getMoveAction():ConnectionModule.MoveVO{
-
-            this.moveVO.ability = "";
-
-            var xOffset:number;
-            var yOffset:number;
-            var randomX = Math.floor(Math.random() * 12);
-
-            if(randomX < 6)
-            {
-                xOffset = - 40 * randomX;
-            }
-            else
-            {
-                xOffset = 40 * (randomX % 6);
-            }
-            var randomY = Math.floor(Math.random() * 6);
-            yOffset = - 40 * randomY;
-
-            var newEnemyPosition:Phaser.Point = new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
-                this.enemyProxy.getCharacter().position.y + yOffset);
-            this.moveVO.destination = newEnemyPosition;
-            this.moveVO.player_pos = newEnemyPosition;
-
-            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 5;
-            this.moveVO.player_health = this.enemyProxy.getLife();
-            this.moveVO.opponent_energy = this.characterProxy.getEnergy();
-            this.moveVO.opponent_health = this.characterProxy.getLife();
-            this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
-
-            return this.moveVO;
         }
 
         getAttackAction():ConnectionModule.MoveVO{
+
             var abilityNo = Math.random() * 4;
             var ability:string = "";
             if(abilityNo < 1)
@@ -169,10 +114,28 @@ module ServerMockModule
             }
             this.moveVO.ability = ability;
 
-            this.moveVO.destination = this.enemyProxy.getCharacter().position;
-            this.moveVO.player_pos = this.enemyProxy.getCharacter().position;
+            var xOffset:number;
+            var yOffset:number;
+            var randomX = Math.floor(Math.random() * 12);
 
-            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 5;
+            if(randomX < 6)
+            {
+                xOffset = - 40 * randomX;
+            }
+            else
+            {
+                xOffset = 40 * (randomX % 6);
+            }
+
+            var randomY = Math.floor(Math.random() * 6);
+            yOffset = - 40 * randomY;
+
+            var newEnemyPosition:Phaser.Point = new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
+                this.enemyProxy.getCharacter().position.y + yOffset);
+            this.moveVO.destination = newEnemyPosition;
+            this.moveVO.player_pos = newEnemyPosition;
+
+            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 10;
             this.moveVO.player_health = this.enemyProxy.getLife();
             this.moveVO.opponent_energy = this.characterProxy.getEnergy();
             this.moveVO.opponent_health = this.characterProxy.getLife();
