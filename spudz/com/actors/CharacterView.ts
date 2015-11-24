@@ -20,8 +20,11 @@ module CharacterModule
         currentAction:string = CharacterModule.CharacterActionType.MOVE;
         currentAnimation:string = "";
         attackAction:string = "";
+        currentDamage:number;
 
         characterName:string;
+
+        enemyGraphics:Phaser.Sprite;
 
         constructor() {
             super(CharacterView.NAME);
@@ -78,6 +81,7 @@ module CharacterModule
             this.graphics.body.immovable = true;
             this.graphics.body.collideWorldBounds = true;
             this.graphics.body.gravity.y = 400;
+
             //TODO - set correct size for each character
             this.graphics.body.setSize(this.graphics.width/2, this.graphics.height, this.graphics.width/4, 0);
 
@@ -90,6 +94,11 @@ module CharacterModule
             {
                 this.animateJump();
             }
+        }
+
+        updateEnemy(enemy:Phaser.Sprite)
+        {
+            this.enemyGraphics = enemy;
         }
 
         checkCollisionWithMap(layers:Array<Phaser.TilemapLayer>){
@@ -303,7 +312,7 @@ module CharacterModule
 
             this.graphics.play(CharacterModule.CharacterAnimations.DAMAGE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.DAMAGE_ANIMATION;
-            this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
+            this.graphics.events.onAnimationComplete.add(this.onDamageComplete, this);
         }
 
         onAttackComplete()
@@ -318,6 +327,16 @@ module CharacterModule
             else if(this.currentAction != CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
             {
                 this.sendToServer();
+            }
+        }
+
+        onDamageComplete()
+        {
+            this.graphics.events.onAnimationComplete.removeAll();
+            if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
+            {
+                this.dispatchSignal("CharacterDamage", this.currentDamage);
+                this.animateIdle();
             }
         }
 

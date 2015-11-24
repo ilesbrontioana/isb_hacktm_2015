@@ -11,7 +11,6 @@ module CharacterModule
         }
 
 
-        currentDamage:number;
 
 
         onAttackComplete()
@@ -22,15 +21,9 @@ module CharacterModule
             {
                 this.animateIdle();
             }
-            if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
-            {
-                this.dispatchSignal("CharacterDamage", this.currentDamage);
-                this.animateIdle();
-            }
-            else
-            {
-                this.sendToServer();
-            }
+
+            //TODO - send after player takes damage
+            this.sendToServer();
         }
 
         setCharacterAttackAction(attackAction:string)
@@ -76,6 +69,7 @@ module CharacterModule
         tryDamage(circle:Phaser.Sprite)
         {
             this.currentDamage = 0;
+
             this.game.physics.arcade.overlap(this.graphics, circle, this.addDamage, null, this);
             if(this.currentDamage == 0)
             {
@@ -85,8 +79,19 @@ module CharacterModule
 
         addDamage()
         {
-            //this.animateHit();
-            //this.currentDamage = 10;
+            this.startMovingWhehHit();
+            if(this.currentAction != CharacterModule.CharacterActionType.DEFENCE)
+            {
+                this.animateHit();
+                this.currentAction = CharacterModule.CharacterActionType.DAMAGE;
+                this.currentDamage = 10;
+            }
+
+        }
+
+        startMovingWhehHit()
+        {
+
         }
 
     }

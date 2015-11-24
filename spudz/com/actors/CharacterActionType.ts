@@ -11,5 +11,6 @@ module CharacterModule
         static MELEE:string = "character_action_melee";
         static RANGE:string = "character_action_range";
         static SKIP:string = "character_action_skip";
+        static DAMAGE:string = "character_action_damage";
     }
 }

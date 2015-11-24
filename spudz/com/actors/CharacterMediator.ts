@@ -64,6 +64,7 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
                 CharacterModule.CharacterNotifications.ATTACK_COMPLETE,
                 ConnectionModule.ConnectionSignals.YOUR_TURN,
+                RoundsModule.RoundsNotifications.FIGHT,
                 CharacterActionType.ATTACK];
         }
 
@@ -93,6 +94,9 @@ module CharacterModule
                     break;
                 case CharacterModule.CharacterNotifications.ATTACK_COMPLETE:
                     this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.getMoveVO());
+                    break;
+                case RoundsModule.RoundsNotifications.FIGHT:
+                    (this.viewComponent as CharacterView).updateEnemy(this.enemyProxy.getCharacter());
                     break;
             }
         }

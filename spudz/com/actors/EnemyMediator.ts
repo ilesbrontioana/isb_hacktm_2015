@@ -48,7 +48,8 @@ module CharacterModule
         listNotificationInterests():Array<string>{
             return [CharacterModule.CharacterNotifications.UPDATE_CHARACTER,
                 CharacterModule.CharacterNotifications.ATTACK_ENEMY,
-                ConnectionModule.ConnectionSignals.MOVE
+                ConnectionModule.ConnectionSignals.MOVE,
+                RoundsModule.RoundsNotifications.FIGHT
             ];
         }
 
@@ -68,6 +69,9 @@ module CharacterModule
                         40, 40);
                     (this.viewComponent as EnemyView).setCharacterAttackAction(notification.body.ability);
 
+                    break;
+                case RoundsModule.RoundsNotifications.FIGHT:
+                    (this.viewComponent as EnemyView).updateEnemy(this.characterProxy.getCharacter());
                     break;
             }
         }
