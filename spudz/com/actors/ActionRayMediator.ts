@@ -17,7 +17,8 @@ module CharacterModule {
         listNotificationInterests():Array<string>{
             return [CharacterModule.CharacterNotifications.CHARACTER_POSITION,
                     GridModule.GridNotifications.GRID_CREATED,
-                    CharacterModule.CharacterActionType.ATTACK
+                    CharacterModule.CharacterActionType.ATTACK,
+                    RoundsModule.RoundsNotifications.FIGHT
                     ];
         }
 
@@ -25,7 +26,6 @@ module CharacterModule {
             switch (notification.name){
                 case CharacterModule.CharacterNotifications.CHARACTER_POSITION:
                     (this.viewComponent as ActionRayView).addActionRayAt(notification.body.x, notification.body.y, notification.body.actionType);
-                    (MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME) as CharacterProxy).setActionRay((this.viewComponent as ActionRayView).currentCircle)
                     break;
                 case GridModule.GridNotifications.GRID_CREATED:
                     (this.viewComponent as ActionRayView).setGrid(notification.body);
@@ -33,6 +33,8 @@ module CharacterModule {
                 case CharacterModule.CharacterActionType.ATTACK:
                     (this.viewComponent as ActionRayView).removeActionRay();
                     break;
+                case RoundsModule.RoundsNotifications.FIGHT:
+                    (MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME) as CharacterProxy).setActionRay((this.viewComponent as ActionRayView).attackCircle)
             }
         }
     }

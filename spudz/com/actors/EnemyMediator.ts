@@ -67,7 +67,17 @@ module CharacterModule
                     //TODO - hardcoded, remove 40, get from grid
                     (this.viewComponent as EnemyView).startMoving(notification.body.destination.x, notification.body.destination.y,
                         40, 40);
+
                     (this.viewComponent as EnemyView).setCharacterAttackAction(notification.body.ability);
+
+                    if(this.characterProxy.getLife() > notification.body.opponent_health)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
 
                     break;
                 case RoundsModule.RoundsNotifications.FIGHT:

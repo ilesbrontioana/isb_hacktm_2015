@@ -68,8 +68,8 @@
 /// <reference path="com/background/BackgroundMediator.ts" />
 /// <reference path="com/background/BackgroundView.ts" />
 
-/// <reference path="com/serverMock/ServerMockView.ts" />
-/// <reference path="com/serverMock/ServerMockMediator.ts" />
+/// <reference path="com/dummyAI/DummyAIView.ts" />
+/// <reference path="com/dummyAI/DummyAIMediator.ts" />
 
 class SimpleGame extends MvcModule.MVCBoiler{
     game: Phaser.Game;

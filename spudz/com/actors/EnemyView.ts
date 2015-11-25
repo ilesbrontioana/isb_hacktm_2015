@@ -11,8 +11,6 @@ module CharacterModule
         }
 
 
-
-
         onAttackComplete()
         {
             this.graphics.events.onAnimationComplete.removeAll();
@@ -25,6 +23,8 @@ module CharacterModule
             //TODO - send after player takes damage
             this.sendToServer();
         }
+
+
 
         setCharacterAttackAction(attackAction:string)
         {
@@ -79,7 +79,7 @@ module CharacterModule
 
         addDamage()
         {
-            this.startMovingWhehHit();
+            this.startMovingWhenHit();
             if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
             {
                 this.animateHit();
@@ -89,9 +89,9 @@ module CharacterModule
 
         }
 
-        startMovingWhehHit()
+        startMovingWhenHit()
         {
-
+            //TODO
         }
 
     }

@@ -1,11 +1,12 @@
 /**
  * Created by ioanailes on 12/11/15.
  */
-module ServerMockModule
+module DummyAIModule
 {
-    export class ServerMockMediator extends MvcModule.Mediator
+    import P2 = Phaser.Physics.P2;
+    export class DummyAIMediator extends MvcModule.Mediator
     {
-        static NAME:string = "ServerMockMediator";
+        static NAME:string = "DummyAIMediator";
 
         moveVO:ConnectionModule.MoveVO;
 
@@ -14,7 +15,7 @@ module ServerMockModule
 
         constructor(viewComponent:MvcModule.IView)
         {
-            super(ServerMockMediator.NAME, viewComponent);
+            super(DummyAIMediator.NAME, viewComponent);
         }
 
         onRegister()
@@ -42,20 +43,20 @@ module ServerMockModule
                     {
                         opponentSelection = "marine";
                     }
-                    console.log("server : opponent selection");
+                    console.log("dummy ai : opponent selection");
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.OPPONENT_CHARACTER, opponentSelection);
                 }.bind(this), this);
             }, this);
 
             this.addListenerToSignal(ConnectionModule.ConnectionSignals.MOVE, function (param:any) {
-                    console.log("server : end turn");
+                    console.log("dummy ai : end turn");
                     MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.END_TURN);
                     this.opponentMove();
             }, this);
 
             this.addListenerToSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE_COMPLETE, function(param:any)
             {
-                console.log("server : your turn");
+                console.log("dummy ai : your turn");
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
             }, this)
         }
@@ -77,7 +78,7 @@ module ServerMockModule
                     //}
                     //else
                     //{
-                        console.log("server : your turn");
+                        console.log("dummy ai : your turn");
                         MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
                     //}
 
@@ -88,12 +89,32 @@ module ServerMockModule
 
         opponentMove()
         {
-                console.log("server : opponent attack");
+                console.log("dummy ai : opponent attack");
                 MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getAttackAction());
         }
 
         getAttackAction():ConnectionModule.MoveVO{
 
+
+            this.moveVO.ability = this.getAbility();
+
+            var newEnemyPosition = this.getNewEnemyPosition();
+
+            this.moveVO.destination = newEnemyPosition;
+            this.moveVO.player_pos = newEnemyPosition;
+
+            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 10;
+            this.moveVO.player_health = this.enemyProxy.getLife();
+
+            this.moveVO.opponent_energy = this.characterProxy.getEnergy();
+            this.moveVO.opponent_health = this.getLife(this.moveVO.ability, newEnemyPosition);
+            this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
+
+            return this.moveVO;
+        }
+
+        getAbility():String
+        {
             var abilityNo = Math.random() * 4;
             var ability:string = "";
             if(abilityNo < 1)
@@ -112,8 +133,11 @@ module ServerMockModule
             {
                 ability = CharacterModule.CharacterActionType.SKIP;
             }
-            this.moveVO.ability = ability;
+            return ability;
+        }
 
+        getNewEnemyPosition():Phaser.Point
+        {
             var xOffset:number;
             var yOffset:number;
             var randomX = Math.floor(Math.random() * 12);
@@ -132,16 +156,37 @@ module ServerMockModule
 
             var newEnemyPosition:Phaser.Point = new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
                 this.enemyProxy.getCharacter().position.y + yOffset);
-            this.moveVO.destination = newEnemyPosition;
-            this.moveVO.player_pos = newEnemyPosition;
 
-            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 10;
-            this.moveVO.player_health = this.enemyProxy.getLife();
-            this.moveVO.opponent_energy = this.characterProxy.getEnergy();
-            this.moveVO.opponent_health = this.characterProxy.getLife();
-            this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
+            return newEnemyPosition;
+        }
 
-            return this.moveVO;
+        getLife(ability, newEnemyPosition)
+        {
+            if(this.characterProxy.getAbility() != CharacterModule.CharacterActionType.DEFENCE &&
+                (ability == CharacterModule.CharacterActionType.MELEE ||
+                    ability == CharacterModule.CharacterActionType.RANGE)) {
+                this.characterInActionRay(newEnemyPosition);
+            }
+
+        }
+
+        characterInActionRay(newEnemyPosition)
+        {
+            var actionRay:Phaser.Sprite = this.characterProxy.getActionRay();
+            actionRay.visible = true;
+            actionRay.x = newEnemyPosition.x;
+            actionRay.y = newEnemyPosition.y;
+
+            GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.overlap(
+                this.characterProxy.getCharacter(), actionRay, this.overlap, null, this);
+
+            actionRay.visible = false;
+        }
+
+        overlap()
+        {
+            this.characterProxy.setLife(this.characterProxy.getLife() - 10);
+            console.log("dummy ai: damage 10");
         }
 
         getOtherSelections(selection:string):Array<string>

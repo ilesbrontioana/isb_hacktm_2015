@@ -21,7 +21,7 @@ module SelectionScreenModule{
 
         onRegister()
         {
-            MvcModule.Mvc.getInstance().registerMediator(ServerMockModule.ServerMockMediator.NAME, new ServerMockModule.ServerMockMediator(new ServerMockModule.ServerMockView()));
+            MvcModule.Mvc.getInstance().registerMediator(DummyAIModule.DummyAIMediator.NAME, new DummyAIModule.DummyAIMediator(new DummyAIModule.DummyAIView()));
         }
 
         listNotificationInterests():Array<string>{
