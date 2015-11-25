@@ -80,7 +80,7 @@ module CharacterModule
         addDamage()
         {
             this.startMovingWhehHit();
-            if(this.currentAction != CharacterModule.CharacterActionType.DEFENCE)
+            if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
             {
                 this.animateHit();
                 this.currentAction = CharacterModule.CharacterActionType.DAMAGE;
