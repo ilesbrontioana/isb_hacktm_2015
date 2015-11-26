@@ -44,6 +44,14 @@ module CharacterModule
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_COMPLETE, damage);
             },this);
 
+            this.addListenerToSignal("EnemyLandComplete", function(damage:number){
+                //TODO - hardcoded, remove 40, get from grid
+                (this.viewComponent as EnemyView).startMoving(this.moveVO.destination.x, this.moveVO.destination.y,
+                    40, 40);
+
+                (this.viewComponent as EnemyView).setCharacterAttackAction(this.moveVO.ability);
+            },this);
+
             this.addListenerToSignal("OpponentActionsComplete", function(){
                 if(this.moveVO.opponent_health < this.characterProxy.getLife())
                 {
@@ -93,12 +101,6 @@ module CharacterModule
                     this.moveVO = notification.body;
 
                     (this.viewComponent as EnemyView).characterTurn();
-
-                    //TODO - hardcoded, remove 40, get from grid
-                    (this.viewComponent as EnemyView).startMoving(this.moveVO.destination.x, this.moveVO.destination.y,
-                        40, 40);
-
-                    (this.viewComponent as EnemyView).setCharacterAttackAction(this.moveVO.ability);
 
                     break;
                 case RoundsModule.RoundsNotifications.FIGHT:
