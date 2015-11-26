@@ -107,13 +107,13 @@ module DummyAIModule
             this.moveVO.player_health = this.enemyProxy.getLife();
 
             this.moveVO.opponent_energy = this.characterProxy.getEnergy();
-            this.getLife(this.moveVO.ability, newEnemyPosition);
+            this.getLife();
             this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
 
             return this.moveVO;
         }
 
-        getAbility():String
+        getAbility():string
         {
             var abilityNo = Math.random() * 4;
             var ability:string = "";
@@ -160,23 +160,23 @@ module DummyAIModule
             return newEnemyPosition;
         }
 
-        getLife(ability, newEnemyPosition)
+        getLife()
         {
             this.moveVO.opponent_health = this.characterProxy.getLife();
             if(this.characterProxy.getAbility() != CharacterModule.CharacterActionType.DEFENCE &&
-                (ability == CharacterModule.CharacterActionType.MELEE ||
-                    ability == CharacterModule.CharacterActionType.RANGE)) {
-                this.characterInActionRay(newEnemyPosition);
+                (this.moveVO.ability == CharacterModule.CharacterActionType.MELEE ||
+                    this.moveVO.ability == CharacterModule.CharacterActionType.RANGE)) {
+                this.characterInActionRay();
             }
 
         }
 
-        characterInActionRay(newEnemyPosition)
+        characterInActionRay()
         {
             var actionRay:Phaser.Sprite = this.characterProxy.getActionRay();
             actionRay.visible = true;
-            actionRay.x = newEnemyPosition.x;
-            actionRay.y = newEnemyPosition.y;
+            actionRay.x = this.moveVO.player_pos.x;
+            actionRay.y = this.moveVO.player_pos.y;
 
             GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.overlap(
                 this.characterProxy.getCharacter(), actionRay, this.overlap, null, this);

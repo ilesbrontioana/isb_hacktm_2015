@@ -46,7 +46,7 @@ module CharacterModule
             this.tweenObject.alpha = 0;
         }
 
-        createCharacter(characterName:string, x:number, y:number, followCharacter)
+        createCharacter(characterName:string, x:number, y:number, followCharacter:boolean)
         {
             this.characterName = characterName;
 
