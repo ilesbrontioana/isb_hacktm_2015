@@ -10,6 +10,8 @@ module CharacterModule
         characterProxy:CharacterModule.CharacterProxy;
         enemyProxy:CharacterModule.EnemyProxy;
 
+        moveVO:ConnectionModule.MoveVO;
+
         constructor(viewComponent:MvcModule.View){
 
             super(EnemyMediator.NAME, viewComponent);
@@ -18,6 +20,8 @@ module CharacterModule
         onRegister(){
 
             this.initListeners();
+
+            this.moveVO = new ConnectionModule.MoveVO();
 
             this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
             this.enemyProxy.setCharacterName((MvcModule.Mvc.getInstance().retrieveProxy(SelectionScreenModule.SelectionScreenProxy.NAME) as SelectionScreenModule.SelectionScreenProxy).getOpponentSelection());
@@ -41,9 +45,32 @@ module CharacterModule
             },this);
 
             this.addListenerToSignal("OpponentActionsComplete", function(){
-                this.dispatchSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE_COMPLETE);
+                if(this.moveVO.opponent_health < this.characterProxy.getLife())
+                {
+                    console.log("enemy: hit player");
+                    this.updateCharacters();
+                    this.sendNotification(CharacterNotifications.TAKE_DAMAGE);
+                }
+                else
+                {
+                    console.log("enemy: no hit " + this.moveVO.opponent_health + " " + this.characterProxy.getLife());
+                    this.updateCharacters();
+                    this.dispatchSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE_COMPLETE);
+                }
+
+
             },this);
         }
+
+        updateCharacters()
+        {
+            this.characterProxy.setLife(this.moveVO.opponent_health);
+            this.characterProxy.setEnergy(this.moveVO.opponent_energy);
+
+            this.enemyProxy.setEnergy(this.moveVO.player_energy);
+            this.enemyProxy.setLife(this.moveVO.player_health);
+        }
+
 
         listNotificationInterests():Array<string>{
             return [CharacterModule.CharacterNotifications.UPDATE_CHARACTER,
@@ -62,22 +89,16 @@ module CharacterModule
                     (this.viewComponent as EnemyView).tryDamage(notification.body);
                     break;
                 case ConnectionModule.ConnectionSignals.MOVE:
+
+                    this.moveVO = notification.body;
+
                     (this.viewComponent as EnemyView).characterTurn();
 
                     //TODO - hardcoded, remove 40, get from grid
-                    (this.viewComponent as EnemyView).startMoving(notification.body.destination.x, notification.body.destination.y,
+                    (this.viewComponent as EnemyView).startMoving(this.moveVO.destination.x, this.moveVO.destination.y,
                         40, 40);
 
-                    (this.viewComponent as EnemyView).setCharacterAttackAction(notification.body.ability);
-
-                    if(this.characterProxy.getLife() > notification.body.opponent_health)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
+                    (this.viewComponent as EnemyView).setCharacterAttackAction(this.moveVO.ability);
 
                     break;
                 case RoundsModule.RoundsNotifications.FIGHT:

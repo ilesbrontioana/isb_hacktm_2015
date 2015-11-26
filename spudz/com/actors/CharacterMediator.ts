@@ -47,6 +47,10 @@ module CharacterModule
 
             },this);
 
+            this.addListenerToSignal("CharacterDamageComplete", function(){
+                this.dispatchSignal(ConnectionModule.ConnectionSignals.OPPONENT_MOVE_COMPLETE);
+            },this);
+
             this.addListenerToSignal("CharacterPosition", function(body:any){
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
                 if(body.actionType == CharacterActionType.ATTACK)
@@ -75,16 +79,20 @@ module CharacterModule
                     break;
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
                     var tile:Phaser.Sprite = notification.body as Phaser.Sprite;
+                    (this.moveVO.destination = new Phaser.Point(tile.x, tile.y));
+                    (this.moveVO.player_pos = new Phaser.Point(tile.x, tile.y));
                     (this.viewComponent as CharacterView).startMoving(tile.x, tile.y, tile.width, tile.height)
                     break;
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
-                    (this.viewComponent as CharacterView).animateTakeDamage(notification.body);
+                    console.log("player: hit me!");
+
+                    (this.viewComponent as CharacterView).animateHit();
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,
-                        MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.life);
+                        this.characterProxy.getLife());
                     break;
                 case CharacterModule.CharacterNotifications.DRAIN_ENERGY:
                         MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_ENERGY,
-                        MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME).VO.energy);
+                        this.characterProxy.getEnergy());
                     break;
                 case CharacterActionType.ATTACK:
                     (this.viewComponent as CharacterView).setCharacterAttackAction(notification.body);
@@ -106,8 +114,6 @@ module CharacterModule
             this.characterProxy.setEnergy(this.characterProxy.getEnergy() - 10);
             this.characterProxy.setAbility((this.viewComponent as CharacterView).attackAction);
             this.moveVO.ability = this.characterProxy.getAbility();
-            this.moveVO.destination = this.characterProxy.getCharacter().position;
-            this.moveVO.player_pos = this.characterProxy.getCharacter().position;
             this.moveVO.player_energy = this.characterProxy.getEnergy();
             this.moveVO.player_health = this.characterProxy.getLife();
             this.moveVO.opponent_energy = this.enemyProxy.getEnergy();

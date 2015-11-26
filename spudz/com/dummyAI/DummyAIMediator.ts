@@ -107,7 +107,7 @@ module DummyAIModule
             this.moveVO.player_health = this.enemyProxy.getLife();
 
             this.moveVO.opponent_energy = this.characterProxy.getEnergy();
-            this.moveVO.opponent_health = this.getLife(this.moveVO.ability, newEnemyPosition);
+            this.getLife(this.moveVO.ability, newEnemyPosition);
             this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
 
             return this.moveVO;
@@ -162,6 +162,7 @@ module DummyAIModule
 
         getLife(ability, newEnemyPosition)
         {
+            this.moveVO.opponent_health = this.characterProxy.getLife();
             if(this.characterProxy.getAbility() != CharacterModule.CharacterActionType.DEFENCE &&
                 (ability == CharacterModule.CharacterActionType.MELEE ||
                     ability == CharacterModule.CharacterActionType.RANGE)) {
@@ -185,7 +186,7 @@ module DummyAIModule
 
         overlap()
         {
-            this.characterProxy.setLife(this.characterProxy.getLife() - 10);
+            this.moveVO.opponent_health = this.characterProxy.getLife() - 10;
             console.log("dummy ai: damage 10");
         }
 

@@ -335,7 +335,7 @@ module CharacterModule
             this.graphics.events.onAnimationComplete.removeAll();
             if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
             {
-                this.dispatchSignal("CharacterDamage", this.currentDamage);
+                this.dispatchSignal("CharacterDamageComplete", this.currentDamage);
                 this.animateIdle();
             }
         }

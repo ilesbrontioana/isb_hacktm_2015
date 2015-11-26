@@ -50,7 +50,6 @@ module CharacterModule
                 }
                 else if(this.attackAction == CharacterActionType.SKIP)
                 {
-
                     this.onAttackComplete();
                 }
             }
@@ -92,6 +91,16 @@ module CharacterModule
         startMovingWhenHit()
         {
             //TODO
+        }
+
+        onDamageComplete()
+        {
+            this.graphics.events.onAnimationComplete.removeAll();
+            if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
+            {
+                this.dispatchSignal("CharacterDamage", this.currentDamage);
+                this.animateIdle();
+            }
         }
 
     }
