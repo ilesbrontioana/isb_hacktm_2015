@@ -52,13 +52,32 @@ module CharacterModule
             },this);
 
             this.addListenerToSignal("CharacterPosition", function(body:any){
+
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
                 if(body.actionType == CharacterActionType.ATTACK)
                 {
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
+                    this.enemyInActionRay();
                 }
             }, this);
 
+        }
+
+        inActionRay:boolean;
+
+        enemyInActionRay()
+        {
+            var distance = GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.distanceBetween(
+                this.characterProxy.getCharacter(), this.enemyProxy.getCharacter());
+            if(distance > CharacterModule.ActionRayView.MELEE_RAY * 40)
+            {
+                MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON);
+            }
+            if(distance > CharacterModule.ActionRayView.RANGE_RAY * 40)
+            {
+                MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON);
+            }
+            this.inActionRay = true;
         }
 
         listNotificationInterests():Array<string>{

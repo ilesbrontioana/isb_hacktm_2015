@@ -22,6 +22,8 @@ module UserInterfaceModule{
                 UserInterfaceModule.UINotifications.UPDATE_LIFE,
                 UserInterfaceModule.UINotifications.SHOW_MOVE_MENU,
                 UserInterfaceModule.UINotifications.HIDE_MOVE_MENU,
+                UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON,
+                UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON,
                 UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY];
         }
 
@@ -33,6 +35,12 @@ module UserInterfaceModule{
                     break;
                 case UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU:
                     (this.viewComponent as UIView).showActionsMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
+                    break;
+                case UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON:
+                    (this.viewComponent as UIView).disableMeleeButton();
+                    break;
+                case UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON:
+                    (this.viewComponent as UIView).disableRangeButton();
                     break;
                 case  UserInterfaceModule.UINotifications.UPDATE_LIFE:
                     break;

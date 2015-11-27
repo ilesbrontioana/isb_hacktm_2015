@@ -8,6 +8,9 @@ module CharacterModule
     {
         static NAME:string = "ActionRayView";
 
+        static MELEE_RAY:number = 6;
+        static RANGE_RAY:number = 12;
+
         tiles:Array<Array<GridModule.Tile>> = [];
 
         moveCircle:Phaser.Sprite;

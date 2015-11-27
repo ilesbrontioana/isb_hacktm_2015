@@ -134,6 +134,10 @@ module UserInterfaceModule{
 
         hideAll()
         {
+            this.btnMelee.alpha = 1;
+            this.btnRange.alpha = 1;
+            this.btnMelee.inputEnabled = true;
+            this.btnRange.inputEnabled = true;
             this.actionsGroup.visible = false;
         }
 
@@ -185,6 +189,16 @@ module UserInterfaceModule{
             this.btnSkip.y = this.actionsMenuButton.y - 30;
 
             this.actionsMenuButton.inputEnabled = true;
+        }
+
+        disableMeleeButton(){
+            this.btnMelee.alpha = 0.5;
+            this.btnMelee.inputEnabled = false;
+        }
+
+        disableRangeButton(){
+            this.btnRange.alpha = 0.5;
+            this.btnRange.inputEnabled = false;
         }
 
         hideActionsMenu(){
