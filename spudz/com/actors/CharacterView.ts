@@ -122,14 +122,12 @@ module CharacterModule
 
             if(x < this.graphics.x)
             {
-                this.graphics.scale.x = -1;
-                this.graphics.body.position.x -= this.graphics.width;
+                this.rotateLeft();
 
             }
             else
             {
-                this.graphics.scale.x = 1;
-                this.graphics.body.position.x += this.graphics.width;
+                this.rotateRight();
             }
 
             this.tweenObject.x = x;
@@ -165,6 +163,35 @@ module CharacterModule
             this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
             this.animateIdle();
             this.moving = false;
+
+            if(this.enemyGraphics.x < this.graphics.x)
+            {
+               this.rotateLeft();
+
+            }
+            else
+            {
+                this.rotateRight()
+            }
+
+        }
+
+        rotateLeft()
+        {
+            if(this.graphics.scale.x != -1)
+            {
+                this.graphics.scale.x = -1;
+                //this.graphics.body.position.x += this.graphics.width;
+            }
+        }
+
+        rotateRight()
+        {
+            if(this.graphics.scale.x != 1)
+            {
+                this.graphics.scale.x = 1;
+                //this.graphics.body.position.x -= this.graphics.width;
+            }
         }
 
         setCharacterAttackAction(attackAction:string)
@@ -257,16 +284,14 @@ module CharacterModule
                 //move right
                 //TODO - get tile height
                 newX = this.graphics.x + 40;
-                this.graphics.scale.x = -1;
-                this.graphics.body.position.x -= this.graphics.width;
+                this.rotateLeft();
             }
             else
             {
                 //move left
                 //TODO - get tile height
                 newX = this.graphics.x - 40;
-                this.graphics.scale.x = 1;
-                this.graphics.body.position.x += this.graphics.width;
+                this.rotateRight();
             }
 
             this.tweenObject.x = newX;

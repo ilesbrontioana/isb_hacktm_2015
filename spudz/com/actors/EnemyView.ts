@@ -22,6 +22,12 @@ module CharacterModule
             this.sendToServer();
         }
 
+        createCharacter(characterName:string, x:number, y:number, followCharacter:boolean)
+        {
+            super.createCharacter(characterName, x, y, followCharacter);
+            this.rotateLeft();
+        }
+
 
 
         setCharacterAttackAction(attackAction:string)
