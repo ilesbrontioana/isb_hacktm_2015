@@ -18,5 +18,7 @@ module CharacterModule
         static  ATTACK_ENEMY:string = "_character_attack_enemy";
 
         static  ATTACK_COMPLETE:string = "_character_attack_complete";
+
+        static  MOVE_WHEN_HIT:string = "_character_move_when_hit";
     }
 }

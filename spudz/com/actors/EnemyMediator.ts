@@ -53,6 +53,11 @@ module CharacterModule
             },this);
 
             this.addListenerToSignal("OpponentActionsComplete", function(){
+                if(this.moveVO.ability == CharacterModule.CharacterActionType.MELEE ||
+                    this.moveVO.ability == CharacterModule.CharacterActionType.RANGE)
+                {
+                    this.sendNotification(CharacterModule.CharacterNotifications.MOVE_WHEN_HIT);
+                }
                 if(this.moveVO.opponent_health < this.characterProxy.getLife())
                 {
                     console.log("enemy: hit player");

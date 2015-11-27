@@ -67,6 +67,7 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.TAKE_DAMAGE,
                 CharacterModule.CharacterNotifications.DRAIN_ENERGY,
                 CharacterModule.CharacterNotifications.ATTACK_COMPLETE,
+                CharacterModule.CharacterNotifications.MOVE_WHEN_HIT,
                 ConnectionModule.ConnectionSignals.YOUR_TURN,
                 RoundsModule.RoundsNotifications.FIGHT,
                 CharacterActionType.ATTACK];
@@ -105,6 +106,9 @@ module CharacterModule
                     break;
                 case RoundsModule.RoundsNotifications.FIGHT:
                     (this.viewComponent as CharacterView).updateEnemy(this.enemyProxy.getCharacter());
+                    break;
+                case CharacterModule.CharacterNotifications.MOVE_WHEN_HIT:
+                    (this.viewComponent as CharacterView).startMovingWhenHit();
                     break;
             }
         }

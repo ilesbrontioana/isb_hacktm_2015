@@ -89,53 +89,6 @@ module CharacterModule
 
         }
 
-        startMovingWhenHit()
-        {
-            var newX = 0;
-            if(this.enemyGraphics.x < this.graphics.x)
-            {
-                //move right
-                //TODO - get tile height
-                newX = this.graphics.x + 40;
-                this.graphics.scale.x = -1;
-                this.graphics.body.position.x -= this.graphics.width;
-            }
-            else
-            {
-                //move left
-                //TODO - get tile height
-                newX = this.graphics.x - 40;
-                this.graphics.scale.x = 1;
-                this.graphics.body.position.x += this.graphics.width;
-            }
-
-            this.tweenObject.x = newX;
-            this.tweenObject.y = this.graphics.y;
-
-            var distance = this.game.physics.arcade.distanceBetween(this.graphics, this.tweenObject);
-            var tweenDuration = distance/this.speed;
-
-            this.tweenObject.x = this.graphics.x;
-            this.tweenObject.y = this.graphics.y;
-
-            this.tween = this.game.add.tween(this.tweenObject).to(
-                {   x: newX,
-                }, tweenDuration * 2 * 1000, "Linear", true);
-
-            this.tween.onComplete.removeAll();
-            this.tween.onComplete.add( this.moveHitComplete ,this);
-
-            this.tween.start();
-
-            this.game.physics.arcade.moveToXY(this.graphics, newX, this.graphics.y, 350);
-        }
-
-        moveHitComplete()
-        {
-            this.graphics.body.velocity.x = 0;
-            this.graphics.body.velocity.y = 0;
-        }
-
         onDamageComplete()
         {
             this.graphics.events.onAnimationComplete.removeAll();
