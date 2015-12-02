@@ -17,8 +17,7 @@ module CharacterModule {
         listNotificationInterests():Array<string>{
             return [CharacterModule.CharacterNotifications.CHARACTER_POSITION,
                     GridModule.GridNotifications.GRID_CREATED,
-                    CharacterModule.CharacterActionType.ATTACK,
-                    RoundsModule.RoundsNotifications.FIGHT
+                    CharacterModule.CharacterActionType.ATTACK
                     ];
         }
 
@@ -33,8 +32,6 @@ module CharacterModule {
                 case CharacterModule.CharacterActionType.ATTACK:
                     (this.viewComponent as ActionRayView).removeActionRay();
                     break;
-                case RoundsModule.RoundsNotifications.FIGHT:
-                    (MvcModule.Mvc.getInstance().retrieveProxy(CharacterProxy.NAME) as CharacterProxy).setActionRay((this.viewComponent as ActionRayView).attackCircle)
             }
         }
     }

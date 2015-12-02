@@ -38,8 +38,7 @@ module CharacterModule
         initListeners()
         {
             this.addListenerToSignal("AttackOpponent", function(){
-                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_ENEMY,
-                        this.characterProxy.getActionRay());
+                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_ENEMY);
             },this);
 
             this.addListenerToSignal("SendMoveToServer", function(){
@@ -67,21 +66,20 @@ module CharacterModule
 
         }
 
-        inActionRay:boolean;
-
         enemyInActionRay()
         {
             var distance = GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.distanceBetween(
                 this.characterProxy.getCharacter(), this.enemyProxy.getCharacter());
-            if(distance > CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth)
+            if(distance >
+                CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
                 MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON);
             }
-            if(distance > CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth)
+            if(distance >
+                CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
                 MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON);
             }
-            this.inActionRay = true;
         }
 
         listNotificationInterests():Array<string>{
@@ -108,11 +106,7 @@ module CharacterModule
                     (this.viewComponent as CharacterView).startMoving(tile.x, tile.y, tile.width, tile.height)
                     break;
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
-                    console.log("player: hit me!");
-
                     (this.viewComponent as CharacterView).animateHit();
-                    MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,
-                        this.characterProxy.getLife());
                     break;
                 case CharacterModule.CharacterNotifications.DRAIN_ENERGY:
                         MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_ENERGY,
@@ -125,6 +119,7 @@ module CharacterModule
                     }
                     else
                     {
+                        this.characterProxy.setAbility(notification.body);
                         (this.viewComponent as CharacterView).setCharacterAttackAction(notification.body);
                     }
                     break;

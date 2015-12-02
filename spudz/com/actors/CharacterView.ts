@@ -389,7 +389,7 @@ module CharacterModule
         {
             this.graphics.events.onAnimationComplete.removeAll();
             this.attackComplete = true;
-            if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION ||
+            if(this.attackAction != CharacterModule.CharacterActionType.DEFENCE &&
                 this.attackAction != CharacterModule.CharacterActionType.SKIP)
             {
                 this.animateIdle();

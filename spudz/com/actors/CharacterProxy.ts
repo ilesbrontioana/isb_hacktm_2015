@@ -58,15 +58,5 @@ module CharacterModule
         {
             return this.VO.ability;
         }
-
-        setActionRay(actionRay:Phaser.Sprite)
-        {
-            this.VO.actionRay = actionRay;
-        }
-
-        getActionRay():Phaser.Sprite
-        {
-            return this.VO.actionRay;
-        }
     }
 }

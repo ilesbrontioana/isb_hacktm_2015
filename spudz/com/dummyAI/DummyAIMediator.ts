@@ -117,15 +117,15 @@ module DummyAIModule
         {
             var abilityNo = Math.random() * 4;
             var ability:string = "";
-            if(abilityNo < 1)
+            if(abilityNo < 1.25)
             {
                 ability = CharacterModule.CharacterActionType.DEFENCE;
             }
-            else if(abilityNo < 2)
+            else if(abilityNo < 2.5)
             {
                 ability = CharacterModule.CharacterActionType.MELEE;
             }
-            else if(abilityNo < 3)
+            else if(abilityNo < 3.75)
             {
                 ability = CharacterModule.CharacterActionType.RANGE;
             }
@@ -133,6 +133,7 @@ module DummyAIModule
             {
                 ability = CharacterModule.CharacterActionType.SKIP;
             }
+            console.log("dummy ai: ability: " + ability);
             return ability;
         }
 
@@ -166,28 +167,27 @@ module DummyAIModule
             if(this.characterProxy.getAbility() != CharacterModule.CharacterActionType.DEFENCE &&
                 (this.moveVO.ability == CharacterModule.CharacterActionType.MELEE ||
                     this.moveVO.ability == CharacterModule.CharacterActionType.RANGE)) {
-                this.characterInActionRay();
+                this.addDamageForOpponent();
+            }
+        }
+
+        addDamageForOpponent()
+        {
+            var distance = GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.distanceBetween(
+                this.characterProxy.getCharacter(), this.enemyProxy.getCharacter());
+            if(this.moveVO.ability == CharacterModule.CharacterActionType.MELEE &&
+                distance <= CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
+            {
+                this.moveVO.opponent_health = this.characterProxy.getLife() - 20;
+                console.log("dummy ai: damage 10");
+            }
+            else if(  this.moveVO.ability == CharacterModule.CharacterActionType.RANGE &&
+                distance <= CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
+            {
+                this.moveVO.opponent_health = this.characterProxy.getLife() - 10;
+                console.log("dummy ai: damage 5");
             }
 
-        }
-
-        characterInActionRay()
-        {
-            var actionRay:Phaser.Sprite = this.characterProxy.getActionRay();
-            actionRay.visible = true;
-            actionRay.x = this.moveVO.player_pos.x;
-            actionRay.y = this.moveVO.player_pos.y;
-
-            GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.overlap(
-                this.characterProxy.getCharacter(), actionRay, this.overlap, null, this);
-
-            actionRay.visible = false;
-        }
-
-        overlap()
-        {
-            this.moveVO.opponent_health = this.characterProxy.getLife() - 10;
-            console.log("dummy ai: damage 10");
         }
 
         getOtherSelections(selection:string):Array<string>

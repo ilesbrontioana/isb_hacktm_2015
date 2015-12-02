@@ -41,7 +41,7 @@ module CharacterModule
         {
             this.addListenerToSignal("CharacterDamage", function(damage:number){
                 this.enemyProxy.setLife(this.enemyProxy.getLife() - damage);
-                MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY, this.enemyProxy.getLife());
+                MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY, damage);
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_COMPLETE, damage);
             },this);
 
@@ -61,6 +61,8 @@ module CharacterModule
                 if(this.moveVO.opponent_health < this.characterProxy.getLife())
                 {
                     console.log("enemy: hit player");
+                    MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE,
+                        this.characterProxy.getLife() - this.moveVO.opponent_health);
                     this.updateCharacters();
                     this.sendNotification(CharacterNotifications.TAKE_DAMAGE);
                 }
@@ -99,7 +101,7 @@ module CharacterModule
                     (this.viewComponent as EnemyView).updateCharacter();
                     break;
                 case  CharacterModule.CharacterNotifications.ATTACK_ENEMY:
-                    (this.viewComponent as EnemyView).tryDamage(notification.body);
+                    (this.viewComponent as EnemyView).addDamage(this.characterProxy.getAbility());
                     break;
                 case ConnectionModule.ConnectionSignals.MOVE:
 

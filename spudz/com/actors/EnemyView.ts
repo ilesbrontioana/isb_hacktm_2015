@@ -72,27 +72,35 @@ module CharacterModule
             this.dispatchSignal("OpponentActionsComplete");
         }
 
-        tryDamage(circle:Phaser.Sprite)
+        addDamage(enemyAbility:string)
         {
             this.currentDamage = 0;
 
-            this.game.physics.arcade.overlap(this.graphics, circle, this.addDamage, null, this);
-            if(this.currentDamage == 0)
-            {
-                this.dispatchSignal("CharacterDamage", this.currentDamage);
-            }
-        }
-
-        addDamage()
-        {
             this.startMovingWhenHit();
             if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
             {
                 this.animateHit();
                 this.currentAction = CharacterModule.CharacterActionType.DAMAGE;
-                this.currentDamage = 10;
-            }
 
+                if(enemyAbility == CharacterModule.CharacterActionType.MELEE)
+                {
+                    this.currentDamage = 20;
+                }
+                else if(enemyAbility == CharacterModule.CharacterActionType.RANGE)
+                {
+                    this.currentDamage = 10;
+                }
+            }
+        }
+
+        moveHitComplete()
+        {
+            this.graphics.body.velocity.x = 0;
+            this.graphics.body.velocity.y = 0;
+            if(this.currentDamage == 0)
+            {
+                this.dispatchSignal("CharacterDamage", this.currentDamage);
+            }
         }
 
         onDamageComplete()
