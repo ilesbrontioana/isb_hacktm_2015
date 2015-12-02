@@ -41,6 +41,7 @@ module CharacterModule
         {
             this.addListenerToSignal("CharacterDamage", function(damage:number){
                 this.enemyProxy.setLife(this.enemyProxy.getLife() - damage);
+                MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY, this.enemyProxy.getLife());
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.ATTACK_COMPLETE, damage);
             },this);
 

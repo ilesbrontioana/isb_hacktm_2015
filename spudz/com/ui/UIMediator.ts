@@ -43,8 +43,10 @@ module UserInterfaceModule{
                     (this.viewComponent as UIView).disableRangeButton();
                     break;
                 case  UserInterfaceModule.UINotifications.UPDATE_LIFE:
+                    (this.viewComponent as UIView).updateLife(notification.body);
                     break;
                 case UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY:
+                    (this.viewComponent as UIView).updateEnemyLife(notification.body);
                     break;
                 case UserInterfaceModule.UINotifications.SHOW_MOVE_MENU:
                     (this.viewComponent as UIView).showMoveMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
