@@ -10,6 +10,7 @@ module CharacterModule
 
         static MELEE_RAY:number = 6;
         static RANGE_RAY:number = 12;
+        static MOVE_RAY:number = 6;
 
         tiles:Array<Array<GridModule.Tile>> = [];
 
@@ -17,9 +18,6 @@ module CharacterModule
         attackCircle:Phaser.Sprite;
 
         currentCircle:Phaser.Sprite;
-
-        moveCircleRadius:number = 6;
-        attackCircleRadius:number = 12;
 
         constructor()
         {
@@ -32,27 +30,26 @@ module CharacterModule
 
         createActionRays()
         {
-            var tilesSize = 40;
-            var moveCircleCenterX = this.moveCircleRadius * tilesSize;
-            var moveCircleCenterY = this.moveCircleRadius * tilesSize;
+            var moveCircleCenterX = ActionRayView.MOVE_RAY * GridModule.GridView.tileWidth;
+            var moveCircleCenterY = ActionRayView.MOVE_RAY * GridModule.GridView.tileWidth;
 
             var bmdMove = this.game.add.bitmapData(moveCircleCenterX * 2, moveCircleCenterY * 2);
             bmdMove.ctx.fillStyle = '#00FF00';
             bmdMove.ctx.beginPath();
-            bmdMove.ctx.arc(moveCircleCenterX, moveCircleCenterY, this.moveCircleRadius * tilesSize, 0, Math.PI*2, true);
+            bmdMove.ctx.arc(moveCircleCenterX, moveCircleCenterY, ActionRayView.MOVE_RAY * GridModule.GridView.tileWidth, 0, Math.PI*2, true);
             bmdMove.ctx.closePath();
             bmdMove.ctx.fill();
             this.game.cache.addBitmapData("GreenCircleBMP", bmdMove);
 
-            var attackCircleCenterX = this.attackCircleRadius * tilesSize;
-            var attackCircleCenterY = this.attackCircleRadius * tilesSize;
+            var attackCircleCenterX = ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth;
+            var attackCircleCenterY = ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth;
 
             var bmdAttack = this.game.add.bitmapData(
                                     attackCircleCenterX * 2,
                                     attackCircleCenterY * 2);
             bmdAttack.ctx.fillStyle = '#FF0000';
             bmdAttack.ctx.beginPath();
-            bmdAttack.ctx.arc(attackCircleCenterX, attackCircleCenterY, this.attackCircleRadius * tilesSize, 0, Math.PI*2, true);
+            bmdAttack.ctx.arc(attackCircleCenterX, attackCircleCenterY, ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth, 0, Math.PI*2, true);
             bmdAttack.ctx.closePath();
             bmdAttack.ctx.fill();
             this.game.cache.addBitmapData("RedCircleBMP", bmdAttack);

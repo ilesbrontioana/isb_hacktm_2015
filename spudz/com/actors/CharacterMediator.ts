@@ -59,6 +59,10 @@ module CharacterModule
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
                     this.enemyInActionRay();
                 }
+                else if(body.actionType == CharacterActionType.MOVE)
+                {
+                    //MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_MOVE_MENU);
+                }
             }, this);
 
         }
@@ -69,11 +73,11 @@ module CharacterModule
         {
             var distance = GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.distanceBetween(
                 this.characterProxy.getCharacter(), this.enemyProxy.getCharacter());
-            if(distance > CharacterModule.ActionRayView.MELEE_RAY * 40)
+            if(distance > CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth)
             {
                 MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON);
             }
-            if(distance > CharacterModule.ActionRayView.RANGE_RAY * 40)
+            if(distance > CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth)
             {
                 MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON);
             }

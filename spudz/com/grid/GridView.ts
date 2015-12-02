@@ -7,12 +7,17 @@ module GridModule
         static NAME:string = "GridView";
         tiles:Array<Array<GridModule.Tile>> = [];
 
+        static tileWidth:number = 40;
+        static tileHeight:number = 40;
+
         constructor (){
             super(GridView.NAME);
             this.buildGrid(0, 0, 50, 35, 40, 40);
         }
 
         buildGrid(x:number, y:number, gridH:number, gridV:number, tileW:number, tileH:number){
+            GridView.tileHeight = tileH;
+            GridView.tileWidth = tileW;
             var bmd = this.game.add.bitmapData(tileW, tileH);
             bmd.ctx.fillStyle = '#CCCCCC';
             bmd.ctx.beginPath();

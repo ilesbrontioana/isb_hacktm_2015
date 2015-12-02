@@ -197,7 +197,6 @@ module CharacterModule
         setCharacterAttackAction(attackAction:string)
         {
             this.attackAction = attackAction;
-            //TODO - set direction
             if(attackAction == CharacterActionType.MELEE)
             {
                 this.animateMelee();
@@ -283,15 +282,13 @@ module CharacterModule
             if(this.enemyGraphics.x < this.graphics.x)
             {
                 //move right
-                //TODO - get tile height
-                newX = this.graphics.x + 40;
+                newX = this.graphics.x + GridModule.GridView.tileWidth;
                 this.rotateLeft();
             }
             else
             {
                 //move left
-                //TODO - get tile height
-                newX = this.graphics.x - 40;
+                newX = this.graphics.x - GridModule.GridView.tileWidth;
                 this.rotateRight();
             }
 

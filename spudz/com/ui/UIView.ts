@@ -73,6 +73,7 @@ module UserInterfaceModule{
         createActionsMenu(){
             this.actionsGroup = new Phaser.Group(this.game);
             this.actionsMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
+            this.actionsMenuButton.anchor.set(.5, .5);
             this.moveMenuButton = new Phaser.Sprite(this.game, 100, 100, "ui", "button.png");
 
             this.btnDefence = this.game.add.sprite(10,20,'btnDefence');
@@ -80,9 +81,13 @@ module UserInterfaceModule{
             this.btnRange = this.game.add.sprite(110,20,'btnRange');
             this.btnSkip = this.game.add.sprite(160,20,'btnSkip');
 
+            this.btnDefence.anchor.set(.5,.5);
             this.btnDefence.scale.set(.5,.5);
+            this.btnMelee.anchor.set(.5,.5);
             this.btnMelee.scale.set(.5,.5);
+            this.btnRange.anchor.set(.5,.5);
             this.btnRange.scale.set(.5,.5);
+            this.btnSkip.anchor.set(.5,.5);
             this.btnSkip.scale.set(.5,.5);
 
             //this.actionsGroup.fixedToCamera = true;
@@ -134,6 +139,11 @@ module UserInterfaceModule{
 
         hideAll()
         {
+            this.actionsMenuButton.visible = true;
+            this.btnDefence.visible = true;
+            this.btnMelee.visible = true;
+            this.btnRange.visible = true;
+
             this.btnMelee.alpha = 1;
             this.btnRange.alpha = 1;
             this.btnMelee.inputEnabled = true;
@@ -176,17 +186,17 @@ module UserInterfaceModule{
             this.actionsMenuButton.x = target.x;
             this.actionsMenuButton.y = target.y - 140;
 
-            this.btnDefence.x = this.actionsMenuButton.x - 50  - 110;
-            this.btnDefence.y = this.actionsMenuButton.y - 35;
+            this.btnDefence.x = this.actionsMenuButton.x  - 120;
+            this.btnDefence.y = this.actionsMenuButton.y;
 
-            this.btnMelee.x = this.actionsMenuButton.x - 30 + 110;
-            this.btnMelee.y = this.actionsMenuButton.y - 30;
+            this.btnMelee.x = this.actionsMenuButton.x + 120;
+            this.btnMelee.y = this.actionsMenuButton.y;
 
-            this.btnRange.x = this.actionsMenuButton.x - 40;
-            this.btnRange.y = this.actionsMenuButton.y - 30 - 110;
+            this.btnRange.x = this.actionsMenuButton.x;
+            this.btnRange.y = this.actionsMenuButton.y - 110;
 
-            this.btnSkip.x = this.actionsMenuButton.x -30  - 260;
-            this.btnSkip.y = this.actionsMenuButton.y - 30;
+            this.btnSkip.x = this.actionsMenuButton.x - 240;
+            this.btnSkip.y = this.actionsMenuButton.y;
 
             this.actionsMenuButton.inputEnabled = true;
         }
@@ -205,8 +215,20 @@ module UserInterfaceModule{
             this.actionsGroup.visible = false;
         }
 
-        showMoveMenu(){
+        showMoveMenu(target:Phaser.Sprite){
+            this.currentTarget = target;
 
+            this.actionsGroup.visible = true;
+
+            this.btnSkip.x = target.x;
+            this.btnSkip.y = target.y - CharacterModule.ActionRayView.MOVE_RAY * GridModule.GridView.tileWidth - 50;
+
+            this.actionsMenuButton.visible = false;
+            this.btnDefence.visible = false;
+            this.btnMelee.visible = false;
+            this.btnRange.visible = false;
+
+            this.actionsMenuButton.inputEnabled = true;
         }
 
         hideMoveMenu(){

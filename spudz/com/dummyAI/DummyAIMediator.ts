@@ -144,15 +144,15 @@ module DummyAIModule
 
             if(randomX < 6)
             {
-                xOffset = - 40 * randomX;
+                xOffset = - GridModule.GridView.tileWidth * randomX;
             }
             else
             {
-                xOffset = 40 * (randomX % 6);
+                xOffset = GridModule.GridView.tileWidth * (randomX % 6);
             }
 
             var randomY = Math.floor(Math.random() * 6);
-            yOffset = - 40 * randomY;
+            yOffset = - GridModule.GridView.tileWidth * randomY;
 
             var newEnemyPosition:Phaser.Point = new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
                 this.enemyProxy.getCharacter().position.y + yOffset);

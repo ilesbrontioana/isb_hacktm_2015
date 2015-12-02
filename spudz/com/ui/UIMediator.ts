@@ -47,6 +47,7 @@ module UserInterfaceModule{
                 case UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY:
                     break;
                 case UserInterfaceModule.UINotifications.SHOW_MOVE_MENU:
+                    (this.viewComponent as UIView).showMoveMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
                     break;
                 case UserInterfaceModule.UINotifications.HIDE_MOVE_MENU:
                     break;
