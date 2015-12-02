@@ -46,10 +46,20 @@ module CharacterModule
             },this);
 
             this.addListenerToSignal("EnemyLandComplete", function(damage:number){
-                (this.viewComponent as EnemyView).startMoving(this.moveVO.destination.x, this.moveVO.destination.y,
-                    GridModule.GridView.tileWidth, GridModule.GridView.tileWidth);
 
-                (this.viewComponent as EnemyView).setCharacterAttackAction(this.moveVO.ability);
+                if(this.moveVO.destination.x == this.moveVO.player_pos.x &&
+                    this.moveVO.destination.y == this.moveVO.player_pos.y)
+                {
+                    (this.viewComponent as EnemyView).setCharacterAttackAction(this.moveVO.ability);
+                    (this.viewComponent as EnemyView).skipMove();
+                }
+                else
+                {
+                    (this.viewComponent as EnemyView).startMoving(this.moveVO.destination.x, this.moveVO.destination.y,
+                        GridModule.GridView.tileWidth, GridModule.GridView.tileWidth);
+                    (this.viewComponent as EnemyView).setCharacterAttackAction(this.moveVO.ability);
+                }
+
             },this);
 
             this.addListenerToSignal("OpponentActionsComplete", function(){

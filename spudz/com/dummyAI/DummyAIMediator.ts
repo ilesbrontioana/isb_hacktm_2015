@@ -3,7 +3,6 @@
  */
 module DummyAIModule
 {
-    import P2 = Phaser.Physics.P2;
     export class DummyAIMediator extends MvcModule.Mediator
     {
         static NAME:string = "DummyAIMediator";
@@ -100,8 +99,8 @@ module DummyAIModule
 
             var newEnemyPosition = this.getNewEnemyPosition();
 
+            this.moveVO.player_pos = new Phaser.Point(this.enemyProxy.getCharacter().x, this.enemyProxy.getCharacter().y);
             this.moveVO.destination = newEnemyPosition;
-            this.moveVO.player_pos = newEnemyPosition;
 
             this.moveVO.player_energy = this.enemyProxy.getEnergy() - 10;
             this.moveVO.player_health = this.enemyProxy.getLife();
@@ -141,24 +140,35 @@ module DummyAIModule
         {
             var xOffset:number;
             var yOffset:number;
-            var randomX = Math.floor(Math.random() * 12);
 
-            if(randomX < 6)
+            var randomMove:number = Math.random();
+
+            if(randomMove < 0.5)
             {
-                xOffset = - GridModule.GridView.tileWidth * randomX;
+                console.log("dummy ai: skip move");
+                xOffset = 0;
+                yOffset = 0;
             }
             else
             {
-                xOffset = GridModule.GridView.tileWidth * (randomX % 6);
+                console.log("dummy ai: move somewhere");
+                var randomX = Math.floor(Math.random() * 12);
+
+                if(randomX < 6)
+                {
+                    xOffset = - GridModule.GridView.tileWidth * randomX;
+                }
+                else
+                {
+                    xOffset = GridModule.GridView.tileWidth * (randomX % 6);
+                }
+
+                var randomY = Math.floor(Math.random() * 6);
+                yOffset = - GridModule.GridView.tileWidth * randomY;
             }
 
-            var randomY = Math.floor(Math.random() * 6);
-            yOffset = - GridModule.GridView.tileWidth * randomY;
-
-            var newEnemyPosition:Phaser.Point = new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
+            return new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
                 this.enemyProxy.getCharacter().position.y + yOffset);
-
-            return newEnemyPosition;
         }
 
         getLife()
@@ -179,13 +189,11 @@ module DummyAIModule
                 distance <= CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
                 this.moveVO.opponent_health = this.characterProxy.getLife() - 20;
-                console.log("dummy ai: damage 10");
             }
             else if(  this.moveVO.ability == CharacterModule.CharacterActionType.RANGE &&
                 distance <= CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
                 this.moveVO.opponent_health = this.characterProxy.getLife() - 10;
-                console.log("dummy ai: damage 5");
             }
 
         }

@@ -70,13 +70,11 @@ module CharacterModule
         {
             var distance = GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.distanceBetween(
                 this.characterProxy.getCharacter(), this.enemyProxy.getCharacter());
-            if(distance >
-                CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
+            if(distance > CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
                 MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON);
             }
-            if(distance >
-                CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
+            if(distance > CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
                 MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON);
             }
@@ -102,7 +100,6 @@ module CharacterModule
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
                     var tile:Phaser.Sprite = notification.body as Phaser.Sprite;
                     (this.moveVO.destination = new Phaser.Point(tile.x, tile.y));
-                    (this.moveVO.player_pos = new Phaser.Point(tile.x, tile.y));
                     (this.viewComponent as CharacterView).startMoving(tile.x, tile.y, tile.width, tile.height)
                     break;
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
@@ -115,6 +112,10 @@ module CharacterModule
                 case CharacterActionType.ATTACK:
                     if((this.viewComponent as CharacterView).currentAction == CharacterModule.CharacterActionType.MOVE)
                     {
+                        this.moveVO.destination = new Phaser.Point(
+                            (this.viewComponent as CharacterView).graphics.x,
+                            (this.viewComponent as CharacterView).graphics.y
+                                                                    );
                         (this.viewComponent as CharacterView).skipMove();
                     }
                     else
@@ -124,6 +125,10 @@ module CharacterModule
                     }
                     break;
                 case ConnectionModule.ConnectionSignals.YOUR_TURN:
+                    this.moveVO.player_pos = new Phaser.Point(
+                                                                (this.viewComponent as CharacterView).graphics.x,
+                                                                (this.viewComponent as CharacterView).graphics.y
+                                                             );
                     (this.viewComponent as CharacterView).characterTurn();
                     break;
                 case CharacterModule.CharacterNotifications.ATTACK_COMPLETE:
