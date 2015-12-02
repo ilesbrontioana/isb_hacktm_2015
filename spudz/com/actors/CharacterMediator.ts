@@ -100,7 +100,8 @@ module CharacterModule
                 case CharacterModule.CharacterNotifications.GRID_TOUCHED:
                     var tile:Phaser.Sprite = notification.body as Phaser.Sprite;
                     (this.moveVO.destination = new Phaser.Point(tile.x, tile.y));
-                    (this.viewComponent as CharacterView).startMoving(tile.x, tile.y, tile.width, tile.height)
+                    (this.viewComponent as CharacterView).startMoving(tile.x, tile.y, tile.width, tile.height);
+                    this.sendNotification(UserInterfaceModule.UINotifications.HIDE_MOVE_MENU);
                     break;
                 case CharacterModule.CharacterNotifications.TAKE_DAMAGE:
                     (this.viewComponent as CharacterView).animateHit();

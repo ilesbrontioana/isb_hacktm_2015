@@ -52,6 +52,7 @@ module UserInterfaceModule{
                     (this.viewComponent as UIView).showMoveMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
                     break;
                 case UserInterfaceModule.UINotifications.HIDE_MOVE_MENU:
+                    (this.viewComponent as UIView).hideMoveMenu();
                     break;
             }
         }
