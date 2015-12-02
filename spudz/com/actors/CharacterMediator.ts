@@ -61,7 +61,7 @@ module CharacterModule
                 }
                 else if(body.actionType == CharacterActionType.MOVE)
                 {
-                    //MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_MOVE_MENU);
+                    MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_MOVE_MENU);
                 }
             }, this);
 
@@ -119,7 +119,14 @@ module CharacterModule
                         this.characterProxy.getEnergy());
                     break;
                 case CharacterActionType.ATTACK:
-                    (this.viewComponent as CharacterView).setCharacterAttackAction(notification.body);
+                    if((this.viewComponent as CharacterView).currentAction == CharacterModule.CharacterActionType.MOVE)
+                    {
+                        (this.viewComponent as CharacterView).skipMove();
+                    }
+                    else
+                    {
+                        (this.viewComponent as CharacterView).setCharacterAttackAction(notification.body);
+                    }
                     break;
                 case ConnectionModule.ConnectionSignals.YOUR_TURN:
                     (this.viewComponent as CharacterView).characterTurn();

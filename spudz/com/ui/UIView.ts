@@ -132,9 +132,9 @@ module UserInterfaceModule{
         }
 
         defenceButtonTouched(){
+            this.hideAll();
             this.currentAction = CharacterModule.CharacterActionType.DEFENCE;
             this.dispatchSignal("sendAction", this.currentAction);
-            this.hideAll();
         }
 
         hideAll()
@@ -153,21 +153,21 @@ module UserInterfaceModule{
 
 
         meleeButtonTouched(){
+            this.hideAll();
             this.currentAction = CharacterModule.CharacterActionType.MELEE;
             this.dispatchSignal("sendAction", this.currentAction);
-            this.hideAll();
         }
 
         rangeButtonTouched(){
+            this.hideAll();
             this.currentAction = CharacterModule.CharacterActionType.RANGE;
             this.dispatchSignal("sendAction", this.currentAction);
-            this.hideAll();
         }
 
         skipButtonTouched(){
+            this.hideAll();
             this.currentAction = CharacterModule.CharacterActionType.SKIP;
             this.dispatchSignal("sendAction", this.currentAction);
-            this.hideAll();
         }
 
         updateLife(amount:number){
@@ -179,6 +179,9 @@ module UserInterfaceModule{
         }
 
         showActionsMenu(target:Phaser.Sprite){
+
+            this.hideMoveMenu();
+
             this.currentTarget = target;
 
             this.actionsGroup.visible = true;
@@ -212,7 +215,7 @@ module UserInterfaceModule{
         }
 
         hideActionsMenu(){
-            this.actionsGroup.visible = false;
+            this.hideAll();
         }
 
         showMoveMenu(target:Phaser.Sprite){
@@ -232,7 +235,7 @@ module UserInterfaceModule{
         }
 
         hideMoveMenu(){
-
+            this.hideAll();
         }
 
         updatePlayerNames(){

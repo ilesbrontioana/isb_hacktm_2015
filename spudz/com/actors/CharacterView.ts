@@ -216,6 +216,11 @@ module CharacterModule
             }
         }
 
+        skipMove()
+        {
+            this.moveComplete();
+        }
+
         waitToMove:boolean;
 
         characterTurn()
