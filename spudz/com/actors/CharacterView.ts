@@ -261,13 +261,13 @@ module CharacterModule
                     SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["land"]);
                 }
             }
-            //else
-            //{
-            //    if(this.currentAnimation == CharacterModule.CharacterAnimations.RUN_ANIMATION)
-            //    {
-            //        this.animateJump();
-            //    }
-            //}
+            else
+            {
+                if(this.currentAnimation == CharacterModule.CharacterAnimations.RUN_ANIMATION)
+                {
+                    this.animateJump();
+                }
+            }
 
             if(this.currentAction == CharacterModule.CharacterActionType.MOVE &&
                 this.currentAnimation != CharacterModule.CharacterAnimations.IDLE_ANIMATION)
