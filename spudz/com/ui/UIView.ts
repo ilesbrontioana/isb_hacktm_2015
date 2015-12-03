@@ -238,6 +238,10 @@ module UserInterfaceModule{
             this.hideAll();
         }
 
+        updateEnergy(amount:number){
+            console.log("update energy: "+amount);
+        }
+
         updatePlayerNames(){
             this.textsGroup = new Phaser.Group(this.game);
             var currentPlayerNameText = this.game.add.bitmapText(10, 5, 'font','Gheorghe',30);
@@ -249,6 +253,12 @@ module UserInterfaceModule{
             this.textsGroup.add(opponentPlayerNameText);
 
             this.textsGroup.fixedToCamera = true;
+        }
+
+        drainEnergy(){
+            if(this.cellsGroup.length>0) {
+                this.cellsGroup.removeChildAt(this.cellsGroup.length - 1)
+            }
         }
     }
 }
