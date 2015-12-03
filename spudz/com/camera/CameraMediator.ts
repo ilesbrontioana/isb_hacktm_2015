@@ -47,9 +47,6 @@ module CameraModule
                 case CharacterModule.CharacterNotifications.UPDATE_CHARACTER:
                     (this.viewComponent as CameraView).updateCamera();
                     break;
-                case CameraNotifications.ZOOM_CAMERA:
-                    (this.viewComponent as CameraView).zoom(notification.body);
-                    break;
             }
         }
     }

@@ -25,7 +25,7 @@ module UserInterfaceModule{
                 UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON,
                 UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON,
                 UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY,
-                UserInterfaceModule.UINotifications.UPDATE_ENERGY
+                UserInterfaceModule.UINotifications.UPDATE_ENERGY,
                 CharacterModule.CharacterNotifications.GRID_TOUCHED];
         }
 
