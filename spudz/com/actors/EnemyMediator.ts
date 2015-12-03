@@ -65,6 +65,7 @@ module CharacterModule
             },this);
 
             this.addListenerToSignal("OpponentActionsComplete", function(){
+                this.enemyProxy.setCharacter((this.viewComponent as EnemyView).graphics);
                 if(this.moveVO.ability == CharacterModule.CharacterActionType.MELEE ||
                     this.moveVO.ability == CharacterModule.CharacterActionType.RANGE)
                 {

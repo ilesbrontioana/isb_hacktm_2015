@@ -59,6 +59,7 @@ module CharacterModule
                 MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
                 if(body.actionType == CharacterActionType.ATTACK)
                 {
+                    this.characterProxy.setCharacter((this.viewComponent as CharacterView).graphics);
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
                     this.enemyInActionRay();
                 }

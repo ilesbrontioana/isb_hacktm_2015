@@ -50,20 +50,31 @@ module CameraModule
         moveCamera(initialX:number, initialY: number, x:number, y:number)
         {
 
+            var distance:number;
+
             if(this.followCharacter)
             {
                 this.tweenObject.x = initialX;
                 this.tweenObject.y = initialY;
             }
 
+            var point:Phaser.Point = new Phaser.Point(x, y);
+            var initialPoint:Phaser.Point = new Phaser.Point(this.tweenObject.x, this.tweenObject.y);
+
+            distance = point.distance(initialPoint, true);
+
+            var tweenDuration = distance;
+
             this.game.camera.follow(this.tweenObject);
             this.tween = this.game.add.tween(this.tweenObject).to(
                 {   x: x,
                     y: y
-                }, 200, "Linear", true);
+                }, tweenDuration, "Linear", true);
 
             this.tween.onComplete.removeAll();
             this.tween.onComplete.add( this.moveComplete ,this);
+
+            this.tween.start();
         }
 
         zoom(percent)
@@ -94,6 +105,8 @@ module CameraModule
 
         moveComplete()
         {
+            this.tween.stop();
+            this.game.tweens.remove(this.tween);
             this.dispatchSignal("CameraMoveComplete");
         }
 

@@ -149,6 +149,11 @@ module CharacterModule
 
         moveComplete()
         {
+            if(this.tween)
+            {
+                this.tween.stop();
+                this.game.tweens.remove(this.tween);
+            }
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
             this.graphics.body.gravity.y = 0;
@@ -314,6 +319,11 @@ module CharacterModule
 
         moveHitComplete()
         {
+            if(this.tween)
+            {
+                this.tween.stop();
+                this.game.tweens.remove(this.tween);
+            }
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
         }
