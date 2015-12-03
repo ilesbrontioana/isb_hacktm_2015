@@ -12,11 +12,13 @@ module CharacterModule
 
         onAttackComplete()
         {
+            console.log(this.characterName + " enemy attack complete");
             this.graphics.events.onAnimationComplete.removeAll();
             this.attackComplete = true;
             if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
             {
                 this.animateIdle();
+                console.log(this.characterName + " idle enemy attack complete");
             }
 
             this.sendToServer();
@@ -27,8 +29,6 @@ module CharacterModule
             super.createCharacter(characterName, x, y, followCharacter);
             this.rotateLeft();
         }
-
-
 
         setCharacterAttackAction(attackAction:string)
         {
@@ -74,7 +74,10 @@ module CharacterModule
 
         addDamage(enemyAbility:string)
         {
+            console.log(this.characterName + " enemy take damage");
             this.currentDamage = 0;
+            this.damageAnimationComplete = false;
+            this.moveHitIsComplete = false;
 
             this.startMovingWhenHit();
             if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
@@ -91,25 +94,42 @@ module CharacterModule
                     this.currentDamage = 10;
                 }
             }
+            if(this.currentDamage == 0)
+            {
+                this.damageAnimationComplete = true;
+            }
         }
+
+        moveHitIsComplete:boolean;
 
         moveHitComplete()
         {
             this.graphics.body.velocity.x = 0;
             this.graphics.body.velocity.y = 0;
-            if(this.currentDamage == 0)
+            this.moveHitIsComplete = true;
+            this.allDamageAnimationsComplete();
+        }
+
+        allDamageAnimationsComplete()
+        {
+            if(this.moveHitIsComplete && this.damageAnimationComplete)
             {
                 this.dispatchSignal("CharacterDamage", this.currentDamage);
             }
         }
 
+        damageAnimationComplete:boolean;
+
         onDamageComplete()
         {
+            console.log(this.characterName + " damage complete");
             this.graphics.events.onAnimationComplete.removeAll();
             if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
             {
-                this.dispatchSignal("CharacterDamage", this.currentDamage);
+                this.damageAnimationComplete = true;
                 this.animateIdle();
+                this.allDamageAnimationsComplete();
+                console.log(this.characterName + " idle enemy damage complete");
             }
         }
 

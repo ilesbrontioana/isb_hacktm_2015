@@ -14,7 +14,6 @@ module CharacterModule
         tween:Phaser.Tween;
         tweenObject:Phaser.Sprite;
 
-        moving:boolean = false;
         attackComplete:boolean = false;
 
         currentAction:string = CharacterModule.CharacterActionType.MOVE;
@@ -149,8 +148,6 @@ module CharacterModule
 
             this.tween.start();
 
-            this.moving = true;
-
             this.game.physics.arcade.moveToXY(this.graphics, x, y, 700);
 
         }
@@ -162,7 +159,7 @@ module CharacterModule
             this.graphics.body.gravity.y = 0;
             this.setCurrentAction(CharacterModule.CharacterActionType.ATTACK);
             this.animateIdle();
-            this.moving = false;
+            console.log(this.characterName + " idle move complete");
 
             if(this.enemyGraphics.x < this.graphics.x)
             {
@@ -212,6 +209,7 @@ module CharacterModule
             else if(attackAction == CharacterActionType.SKIP) {
 
                 this.animateIdle();
+                console.log(this.characterName + " idle skip action");
                 this.onAttackComplete();
             }
         }
@@ -277,6 +275,7 @@ module CharacterModule
                 if(this.graphics.body.velocity.x == 0 && this.graphics.body.velocity.y == 0)
                 {
                     this.animateIdle();
+                    console.log(this.characterName + " idle staying");
                 }
             }
         }
@@ -350,6 +349,7 @@ module CharacterModule
             SoundsModule.SoundsManager.getInstance().playSound(CharacterModule.CharacterAnimationsSounds.sounds[this.characterName]["block"]);
             this.graphics.play(CharacterModule.CharacterAnimations.BLOCK_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.BLOCK_ANIMATION;
+            console.log(this.characterName + " add block");
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
@@ -358,6 +358,7 @@ module CharacterModule
 
             this.graphics.play(CharacterModule.CharacterAnimations.MELEE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.MELEE_ANIMATION;
+            console.log(this.characterName + " add melee");
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
@@ -366,6 +367,7 @@ module CharacterModule
 
             this.graphics.play(CharacterModule.CharacterAnimations.RANGE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.RANGE_ANIMATION;
+            console.log(this.characterName + " add range");
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
@@ -374,6 +376,7 @@ module CharacterModule
 
             this.graphics.play(CharacterModule.CharacterAnimations.ULTIMATE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.ULTIMATE_ANIMATION;
+            console.log(this.characterName + " add ultimate");
             this.graphics.events.onAnimationComplete.add(this.onAttackComplete, this);
         }
 
@@ -382,17 +385,20 @@ module CharacterModule
 
             this.graphics.play(CharacterModule.CharacterAnimations.DAMAGE_ANIMATION, 30, false);
             this.currentAnimation = CharacterModule.CharacterAnimations.DAMAGE_ANIMATION;
+            console.log(this.characterName + " add damage");
             this.graphics.events.onAnimationComplete.add(this.onDamageComplete, this);
         }
 
         onAttackComplete()
         {
+            console.log(this.characterName + " attack complete");
             this.graphics.events.onAnimationComplete.removeAll();
             this.attackComplete = true;
             if(this.attackAction != CharacterModule.CharacterActionType.DEFENCE &&
                 this.attackAction != CharacterModule.CharacterActionType.SKIP)
             {
                 this.animateIdle();
+                console.log(this.characterName + " idle attack complete");
                 this.dispatchSignal("AttackOpponent");
             }
             else if(this.currentAction != CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
@@ -403,11 +409,13 @@ module CharacterModule
 
         onDamageComplete()
         {
+            console.log(this.characterName + " damage complete");
             this.graphics.events.onAnimationComplete.removeAll();
             if(this.currentAnimation == CharacterModule.CharacterAnimations.DAMAGE_ANIMATION)
             {
                 this.dispatchSignal("CharacterDamageComplete", this.currentDamage);
                 this.animateIdle();
+                console.log(this.characterName + " idle damage complete");
             }
         }
 

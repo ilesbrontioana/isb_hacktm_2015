@@ -143,7 +143,7 @@ module DummyAIModule
 
             var randomMove:number = Math.random();
 
-            if(randomMove < 0.5)
+            if(randomMove < 0.15)
             {
                 console.log("dummy ai: skip move");
                 xOffset = 0;
