@@ -24,7 +24,9 @@ module UserInterfaceModule{
                 UserInterfaceModule.UINotifications.HIDE_MOVE_MENU,
                 UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON,
                 UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON,
-                UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY];
+                UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY,
+                UserInterfaceModule.UINotifications.UPDATE_ENERGY
+                CharacterModule.CharacterNotifications.GRID_TOUCHED];
         }
 
         handleNotification(notification:MvcModule.INotification){
@@ -51,14 +53,22 @@ module UserInterfaceModule{
                 case UserInterfaceModule.UINotifications.SHOW_MOVE_MENU:
                     (this.viewComponent as UIView).showMoveMenu(MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME).VO.character);
                     break;
+                case UserInterfaceModule.UINotifications.UPDATE_ENERGY:
+                    (this.viewComponent as UIView).updateEnergy(notification.body);
+                    break;
                 case UserInterfaceModule.UINotifications.HIDE_MOVE_MENU:
                     (this.viewComponent as UIView).hideMoveMenu();
+                    break;
+                case CharacterModule.CharacterNotifications.GRID_TOUCHED:
+                    (this.viewComponent as UIView).drainEnergy();
                     break;
             }
         }
 
         doPlayerAction(actionType:string){
             MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterActionType.ATTACK, actionType);
+            if(actionType!=CharacterModule.CharacterActionType.SKIP)
+                (this.viewComponent as UIView).drainEnergy();
         }
     }
 }
