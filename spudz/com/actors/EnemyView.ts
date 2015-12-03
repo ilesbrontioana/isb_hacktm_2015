@@ -24,9 +24,9 @@ module CharacterModule
             this.sendToServer();
         }
 
-        createCharacter(characterName:string, x:number, y:number, followCharacter:boolean)
+        createCharacter(characterName:string, x:number, y:number)
         {
-            super.createCharacter(characterName, x, y, followCharacter);
+            super.createCharacter(characterName, x, y);
             this.rotateLeft();
         }
 
