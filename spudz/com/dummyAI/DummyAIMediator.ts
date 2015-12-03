@@ -70,16 +70,16 @@ module DummyAIModule
                     this.characterProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterModule.CharacterProxy);
                     this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
 
-                    //var turn:number = Math.random() * 2;
-                    //if(turn < 1)
-                    //{
-                    //    this.opponentMove();
-                    //}
-                    //else
-                    //{
+                    var turn:number = Math.random();
+                    if(turn < 0.5)
+                    {
+                        this.opponentMove();
+                    }
+                    else
+                    {
                         console.log("dummy ai : your turn");
                         MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.YOUR_TURN);
-                    //}
+                    }
 
                     break;
 
