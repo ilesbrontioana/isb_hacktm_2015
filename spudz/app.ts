@@ -71,6 +71,10 @@
 /// <reference path="com/dummyAI/DummyAIView.ts" />
 /// <reference path="com/dummyAI/DummyAIMediator.ts" />
 
+/// <reference path="com/camera/CameraMediator.ts" />
+/// <reference path="com/camera/CameraView.ts" />
+/// <reference path="com/camera/CameraNotifications.ts" />
+
 class SimpleGame extends MvcModule.MVCBoiler{
     game: Phaser.Game;
     map:MapModule.Map;

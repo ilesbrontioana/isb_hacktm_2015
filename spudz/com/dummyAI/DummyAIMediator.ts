@@ -88,8 +88,8 @@ module DummyAIModule
 
         opponentMove()
         {
-                console.log("dummy ai : opponent attack");
-                MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getAttackAction());
+            console.log("dummy ai : opponent attack");
+            MvcModule.Mvc.getInstance().sendNotification(ConnectionModule.ConnectionSignals.MOVE, this.getAttackAction());
         }
 
         getAttackAction():ConnectionModule.MoveVO{

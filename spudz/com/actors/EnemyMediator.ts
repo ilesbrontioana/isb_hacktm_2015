@@ -12,6 +12,8 @@ module CharacterModule
 
         moveVO:ConnectionModule.MoveVO;
 
+        enemyTurn:boolean;
+
         constructor(viewComponent:MvcModule.View){
 
             super(EnemyMediator.NAME, viewComponent);
@@ -28,7 +30,7 @@ module CharacterModule
 
             var x = 1160;
             var y = 1255;
-            (this.viewComponent as CharacterView).createCharacter(this.enemyProxy.getCharacterName(), x, y, false);
+            (this.viewComponent as CharacterView).createCharacter(this.enemyProxy.getCharacterName(), x, y);
 
             this.enemyProxy.setCharacter((this.viewComponent as EnemyView).graphics);
 
@@ -101,7 +103,8 @@ module CharacterModule
             return [CharacterModule.CharacterNotifications.UPDATE_CHARACTER,
                 CharacterModule.CharacterNotifications.ATTACK_ENEMY,
                 ConnectionModule.ConnectionSignals.MOVE,
-                RoundsModule.RoundsNotifications.FIGHT
+                RoundsModule.RoundsNotifications.FIGHT,
+                CameraModule.CameraNotifications.CAMERA_MOVE_COMPLETE
             ];
         }
 
@@ -115,13 +118,30 @@ module CharacterModule
                     break;
                 case ConnectionModule.ConnectionSignals.MOVE:
 
+                    this.sendNotification(CameraModule.CameraNotifications.MOVE_CAMERA,
+                                {   initialX: this.characterProxy.getCharacter().x,
+                                    initialY: this.characterProxy.getCharacter().y,
+                                    x: this.enemyProxy.getCharacter().x,
+                                    y:this.characterProxy.getCharacter().y
+                                });
+
                     this.moveVO = notification.body;
 
-                    (this.viewComponent as EnemyView).characterTurn();
+                    this.enemyTurn = true;
 
                     break;
                 case RoundsModule.RoundsNotifications.FIGHT:
                     (this.viewComponent as EnemyView).updateEnemy(this.characterProxy.getCharacter());
+                    break;
+                case CameraModule.CameraNotifications.CAMERA_MOVE_COMPLETE:
+                    if(this.enemyTurn)
+                    {
+                        this.enemyTurn = false;
+                        (this.viewComponent as EnemyView).characterTurn();
+
+                        this.sendNotification(CameraModule.CameraNotifications.SET_CAMERA_FOLLOWER,
+                            this.enemyProxy.getCharacter());
+                    }
                     break;
             }
         }

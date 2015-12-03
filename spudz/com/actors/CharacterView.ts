@@ -45,7 +45,7 @@ module CharacterModule
             this.tweenObject.alpha = 0;
         }
 
-        createCharacter(characterName:string, x:number, y:number, followCharacter:boolean)
+        createCharacter(characterName:string, x:number, y:number)
         {
             this.characterName = characterName;
 
@@ -83,11 +83,6 @@ module CharacterModule
 
             //TODO - set correct size for each character
             this.graphics.body.setSize(this.graphics.width/2, this.graphics.height, this.graphics.width/4, 0);
-
-            if(followCharacter == true)
-            {
-                this.game.camera.follow(this.graphics);
-            }
 
             if(!this.graphics.body.onFloor())
             {

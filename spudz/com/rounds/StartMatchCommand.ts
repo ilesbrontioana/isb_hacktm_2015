@@ -24,6 +24,8 @@ module RoundsModule
             MvcModule.Mvc.getInstance().registerMediator(CharacterModule.ActionRayMediator.NAME, new CharacterModule.ActionRayMediator(new CharacterModule.ActionRayView()));
             MvcModule.Mvc.getInstance().registerMediator(GridModule.GridMediator.NAME, new GridModule.GridMediator(new GridModule.GridView()));
 
+            MvcModule.Mvc.getInstance().registerMediator(CameraModule.CameraMediator.NAME, new CameraModule.CameraMediator(new CameraModule.CameraView()));
+
             MvcModule.Mvc.getInstance().registerProxy(CharacterModule.CharacterProxy.NAME, new CharacterModule.CharacterProxy());
             MvcModule.Mvc.getInstance().registerProxy(CharacterModule.EnemyProxy.NAME, new CharacterModule.EnemyProxy());
 

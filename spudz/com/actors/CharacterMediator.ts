@@ -11,6 +11,8 @@ module CharacterModule
         characterProxy:CharacterModule.CharacterProxy;
         enemyProxy:CharacterModule.EnemyProxy;
 
+        characterTurn:boolean;
+
         constructor(viewComponent:MvcModule.View){
 
             super(CharacterMediator.NAME, viewComponent);
@@ -27,11 +29,13 @@ module CharacterModule
 
             var x = 680;
             var y = 1255;
-            (this.viewComponent as CharacterView).createCharacter(this.characterProxy.getCharacterName(), x, y, true);
+            (this.viewComponent as CharacterView).createCharacter(this.characterProxy.getCharacterName(), x, y);
 
             this.characterProxy.setCharacter((this.viewComponent as CharacterView).graphics);
 
             this.enemyProxy = (MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.EnemyProxy.NAME) as CharacterModule.EnemyProxy);
+
+            this.sendNotification(CameraModule.CameraNotifications.SET_CAMERA_POSITION, {x:1000, y: 1255});
 
         }
 
@@ -89,6 +93,7 @@ module CharacterModule
                 CharacterModule.CharacterNotifications.MOVE_WHEN_HIT,
                 ConnectionModule.ConnectionSignals.YOUR_TURN,
                 RoundsModule.RoundsNotifications.FIGHT,
+                CameraModule.CameraNotifications.CAMERA_MOVE_COMPLETE,
                 CharacterActionType.ATTACK];
         }
 
@@ -126,11 +131,32 @@ module CharacterModule
                     }
                     break;
                 case ConnectionModule.ConnectionSignals.YOUR_TURN:
-                    this.moveVO.player_pos = new Phaser.Point(
-                                                                (this.viewComponent as CharacterView).graphics.x,
-                                                                (this.viewComponent as CharacterView).graphics.y
-                                                             );
-                    (this.viewComponent as CharacterView).characterTurn();
+
+                    this.sendNotification(CameraModule.CameraNotifications.MOVE_CAMERA,
+                        {
+                            initialX:this.enemyProxy.getCharacter().x,
+                            initialY:this.enemyProxy.getCharacter().y,
+                            x:this.characterProxy.getCharacter().x,
+                            y:this.characterProxy.getCharacter().y
+                        });
+
+                    this.characterTurn = true;
+
+                    break;
+                case CameraModule.CameraNotifications.CAMERA_MOVE_COMPLETE:
+                    if(this.characterTurn)
+                    {
+                        this.characterTurn = false;
+
+                        this.moveVO.player_pos = new Phaser.Point(
+                            (this.viewComponent as CharacterView).graphics.x,
+                            (this.viewComponent as CharacterView).graphics.y
+                        );
+                        (this.viewComponent as CharacterView).characterTurn();
+
+                        this.sendNotification(CameraModule.CameraNotifications.SET_CAMERA_FOLLOWER,
+                            this.characterProxy.getCharacter());
+                    }
                     break;
                 case CharacterModule.CharacterNotifications.ATTACK_COMPLETE:
                     this.dispatchSignal(ConnectionModule.ConnectionSignals.MOVE, this.getMoveVO());
