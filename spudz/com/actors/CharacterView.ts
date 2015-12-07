@@ -282,6 +282,8 @@ module CharacterModule
 
         startMovingWhenHit()
         {
+            this.currentAction = CharacterModule.CharacterActionType.DAMAGE;
+            
             var newX = 0;
             if(this.enemyGraphics.x < this.graphics.x)
             {

@@ -83,7 +83,6 @@ module CharacterModule
             if(this.currentAnimation != CharacterModule.CharacterAnimations.BLOCK_ANIMATION)
             {
                 this.animateHit();
-                this.currentAction = CharacterModule.CharacterActionType.DAMAGE;
 
                 if(enemyAbility == CharacterModule.CharacterActionType.MELEE)
                 {
