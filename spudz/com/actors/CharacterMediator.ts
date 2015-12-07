@@ -56,7 +56,6 @@ module CharacterModule
 
             this.addListenerToSignal("CharacterPosition", function(body:any){
 
-                MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
                 if(body.actionType == CharacterActionType.ATTACK)
                 {
                     this.characterProxy.setCharacter((this.viewComponent as CharacterView).graphics);
@@ -65,6 +64,7 @@ module CharacterModule
                 }
                 else if(body.actionType == CharacterActionType.MOVE)
                 {
+                    MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterNotifications.CHARACTER_POSITION, body);
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_MOVE_MENU);
                 }
             }, this);

@@ -23,7 +23,7 @@ module UserInterfaceModule{
         moveMenuButton:Phaser.Sprite;
 
         currentTarget:Phaser.Sprite;
-        currentAction:string;
+        currentAction:string = "";
 
         constructor(){
             super(UIView.NAME);
@@ -31,7 +31,6 @@ module UserInterfaceModule{
             this.createEnergyCells();
             this.createLife();
             this.createActionsMenu();
-            this.updatePlayerNames();
         }
 
         setUiBackground(){
@@ -111,65 +110,6 @@ module UserInterfaceModule{
             this.btnSkip.events.onInputDown.add(this.skipButtonTouched, this);
         }
 
-        menuButtonTouched(){
-            //this.updateLife(50);
-            //this.updateEnemyLife(50);
-            //this.actionsGroup.visible = false;
-            if(this.btnDefence.visible)
-            {
-                this.btnDefence.visible = false;
-                this.btnMelee.visible = false;
-                this.btnRange.visible = false;
-                this.btnSkip.visible = false;
-            }
-            else
-            {
-                this.btnDefence.visible = true;
-                this.btnMelee.visible = true;
-                this.btnRange.visible = true;
-                this.btnSkip.visible = true;
-            }
-        }
-
-        defenceButtonTouched(){
-            this.hideAll();
-            this.currentAction = CharacterModule.CharacterActionType.DEFENCE;
-            this.dispatchSignal("sendAction", this.currentAction);
-        }
-
-        hideAll()
-        {
-            this.actionsMenuButton.visible = true;
-            this.btnDefence.visible = true;
-            this.btnMelee.visible = true;
-            this.btnRange.visible = true;
-
-            this.btnMelee.alpha = 1;
-            this.btnRange.alpha = 1;
-            this.btnMelee.inputEnabled = true;
-            this.btnRange.inputEnabled = true;
-            this.actionsGroup.visible = false;
-        }
-
-
-        meleeButtonTouched(){
-            this.hideAll();
-            this.currentAction = CharacterModule.CharacterActionType.MELEE;
-            this.dispatchSignal("sendAction", this.currentAction);
-        }
-
-        rangeButtonTouched(){
-            this.hideAll();
-            this.currentAction = CharacterModule.CharacterActionType.RANGE;
-            this.dispatchSignal("sendAction", this.currentAction);
-        }
-
-        skipButtonTouched(){
-            this.hideAll();
-            this.currentAction = CharacterModule.CharacterActionType.SKIP;
-            this.dispatchSignal("sendAction", this.currentAction);
-        }
-
         updateLife(amount:number){
             this.lifeBar.x -= amount;
         }
@@ -180,6 +120,8 @@ module UserInterfaceModule{
 
         showActionsMenu(target:Phaser.Sprite){
 
+            this.currentAction = "";
+
             this.hideMoveMenu();
 
             this.currentTarget = target;
@@ -189,19 +131,60 @@ module UserInterfaceModule{
             this.actionsMenuButton.x = target.x;
             this.actionsMenuButton.y = target.y - 140;
 
-            this.btnDefence.x = this.actionsMenuButton.x  - 120;
+            this.btnMelee.visible = false;
+            this.btnRange.visible = false;
+
+
+            this.btnDefence.x = this.actionsMenuButton.x  + 120;
             this.btnDefence.y = this.actionsMenuButton.y;
 
-            this.btnMelee.x = this.actionsMenuButton.x + 120;
-            this.btnMelee.y = this.actionsMenuButton.y;
-
-            this.btnRange.x = this.actionsMenuButton.x;
-            this.btnRange.y = this.actionsMenuButton.y - 110;
-
-            this.btnSkip.x = this.actionsMenuButton.x - 240;
+            this.btnSkip.x = this.actionsMenuButton.x - 120;
             this.btnSkip.y = this.actionsMenuButton.y;
 
             this.actionsMenuButton.inputEnabled = true;
+        }
+
+        menuButtonTouched(){
+            if(this.currentAction == "")
+            {
+                this.btnMelee.visible = true;
+                this.btnMelee.x = this.actionsMenuButton.x + 120;
+                this.btnMelee.y = this.actionsMenuButton.y - 110;
+
+                this.btnRange.visible = true;
+                this.btnRange.x = this.actionsMenuButton.x;
+                this.btnRange.y = this.actionsMenuButton.y - 110;
+            }
+            else
+            {
+                this.hideAll();
+                this.dispatchSignal("sendAction", this.currentAction);
+            }
+        }
+
+
+        meleeButtonTouched(){
+            this.currentAction = CharacterModule.CharacterActionType.MELEE;
+            this.btnMelee.scale.set(.6, .6);
+            this.dispatchSignal("weaponSelected");
+        }
+
+        rangeButtonTouched(){
+            this.currentAction = CharacterModule.CharacterActionType.RANGE;
+            this.btnRange.scale.set(.6, .6);
+            this.dispatchSignal("weaponSelected");
+        }
+
+        skipButtonTouched(){
+            this.hideAll();
+            this.currentAction = CharacterModule.CharacterActionType.SKIP;
+            this.dispatchSignal("sendAction", this.currentAction);
+        }
+
+        defenceButtonTouched(){
+            this.hideAll();
+            this.currentAction = CharacterModule.CharacterActionType.DEFENCE;
+            this.dispatchSignal("sendAction", this.currentAction);
         }
 
         disableMeleeButton(){
@@ -212,6 +195,11 @@ module UserInterfaceModule{
         disableRangeButton(){
             this.btnRange.alpha = 0.5;
             this.btnRange.inputEnabled = false;
+        }
+
+        disableDefenceButton(){
+            this.btnDefence.alpha = 0.5;
+            this.btnDefence.inputEnabled = false;
         }
 
         hideActionsMenu(){
@@ -242,10 +230,10 @@ module UserInterfaceModule{
             console.log("update energy: "+amount);
         }
 
-        updatePlayerNames(){
+        updatePlayerNames(playerName:string, enemyName:string){
             this.textsGroup = new Phaser.Group(this.game);
-            var currentPlayerNameText = this.game.add.bitmapText(10, 5, 'font','Gheorghe',30);
-            var opponentPlayerNameText = this.game.add.bitmapText(1000, 5, 'font','Vasile',30);
+            var currentPlayerNameText = this.game.add.bitmapText(10, 5, 'font',playerName,30);
+            var opponentPlayerNameText = this.game.add.bitmapText(1000, 5, 'font',enemyName,30);
 
             opponentPlayerNameText.x = 1334 - opponentPlayerNameText.width - 10;
 
@@ -259,6 +247,26 @@ module UserInterfaceModule{
             if(this.cellsGroup.length>0) {
                 this.cellsGroup.removeChildAt(this.cellsGroup.length - 1)
             }
+        }
+
+        hideAll()
+        {
+            this.actionsMenuButton.visible = true;
+            this.btnDefence.visible = true;
+            this.btnMelee.visible = true;
+            this.btnRange.visible = true;
+
+            this.btnMelee.alpha = 1;
+            this.btnRange.alpha = 1;
+            this.btnDefence.alpha = 1;
+            this.btnMelee.scale.set(.5, .5);
+            this.btnRange.scale.set(.5, .5);
+
+            this.btnMelee.inputEnabled = true;
+            this.btnRange.inputEnabled = true;
+            this.btnDefence.inputEnabled = true;
+
+            this.actionsGroup.visible = false;
         }
     }
 }

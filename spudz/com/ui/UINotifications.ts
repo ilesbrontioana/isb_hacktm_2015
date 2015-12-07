@@ -13,5 +13,6 @@ module UserInterfaceModule{
         static  UPDATE_LIFE_ENEMY:string = UINotifications.NAME + "_UPDATE_LIFE_ENEMY";
         static DISABLE_MELEE_ACTION_BUTTON:string = UINotifications.NAME + "_GREY_OUT_MELEE_ACTION_BUTTON";
         static DISABLE_RANGE_ACTION_BUTTON:string = UINotifications.NAME + "_GREY_OUT_RANGE_ACTION_BUTTON";
+        static WEAPON_SELECTED:string = UINotifications.NAME + "WEAPON_SELECTED";
     }
 }

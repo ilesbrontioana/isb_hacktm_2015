@@ -15,7 +15,8 @@ module CharacterModule
         tiles:Array<Array<GridModule.Tile>> = [];
 
         moveCircle:Phaser.Sprite;
-        attackCircle:Phaser.Sprite;
+        meleeCircle:Phaser.Sprite;
+        rangeCircle:Phaser.Sprite;
 
         currentCircle:Phaser.Sprite;
 
@@ -39,36 +40,55 @@ module CharacterModule
             bmdMove.ctx.arc(moveCircleCenterX, moveCircleCenterY, ActionRayView.MOVE_RAY * GridModule.GridView.tileWidth, 0, Math.PI*2, true);
             bmdMove.ctx.closePath();
             bmdMove.ctx.fill();
-            this.game.cache.addBitmapData("GreenCircleBMP", bmdMove);
+            this.game.cache.addBitmapData("MoveCircleBMP", bmdMove);
 
-            var attackCircleCenterX = ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth;
-            var attackCircleCenterY = ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth;
+            var meleeCircleCenterX = ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth;
+            var meleeCircleCenterY = ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth;
 
-            var bmdAttack = this.game.add.bitmapData(
-                                    attackCircleCenterX * 2,
-                                    attackCircleCenterY * 2);
-            bmdAttack.ctx.fillStyle = '#FF0000';
-            bmdAttack.ctx.beginPath();
-            bmdAttack.ctx.arc(attackCircleCenterX, attackCircleCenterY, ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth, 0, Math.PI*2, true);
-            bmdAttack.ctx.closePath();
-            bmdAttack.ctx.fill();
-            this.game.cache.addBitmapData("RedCircleBMP", bmdAttack);
+            var bmdMelee = this.game.add.bitmapData(
+                                    meleeCircleCenterX * 2,
+                                    meleeCircleCenterY * 2);
+            bmdMelee.ctx.fillStyle = '#FF0000';
+            bmdMelee.ctx.beginPath();
+            bmdMelee.ctx.arc(meleeCircleCenterX, meleeCircleCenterY, ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth, 0, Math.PI*2, true);
+            bmdMelee.ctx.closePath();
+            bmdMelee.ctx.fill();
+            this.game.cache.addBitmapData("MeleeCircleBMP", bmdMelee);
+
+            var rangeCircleCenterX = ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth;
+            var rangeCircleCenterY = ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth;
+
+            var bmdRange = this.game.add.bitmapData(
+                rangeCircleCenterX * 2,
+                rangeCircleCenterY * 2);
+            bmdRange.ctx.fillStyle = '#FF0000';
+            bmdRange.ctx.beginPath();
+            bmdRange.ctx.arc(rangeCircleCenterX, rangeCircleCenterY, ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth, 0, Math.PI*2, true);
+            bmdRange.ctx.closePath();
+            bmdRange.ctx.fill();
+            this.game.cache.addBitmapData("RangeCircleBMP", bmdRange);
 
             this.moveCircle  = this.game.add.sprite(0, 0,
-                                this.game.cache.getBitmapData("GreenCircleBMP"));
+                                this.game.cache.getBitmapData("MoveCircleBMP"));
             this.moveCircle.inputEnabled = true;
             this.moveCircle.alpha = 0.5;
             this.moveCircle.visible = false;
             this.moveCircle.anchor.setTo(0.5, 0.5);
             this.moveCircle.events.onInputDown.add(this.circleTouched, this);
 
-            this.attackCircle  = this.game.add.sprite(0, 0,
-                this.game.cache.getBitmapData("RedCircleBMP"));
-            this.attackCircle.inputEnabled = true;
-            this.attackCircle.alpha = 0.5;
-            this.attackCircle.visible = false;
-            this.attackCircle.anchor.setTo(0.5, 0.5);
-            this.game.physics.enable(this.attackCircle, Phaser.Physics.ARCADE);
+            this.meleeCircle  = this.game.add.sprite(0, 0,
+                this.game.cache.getBitmapData("MeleeCircleBMP"));
+            this.meleeCircle.inputEnabled = true;
+            this.meleeCircle.alpha = 0.5;
+            this.meleeCircle.visible = false;
+            this.meleeCircle.anchor.setTo(0.5, 0.5);
+
+            this.rangeCircle  = this.game.add.sprite(0, 0,
+                this.game.cache.getBitmapData("RangeCircleBMP"));
+            this.rangeCircle.inputEnabled = true;
+            this.rangeCircle.alpha = 0.5;
+            this.rangeCircle.visible = false;
+            this.rangeCircle.anchor.setTo(0.5, 0.5);
 
 
         }
@@ -80,12 +100,19 @@ module CharacterModule
 
         addActionRayAt(x:number, y:number, actionType:string)
         {
-            if(actionType == CharacterModule.CharacterActionType.ATTACK)
+            this.removeActionRay();
+
+            if(actionType == CharacterModule.CharacterActionType.MELEE)
             {
-                this.currentCircle = this.attackCircle
+                this.currentCircle = this.meleeCircle;
             }
-            else {
-                this.currentCircle = this.moveCircle
+            else if(actionType == CharacterModule.CharacterActionType.RANGE)
+            {
+                this.currentCircle = this.rangeCircle;
+            }
+            else
+            {
+                this.currentCircle = this.moveCircle;
             }
 
             this.currentCircle.x = x;
@@ -96,20 +123,15 @@ module CharacterModule
 
         removeActionRay()
         {
-            if(this.attackCircle.visible == true)
+            if(this.currentCircle)
             {
-                this.attackCircle.visible = false;
-            }
-
-            if(this.moveCircle.visible == true)
-            {
-                this.moveCircle.visible = false;
+                this.currentCircle.visible = false;
             }
         }
 
         circleTouched(circle:Phaser.Sprite, pointer:Phaser.Pointer){
             var tile = this.getTileAt(pointer.worldX, pointer.worldY);
-            this.signalsManager.dispatch("TiledClicked", tile.graphics);
+            this.signalsManager.dispatch("CircleTouched", tile.graphics);
             this.removeActionRay();
         }
 

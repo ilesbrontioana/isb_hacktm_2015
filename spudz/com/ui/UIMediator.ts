@@ -14,6 +14,9 @@ module UserInterfaceModule{
 
         onRegister(){
             this.addListenerToSignal("sendAction", this.doPlayerAction, this);
+            this.addListenerToSignal("weaponSelected", this.weaponSelected, this);
+
+            (this.viewComponent as UIView).updatePlayerNames('Gheorghe', 'Vasile');
         }
 
         listNotificationInterests():Array<string>{
@@ -66,9 +69,14 @@ module UserInterfaceModule{
         }
 
         doPlayerAction(actionType:string){
-            MvcModule.Mvc.getInstance().sendNotification(CharacterModule.CharacterActionType.ATTACK, actionType);
+            this.sendNotification(CharacterModule.CharacterActionType.ATTACK, actionType);
             if(actionType!=CharacterModule.CharacterActionType.SKIP)
                 (this.viewComponent as UIView).drainEnergy();
+        }
+
+        weaponSelected()
+        {
+            this.sendNotification(UserInterfaceModule.UINotifications.WEAPON_SELECTED, (this.viewComponent as UIView).currentAction);
         }
     }
 }
