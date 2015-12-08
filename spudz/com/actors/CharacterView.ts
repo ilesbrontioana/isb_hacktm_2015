@@ -81,8 +81,18 @@ module CharacterModule
             this.graphics.body.collideWorldBounds = true;
             this.graphics.body.gravity.y = 400;
 
-            //TODO - set correct size for each character
-            this.graphics.body.setSize(this.graphics.width/2, this.graphics.height, this.graphics.width/4, 0);
+            if(this.characterName == 'bacon')
+            {
+                this.graphics.body.setSize(22, this.graphics.height, 54, 0);
+            }
+            else if(this.characterName == 'pirate')
+            {
+                this.graphics.body.setSize(46, this.graphics.height, 63, 0);
+            }
+            else if(this.characterName == 'marine')
+            {
+                this.graphics.body.setSize(40, this.graphics.height, 52, 0);
+            }
 
             if(!this.graphics.body.onFloor())
             {
@@ -283,7 +293,7 @@ module CharacterModule
         startMovingWhenHit()
         {
             this.currentAction = CharacterModule.CharacterActionType.DAMAGE;
-            
+
             var newX = 0;
             if(this.enemyGraphics.x < this.graphics.x)
             {

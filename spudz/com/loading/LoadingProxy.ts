@@ -9,7 +9,6 @@ module LoadingModule
 
         loader:IAbstractLoader;
 
-        //TODO - remove from here
         assetPath:string = '../../spudz/bin/assets/';
 
         constructor(loader:LoadingModule.IAbstractLoader)
