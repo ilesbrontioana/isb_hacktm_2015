@@ -97,15 +97,14 @@ module DummyAIModule
 
             this.moveVO.ability = this.getAbility();
 
-            var newEnemyPosition = this.getNewEnemyPosition();
-
             this.moveVO.player_pos = new Phaser.Point(this.enemyProxy.getCharacter().x, this.enemyProxy.getCharacter().y);
-            this.moveVO.destination = newEnemyPosition;
+            this.moveVO.destination = this.getNewEnemyPosition();
 
             this.moveVO.player_health = this.enemyProxy.getLife();
+            this.moveVO.player_energy = this.enemyProxy.getEnergy();
 
             this.moveVO.opponent_energy = this.characterProxy.getEnergy();
-            this.getLife();
+            this.moveVO.opponent_health = this.characterProxy.getLife();
 
             this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
 
@@ -121,24 +120,28 @@ module DummyAIModule
             }
             else
             {
+                var distance = GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.distanceBetween(
+                    this.characterProxy.getCharacter(), this.enemyProxy.getCharacter());
+
                 var abilityNo = Math.random() * 4;
                 if(abilityNo < 1.25)
                 {
                     ability = CharacterModule.CharacterActionType.DEFENCE;
                     this.enemyProxy.setEnergy(this.enemyProxy.getEnergy() - 10);
-                    this.moveVO.player_energy = this.enemyProxy.getEnergy();
                 }
-                else if(abilityNo < 2.5)
+                else if(abilityNo < 2.5 &&
+                    distance <= CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
                 {
                     ability = CharacterModule.CharacterActionType.MELEE;
                     this.enemyProxy.setEnergy(this.enemyProxy.getEnergy() - 10);
-                    this.moveVO.player_energy = this.enemyProxy.getEnergy();
+                    this.characterProxy.setLife(this.characterProxy.getLife() - 10);
                 }
-                else if(abilityNo < 3.75)
+                else if(abilityNo < 3.75  &&
+                    distance <= CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
                 {
                     ability = CharacterModule.CharacterActionType.RANGE;
                     this.enemyProxy.setEnergy(this.enemyProxy.getEnergy() - 10);
-                    this.moveVO.player_energy = this.enemyProxy.getEnergy();
+                    this.characterProxy.setLife(this.characterProxy.getLife() - 5);
                 }
                 else
                 {
@@ -182,33 +185,6 @@ module DummyAIModule
 
             return new Phaser.Point(this.enemyProxy.getCharacter().position.x + xOffset,
                 this.enemyProxy.getCharacter().position.y + yOffset);
-        }
-
-        getLife()
-        {
-            this.moveVO.opponent_health = this.characterProxy.getLife();
-            if(this.characterProxy.getAbility() != CharacterModule.CharacterActionType.DEFENCE &&
-                (this.moveVO.ability == CharacterModule.CharacterActionType.MELEE ||
-                    this.moveVO.ability == CharacterModule.CharacterActionType.RANGE)) {
-                this.addDamageForOpponent();
-            }
-        }
-
-        addDamageForOpponent()
-        {
-            var distance = GraphicsModule.GraphicsManager.getInstance().game.physics.arcade.distanceBetween(
-                this.characterProxy.getCharacter(), this.enemyProxy.getCharacter());
-            if(this.moveVO.ability == CharacterModule.CharacterActionType.MELEE &&
-                distance <= CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
-            {
-                this.moveVO.opponent_health = this.characterProxy.getLife() - 10;
-            }
-            else if(  this.moveVO.ability == CharacterModule.CharacterActionType.RANGE &&
-                distance <= CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
-            {
-                this.moveVO.opponent_health = this.characterProxy.getLife() - 5;
-            }
-
         }
 
         getOtherSelections(selection:string):Array<string>
