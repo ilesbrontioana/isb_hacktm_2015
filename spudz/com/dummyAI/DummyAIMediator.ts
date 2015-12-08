@@ -102,11 +102,11 @@ module DummyAIModule
             this.moveVO.player_pos = new Phaser.Point(this.enemyProxy.getCharacter().x, this.enemyProxy.getCharacter().y);
             this.moveVO.destination = newEnemyPosition;
 
-            this.moveVO.player_energy = this.enemyProxy.getEnergy() - 10;
             this.moveVO.player_health = this.enemyProxy.getLife();
 
             this.moveVO.opponent_energy = this.characterProxy.getEnergy();
             this.getLife();
+
             this.moveVO.opponent_pos = this.characterProxy.getCharacter().position;
 
             return this.moveVO;
@@ -114,23 +114,36 @@ module DummyAIModule
 
         getAbility():string
         {
-            var abilityNo = Math.random() * 4;
             var ability:string = "";
-            if(abilityNo < 1.25)
+            if(this.enemyProxy.getEnergy() <= 0)
             {
-                ability = CharacterModule.CharacterActionType.DEFENCE;
-            }
-            else if(abilityNo < 2.5)
-            {
-                ability = CharacterModule.CharacterActionType.MELEE;
-            }
-            else if(abilityNo < 3.75)
-            {
-                ability = CharacterModule.CharacterActionType.RANGE;
+                ability = CharacterModule.CharacterActionType.SKIP;
             }
             else
             {
-                ability = CharacterModule.CharacterActionType.SKIP;
+                var abilityNo = Math.random() * 4;
+                if(abilityNo < 1.25)
+                {
+                    ability = CharacterModule.CharacterActionType.DEFENCE;
+                    this.enemyProxy.setEnergy(this.enemyProxy.getEnergy() - 10);
+                    this.moveVO.player_energy = this.enemyProxy.getEnergy();
+                }
+                else if(abilityNo < 2.5)
+                {
+                    ability = CharacterModule.CharacterActionType.MELEE;
+                    this.enemyProxy.setEnergy(this.enemyProxy.getEnergy() - 10);
+                    this.moveVO.player_energy = this.enemyProxy.getEnergy();
+                }
+                else if(abilityNo < 3.75)
+                {
+                    ability = CharacterModule.CharacterActionType.RANGE;
+                    this.enemyProxy.setEnergy(this.enemyProxy.getEnergy() - 10);
+                    this.moveVO.player_energy = this.enemyProxy.getEnergy();
+                }
+                else
+                {
+                    ability = CharacterModule.CharacterActionType.SKIP;
+                }
             }
             console.log("dummy ai: ability: " + ability);
             return ability;

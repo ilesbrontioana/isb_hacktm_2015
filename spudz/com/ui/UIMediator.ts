@@ -27,9 +27,9 @@ module UserInterfaceModule{
                 UserInterfaceModule.UINotifications.HIDE_MOVE_MENU,
                 UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON,
                 UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON,
+                UserInterfaceModule.UINotifications.DISABLE_DEFENCE_ACTION_BUTTON,
                 UserInterfaceModule.UINotifications.UPDATE_LIFE_ENEMY,
-                UserInterfaceModule.UINotifications.UPDATE_ENERGY,
-                CharacterModule.CharacterNotifications.GRID_TOUCHED];
+                UserInterfaceModule.UINotifications.UPDATE_ENERGY];
         }
 
         handleNotification(notification:MvcModule.INotification){
@@ -47,6 +47,9 @@ module UserInterfaceModule{
                 case UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON:
                     (this.viewComponent as UIView).disableRangeButton();
                     break;
+                case UserInterfaceModule.UINotifications.DISABLE_DEFENCE_ACTION_BUTTON:
+                    (this.viewComponent as UIView).disableDefenceButton();
+                    break;
                 case  UserInterfaceModule.UINotifications.UPDATE_LIFE:
                     (this.viewComponent as UIView).updateLife(notification.body);
                     break;
@@ -62,16 +65,20 @@ module UserInterfaceModule{
                 case UserInterfaceModule.UINotifications.HIDE_MOVE_MENU:
                     (this.viewComponent as UIView).hideMoveMenu();
                     break;
-                case CharacterModule.CharacterNotifications.GRID_TOUCHED:
-                    (this.viewComponent as UIView).drainEnergy();
-                    break;
             }
         }
 
         doPlayerAction(actionType:string){
             this.sendNotification(CharacterModule.CharacterActionType.ATTACK, actionType);
             if(actionType!=CharacterModule.CharacterActionType.SKIP)
+            {
                 (this.viewComponent as UIView).drainEnergy();
+                var characterProxy:CharacterModule.CharacterProxy = MvcModule.Mvc.getInstance().retrieveProxy(CharacterModule.CharacterProxy.NAME) as CharacterModule.CharacterProxy;
+                if(characterProxy.getEnergy() > 0)
+                {
+                    characterProxy.setEnergy(characterProxy.getEnergy() - 10);
+                }
+            }
         }
 
         weaponSelected()

@@ -61,6 +61,14 @@ module CharacterModule
                     this.characterProxy.setCharacter((this.viewComponent as CharacterView).graphics);
                     MvcModule.Mvc.getInstance().sendNotification(UserInterfaceModule.UINotifications.SHOW_ACTIONS_MENU);
                     this.enemyInActionRay();
+
+                    if(this.characterProxy.getEnergy() <= 0)
+                    {
+                        this.sendNotification(UserInterfaceModule.UINotifications.DISABLE_MELEE_ACTION_BUTTON);
+                        this.sendNotification(UserInterfaceModule.UINotifications.DISABLE_DEFENCE_ACTION_BUTTON);
+                        this.sendNotification(UserInterfaceModule.UINotifications.DISABLE_RANGE_ACTION_BUTTON);
+                    }
+
                 }
                 else if(body.actionType == CharacterActionType.MOVE)
                 {
@@ -117,6 +125,9 @@ module CharacterModule
                         this.characterProxy.getEnergy());
                     break;
                 case CharacterActionType.ATTACK:
+
+                    this.characterProxy.setAbility((this.viewComponent as CharacterView).attackAction);
+
                     if((this.viewComponent as CharacterView).currentAction == CharacterModule.CharacterActionType.MOVE)
                     {
                         this.moveVO.destination = new Phaser.Point(
@@ -140,7 +151,6 @@ module CharacterModule
                             x:this.characterProxy.getCharacter().x,
                             y:this.characterProxy.getCharacter().y
                         });
-
                     this.characterTurn = true;
 
                     break;
@@ -173,8 +183,6 @@ module CharacterModule
 
         getMoveVO():ConnectionModule.MoveVO
         {
-            this.characterProxy.setEnergy(this.characterProxy.getEnergy() - 10);
-            this.characterProxy.setAbility((this.viewComponent as CharacterView).attackAction);
             this.moveVO.ability = this.characterProxy.getAbility();
             this.moveVO.player_energy = this.characterProxy.getEnergy();
             this.moveVO.player_health = this.characterProxy.getLife();
