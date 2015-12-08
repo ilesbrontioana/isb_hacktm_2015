@@ -86,11 +86,11 @@ module CharacterModule
 
                 if(enemyAbility == CharacterModule.CharacterActionType.MELEE)
                 {
-                    this.currentDamage = 20;
+                    this.currentDamage = 10;
                 }
                 else if(enemyAbility == CharacterModule.CharacterActionType.RANGE)
                 {
-                    this.currentDamage = 10;
+                    this.currentDamage = 5;
                 }
             }
             if(this.currentDamage == 0)

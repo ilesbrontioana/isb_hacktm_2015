@@ -201,12 +201,12 @@ module DummyAIModule
             if(this.moveVO.ability == CharacterModule.CharacterActionType.MELEE &&
                 distance <= CharacterModule.ActionRayView.MELEE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
-                this.moveVO.opponent_health = this.characterProxy.getLife() - 20;
+                this.moveVO.opponent_health = this.characterProxy.getLife() - 10;
             }
             else if(  this.moveVO.ability == CharacterModule.CharacterActionType.RANGE &&
                 distance <= CharacterModule.ActionRayView.RANGE_RAY * GridModule.GridView.tileWidth - this.enemyProxy.getCharacter().width/2)
             {
-                this.moveVO.opponent_health = this.characterProxy.getLife() - 10;
+                this.moveVO.opponent_health = this.characterProxy.getLife() - 5;
             }
 
         }

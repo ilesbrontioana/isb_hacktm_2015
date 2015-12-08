@@ -111,11 +111,13 @@ module UserInterfaceModule{
         }
 
         updateLife(amount:number){
-            this.lifeBar.x -= amount;
+            var moveX:number = this.lifeBar.width * amount/100;
+            this.lifeBar.x -= moveX;
         }
 
         updateEnemyLife(amount:number){
-            this.lifeBarEnemy.x += amount;
+            var moveX:number = this.lifeBarEnemy.width * amount/100;
+            this.lifeBarEnemy.x -= moveX;
         }
 
         showActionsMenu(target:Phaser.Sprite){
